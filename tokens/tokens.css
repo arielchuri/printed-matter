@@ -1,0 +1,373 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap");
+
+/* ============================================================
+   Printed Matter Design Tokens
+   Metaphor: Ink on Paper for Web & Technical Cartography
+   Foundations: Warm Xerox Stock, Slate Ink, Flat Geometry, Hairlines
+   ============================================================ */
+
+:root {
+  /* ─── 1. Surfaces & Canvas ───────────────────────────────── */
+  --white: #EFECE6;                  /* Warm xerox stock — the primary page ground */
+  --true-white: #FFFFFF;             /* Knockout pure white — strictly for cutouts & readouts */
+  --true-black: #000000;             /* Pure black — high density anchor */
+  --surface: #EFECE6;                /* Default component surface */
+  --surface-muted: #e7e4df;          /* Recessed ground / gutter */
+  --surface-subtle: #dfddd7;         /* Secondary panel ground */
+  --surface-knockout: #FFFFFF;       /* Knockout paper surface */
+
+  /* ─── 2. Brand Primary & Accent ──────────────────────────── */
+  /* Single Blue: lighter values resolve to paper stock showing through */
+  --primary-050: #EFECE6;            /* Paper ground */
+  --primary-100: #EFECE6;            /* Subtle tint chip */
+  --primary-200: #1a66a6;            /* Primary brand blue */
+  --primary-300: #1a66a6;
+  --primary-400: #1a66a6;
+  --primary-500: #1a66a6;            /* Canonical Printed Matter Blue */
+  --primary-600: #145082;            /* Deepened blue hover */
+  --primary-700: #0f3d64;            /* Accessible link/text */
+  --primary-800: #0a2b47;
+  --primary-900: #061b2c;
+  --primary-muted: #909390;          /* Tonal multiply tone */
+  --primary-color: #1a66a6;
+  --anti-primary-color: #FFFFFF;
+
+  /* Secondary & Spot Colour */
+  --secondary-color: #d35b50;        /* Printed Matter red — spot ink */
+  --secondary-700: #d35b50;
+  --anti-secondary-color: #FFFFFF;
+
+  /* ─── 3. Full Printed Spectrum (Spot Inks) ────────────────── */
+  --spectrum-red: #d35b50;
+  --spectrum-orange: #f39d22;
+  --spectrum-yellow: #f4d35a;
+  --spectrum-green: #54c93f;
+  --spectrum-aqua: #3abeae;
+  --spectrum-blue: #1a66a6;
+  --spectrum-violet: #8f57cb;
+
+  /* Semantic Status Aliases */
+  --yellow: #f4d35a;
+  --success-color: #54c93f;
+  --warning-color: #f39d22;
+  --danger-color: #d35b50;
+
+  /* ─── 4. Derived Neutrals (Paper × Slate Ink Multiplied) ──── */
+  --gray-50:  #e7e4df;
+  --gray-100: #dfddd7;
+  --gray-200: #cecdc8;
+  --gray-300: #bcbcb8;
+  --gray-400: #a1a49f;
+  --gray-500: #909390;
+  --gray-600: #707673;
+  --gray-700: #5b6360;
+  --gray-800: #3e4846;
+  --gray-900: #222d2c;               /* Slate Ink — the primary dark mark */
+  --base-black: #222d2c;
+  --base-black-color: #222d2c;
+  --base-placeholder-color: #909390;
+
+  /* Semantic Typography & Hairlines */
+  --text: #222d2c;
+  --text-muted: #5b6360;
+  --text-subtle: #909390;
+  --border-gray: #222d2c;            /* Crisp 1px hairline rule */
+  --border-color: #222d2c;
+  --border-strong: #222d2c;
+  --border-subtle: #cecdc8;
+
+  /* ─── 5. Layout & Dimensional Spacing ────────────────────── */
+  --nav-header-height: 48px;
+  --sidebar-width: 300px;
+  --widget-panel-width: 320px;
+  --base-height: 36px;
+  --global-spacing: 1rem;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* ─── 6. Geometry & Elevation (Print Rules) ───────────────── */
+  /* Print does not round corners — radius is 0 */
+  --border-radius: 0px;
+  --radius-xsm: 0px;
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-pill: 9999px;
+
+  /* Paper does not cast shadows on itself — elevation is flat */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --box-shadow-sm: none;
+  --base-shadow-box: none;
+  --widget-box-shadow: none;
+
+  /* ─── 7. Typography Hierarchy ────────────────────────────── */
+  --base-font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --base-font-size: 15px;
+  --base-font-weight: 400;
+  --base-line-height: 1.5;
+  --base-font-color: var(--text);
+
+  /* ─── 8. Interaction & Feedback ──────────────────────────── */
+  --focus-ring: 0 0 0 2px #1a66a6;
+  --transition-fast: 0.12s ease;
+  --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
+  --disabled-color: #bcbcb8;
+
+  /* Navbar / Frame */
+  --navbar-background-color: var(--primary-color);
+  --navbar-font-color: var(--anti-primary-color);
+}
+
+/* ─── Global Reset & Typography Baseline ───────────────────── */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 15px;
+  font-family: var(--base-font-family);
+  background-color: var(--surface-muted);
+  color: var(--text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  background-color: var(--surface-muted);
+  color: var(--text);
+  line-height: var(--base-line-height);
+}
+
+/* ─── Display & Editorial Scale ────────────────────────────── */
+.ds-display, .ds-h0 {
+  font-size: 6rem;
+  font-weight: 800;
+  line-height: 1.02;
+  letter-spacing: -0.04em;
+}
+
+h1, .ds-h1 {
+  font-size: 4rem;
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+}
+
+h2, .ds-h2 {
+  font-size: 2.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+h3, .ds-h3 {
+  font-size: 1.85rem;
+  font-weight: 800;
+  line-height: 1.2;
+}
+
+h4, .ds-h4 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  line-height: 1.3;
+}
+
+h5, .ds-h5 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  line-height: 1.3;
+}
+
+h6, .ds-h6 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Component Baseline Rules ─────────────────────────────── */
+
+/* 1. Buttons: No bevel, no shadow, sharp corners. Pressed flashes green */
+button, input[type="button"], input[type="submit"], .ds-btn {
+  border-radius: 0;
+  box-shadow: none !important;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+button:active, .ds-btn:active {
+  background-color: var(--success-color) !important;
+  color: var(--white) !important;
+  border-color: var(--success-color) !important;
+}
+
+button:disabled, .ds-btn:disabled {
+  background-color: var(--gray-200) !important;
+  color: var(--gray-500) !important;
+  border-color: var(--gray-300) !important;
+  cursor: not-allowed;
+}
+
+/* 2. Inputs & Selects: Hairline box, multiplied shadow */
+input[type="text"], input[type="search"], select, textarea, .ds-field-frame {
+  border-radius: 0;
+  border: 1px solid var(--border-gray);
+  background-color: var(--white);
+  color: var(--text);
+  padding: 8px 12px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-shadow: 1px 1px 1px 0 rgba(128, 128, 128, 0.25);
+  outline: none;
+}
+
+input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 1px var(--primary-color);
+}
+
+/* 3. Search Box Component */
+.ds-search-box {
+  display: flex;
+  align-items: center;
+  position: relative;
+  width: 100%;
+}
+
+.ds-search-input {
+  width: 100%;
+  padding: 8px 36px 8px 36px !important;
+}
+
+.ds-search-icon {
+  position: absolute;
+  left: 10px;
+  display: flex;
+  align-items: center;
+  pointer-events: none;
+  color: var(--gray-700);
+}
+
+.ds-search-clear {
+  position: absolute;
+  right: 10px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  color: var(--gray-700);
+  cursor: pointer;
+  padding: 2px;
+}
+
+/* 4. Tabs: Sharp, active is white on blue, inactive transparent */
+.ds-tab-bar {
+  display: flex;
+  gap: 0px;
+  border-bottom: 1px solid var(--border-gray);
+  background: transparent;
+}
+
+.ds-tab-item {
+  padding: 8px 16px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: transparent;
+  color: var(--gray-700);
+  border: none;
+  border-radius: 0;
+  cursor: pointer;
+}
+
+.ds-tab-item.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* 5. Chevrons: Square 20x20 hairline rule box */
+.ds-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--primary-color);
+  border: 1px solid var(--primary-color);
+  border-radius: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.ds-chevron.active {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* 6. Chips & Status Pills */
+.ds-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 8px;
+  border-radius: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: 1px solid var(--border-gray);
+  background-color: var(--white);
+  color: var(--text);
+  cursor: pointer;
+}
+
+.ds-chip.active {
+  border-color: var(--primary-color);
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+/* 7. Level Badge (C, A1, A2, A3) */
+.ds-level-badge {
+  display: inline-block;
+  padding: 1px 5px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  font-family: var(--font-mono);
+  background-color: var(--gray-100);
+  color: var(--gray-900);
+  border: 1px solid var(--gray-300);
+}
+
+/* 8. Technical Data Readout Bar */
+.ds-readout-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: var(--white);
+  border-top: 1px solid var(--border-gray);
+  padding: 6px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--text);
+}
