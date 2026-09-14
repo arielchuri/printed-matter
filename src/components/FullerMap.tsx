@@ -159,8 +159,8 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
                 />
               </clipPath>
 
-              {/* Ocean Background 1: Ultra-Dense Blue Litho Stipple Micro-Matrix */}
-              <pattern id="ocean-stipple-blue" width="1.2" height="1.2" patternUnits="userSpaceOnUse">
+              {/* Ocean Background 1: Ultra-Dense Blue Litho Stipple Micro-Matrix (15° Screen) */}
+              <pattern id="ocean-stipple-blue" width="1.2" height="1.2" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
                 <circle cx="0.25" cy="0.25" r="0.16" fill="var(--primary-500)" />
                 <circle cx="0.85" cy="0.30" r="0.14" fill="var(--primary-500)" />
                 <circle cx="0.30" cy="0.85" r="0.15" fill="var(--primary-500)" />
@@ -168,24 +168,24 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
                 <circle cx="0.55" cy="0.55" r="0.13" fill="var(--primary-500)" />
               </pattern>
 
-              {/* Ocean Background 2: Sparse Aerated Green Litho Stipple */}
-              <pattern id="ocean-stipple-green" width="5.2" height="5.2" patternUnits="userSpaceOnUse">
+              {/* Ocean Background 2: Sparse Aerated Green Litho Stipple (75° Screen) */}
+              <pattern id="ocean-stipple-green" width="5.2" height="5.2" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                 <circle cx="1.3" cy="1.5" r="0.30" fill="var(--spectrum-green)" />
                 <circle cx="3.9" cy="4.1" r="0.27" fill="var(--spectrum-green)" />
               </pattern>
 
-              {/* Intaglio Pattern 1: Fine Crosshatch (Ink Black) */}
-              <pattern id="fuller-cross-black" width="3" height="3" patternUnits="userSpaceOnUse">
+              {/* Intaglio Pattern 1: Fine Crosshatch (45° Key Black Screen) */}
+              <pattern id="fuller-cross-black" width="3" height="3" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
                 <path d="M 0 0 L 3 3 M 3 0 L 0 3" stroke="var(--gray-900)" strokeWidth="0.35" />
               </pattern>
 
-              {/* Intaglio Pattern 2: Dot Matrix (Ink Black) */}
-              <pattern id="fuller-dots-black" width="3" height="3" patternUnits="userSpaceOnUse">
+              {/* Intaglio Pattern 2: Dot Matrix (15° Cyan Black Screen) */}
+              <pattern id="fuller-dots-black" width="3" height="3" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
                 <circle cx="1.5" cy="1.5" r="0.6" fill="var(--gray-900)" />
               </pattern>
 
-              {/* Intaglio Pattern 3: Litho Stipple (Ink Black) */}
-              <pattern id="fuller-stipple-black" width="4" height="4" patternUnits="userSpaceOnUse">
+              {/* Intaglio Pattern 3: Litho Stipple (75° Magenta Black Screen) */}
+              <pattern id="fuller-stipple-black" width="4" height="4" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                 <circle cx="0.8" cy="0.8" r="0.3" fill="var(--gray-900)" />
                 <circle cx="2.8" cy="1.2" r="0.28" fill="var(--gray-900)" />
                 <circle cx="1.5" cy="2.8" r="0.35" fill="var(--gray-900)" />

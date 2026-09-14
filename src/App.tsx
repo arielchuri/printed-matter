@@ -1684,12 +1684,12 @@ export default function App() {
                   Multi-Spot Ink Cartographic Showcase:
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                  <PatternSwatch type="crosshatch" density={3} color="var(--primary-500)" label="Itten Blue" description="Crosshatch 50%" />
-                  <PatternSwatch type="crosshatch" density={3} color="var(--spectrum-red)" label="Red Swatch" description="Crosshatch 50%" />
-                  <PatternSwatch type="dots" density={3} color="var(--spectrum-green)" label="Green Swatch" description="Dot Matrix 50%" />
-                  <PatternSwatch type="dots" density={3} color="var(--spectrum-amber)" label="Amber Gold" description="Dot Matrix 50%" />
-                  <PatternSwatch type="stipple" density={3} color="var(--spectrum-aqua)" label="Aqua Seafoam" description="Stipple 50%" />
-                  <PatternSwatch type="stipple" density={3} color="var(--spectrum-violet)" label="Violet Swatch" description="Stipple 50%" />
+                  <PatternSwatch type="crosshatch" density={3} angle={15} color="var(--primary-500)" label="Itten Blue" description="15° Screen • Cross 50%" />
+                  <PatternSwatch type="crosshatch" density={3} angle={75} color="var(--spectrum-red)" label="Red Swatch" description="75° Screen • Cross 50%" />
+                  <PatternSwatch type="dots" density={3} angle={30} color="var(--spectrum-green)" label="Green Swatch" description="30° Screen • Dots 50%" />
+                  <PatternSwatch type="dots" density={3} angle={60} color="var(--spectrum-amber)" label="Amber Gold" description="60° Screen • Dots 50%" />
+                  <PatternSwatch type="stipple" density={3} angle={105} color="var(--spectrum-aqua)" label="Aqua Seafoam" description="105° Screen • Stipple" />
+                  <PatternSwatch type="stipple" density={3} angle={120} color="var(--spectrum-violet)" label="Violet Swatch" description="120° Screen • Stipple" />
                 </div>
               </div>
             </section>
@@ -2410,16 +2410,16 @@ export default function App() {
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-hatch-45-lg" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-hatch-15-lg" width="8" height="8" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
                           <line x1="0" y1="0" x2="0" y2="8" stroke="var(--primary-500)" strokeWidth="1.5" />
                         </pattern>
-                        <rect width="100%" height="100%" fill="url(#ov-hatch-45-lg)" />
+                        <rect width="100%" height="100%" fill="url(#ov-hatch-15-lg)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-hatch-135-lg" width="8" height="8" patternTransform="rotate(135 0 0)" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-hatch-75-lg" width="8" height="8" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                           <line x1="0" y1="0" x2="0" y2="8" stroke="var(--spectrum-red)" strokeWidth="1.5" />
                         </pattern>
-                        <rect width="100%" height="100%" fill="url(#ov-hatch-135-lg)" />
+                        <rect width="100%" height="100%" fill="url(#ov-hatch-75-lg)" />
                       </svg>
                     </div>
                     <div className="mt-3">
@@ -2427,33 +2427,42 @@ export default function App() {
                         1. Dual-Angle Crosshatch
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        45° Screen (Itten Blue) &times; 135° Screen (Spot Red) yielding violet node intersections.
+                        15° Blue Screen &times; 75° Red Screen yielding orthogonal 60° node intersections.
                       </span>
                     </div>
                   </div>
 
-                  {/* Pattern 2: Halftone Rosette Matrix */}
+                  {/* Pattern 2: 3-Color Halftone Rosette Matrix */}
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
+                      {/* Yellow Plate (0° Angle) */}
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-dots-yellow-lg" width="10" height="10" patternUnits="userSpaceOnUse">
-                          <circle cx="5" cy="5" r="3.2" fill="var(--spectrum-yellow)" />
+                        <pattern id="ov-dots-yellow-lg" width="12" height="12" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse">
+                          <circle cx="6" cy="6" r="3.2" fill="var(--spectrum-yellow)" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-dots-yellow-lg)" />
                       </svg>
+                      {/* Blue Plate (15° Angle) */}
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-dots-blue-lg" width="10" height="10" patternTransform="rotate(30 0 0)" patternUnits="userSpaceOnUse">
-                          <circle cx="5" cy="5" r="2.2" fill="var(--primary-500)" />
+                        <pattern id="ov-dots-blue-lg" width="12" height="12" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
+                          <circle cx="6" cy="6" r="2.2" fill="var(--primary-500)" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-dots-blue-lg)" />
+                      </svg>
+                      {/* Red Plate (75° Angle) */}
+                      <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
+                        <pattern id="ov-dots-red-lg" width="12" height="12" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
+                          <circle cx="6" cy="6" r="2.0" fill="var(--spectrum-red)" />
+                        </pattern>
+                        <rect width="100%" height="100%" fill="url(#ov-dots-red-lg)" />
                       </svg>
                     </div>
                     <div className="mt-3">
                       <span className="font-mono text-xs font-bold text-[var(--text)] uppercase block">
-                        2. Halftone Rosette Matrix
+                        2. 3-Color Rosette Matrix
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        0° Yellow Screen &times; 30° Blue Screen simulating offset litho rosette structure.
+                        0° Yellow &times; 15° Blue &times; 75° Red screens forming authentic litho rosette structure.
                       </span>
                     </div>
                   </div>
@@ -2462,7 +2471,7 @@ export default function App() {
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-stipple-amber" width="12" height="12" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-stipple-amber" width="12" height="12" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="2" cy="3" r="1.0" fill="var(--spectrum-amber)" />
                           <circle cx="8" cy="2" r="1.4" fill="var(--spectrum-amber)" />
                           <circle cx="5" cy="8" r="0.9" fill="var(--spectrum-amber)" />
@@ -2471,7 +2480,7 @@ export default function App() {
                         <rect width="100%" height="100%" fill="url(#ov-stipple-amber)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-stipple-aqua" width="12" height="12" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-stipple-aqua" width="12" height="12" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="3" cy="7" r="1.1" fill="var(--spectrum-aqua)" />
                           <circle cx="9" cy="4" r="0.9" fill="var(--spectrum-aqua)" />
                           <circle cx="6" cy="11" r="1.3" fill="var(--spectrum-aqua)" />
@@ -2485,7 +2494,7 @@ export default function App() {
                         3. Litho Stipple Scatter
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        Amber &times; Aqua organic micro-stippling creating geological sandstone texture.
+                        15° Amber &times; 75° Aqua rotated litho stipple scatter creating sandstone texture.
                       </span>
                     </div>
                   </div>
@@ -2500,7 +2509,7 @@ export default function App() {
                         <rect width="100%" height="100%" fill="url(#ov-topo-line)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-elevation-dot" width="10" height="10" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-elevation-dot" width="10" height="10" patternTransform="rotate(15 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="5" cy="5" r="1.8" fill="var(--spectrum-green)" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-elevation-dot)" />
@@ -2511,7 +2520,7 @@ export default function App() {
                         4. Topo Line &amp; Point Grid
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        45° Blue Contour lines overlaid with Green elevation sampling point matrix.
+                        45° Blue Contour lines &times; 15° Green elevation sampling point matrix.
                       </span>
                     </div>
                   </div>
@@ -2526,7 +2535,7 @@ export default function App() {
                         <rect width="100%" height="100%" fill="url(#ov-slope-red)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-stipple-violet" width="8" height="8" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-stipple-violet" width="8" height="8" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="2" cy="2" r="1.0" fill="var(--spectrum-violet)" />
                           <circle cx="6" cy="6" r="1.2" fill="var(--spectrum-violet)" />
                         </pattern>
@@ -2538,7 +2547,7 @@ export default function App() {
                         5. Slope Relief Density
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        135° Red heavy slope hatch &times; Violet fine stipple for escarpment shading.
+                        135° Red heavy slope hatch &times; 75° Violet stipple screen for escarpment shading.
                       </span>
                     </div>
                   </div>
@@ -2547,13 +2556,13 @@ export default function App() {
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-coarse-yellow" width="16" height="16" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-coarse-yellow" width="16" height="16" patternTransform="rotate(0 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="8" cy="8" r="4.0" fill="var(--spectrum-yellow)" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-coarse-yellow)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-fine-aqua" width="6" height="6" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-fine-aqua" width="6" height="6" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
                           <circle cx="3" cy="3" r="1.5" fill="var(--spectrum-aqua)" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-fine-aqua)" />
@@ -2564,7 +2573,7 @@ export default function App() {
                         6. Dual-Frequency Halftone
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        Coarse Yellow 10% screen &times; Fine Aqua 75% screen demonstrating pitch modulation.
+                        0° Coarse Yellow screen &times; 75° Fine Aqua screen with pitch and angular modulation.
                       </span>
                     </div>
                   </div>
@@ -2573,13 +2582,13 @@ export default function App() {
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-mesh-green" width="6" height="6" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-mesh-green" width="6" height="6" patternTransform="rotate(30 0 0)" patternUnits="userSpaceOnUse">
                           <line x1="0" y1="0" x2="0" y2="6" stroke="var(--spectrum-green)" strokeWidth="1.0" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-mesh-green)" />
                       </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
-                        <pattern id="ov-mesh-orange" width="6" height="6" patternTransform="rotate(135 0 0)" patternUnits="userSpaceOnUse">
+                        <pattern id="ov-mesh-orange" width="6" height="6" patternTransform="rotate(120 0 0)" patternUnits="userSpaceOnUse">
                           <line x1="0" y1="0" x2="0" y2="6" stroke="var(--spectrum-orange)" strokeWidth="1.0" />
                         </pattern>
                         <rect width="100%" height="100%" fill="url(#ov-mesh-orange)" />
@@ -2590,15 +2599,21 @@ export default function App() {
                         7. Cross-Screen Mesh
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        45° Green &times; 135° Orange fine-gauge intaglio mesh producing warm olive field.
+                        30° Green &times; 120° Orange fine-gauge intaglio mesh producing warm olive field.
                       </span>
                     </div>
                   </div>
 
-                  {/* Pattern 8: Keyplate Intaglio Screen on Yellow Ground */}
+                  {/* Pattern 8: 3-Plate Screen on Tone Ground */}
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="h-40 w-full bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden shrink-0">
                       <div className="absolute inset-0 bg-[var(--spectrum-yellow)] opacity-40" />
+                      <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
+                        <pattern id="ov-keyplate-red" width="8" height="8" patternTransform="rotate(75 0 0)" patternUnits="userSpaceOnUse">
+                          <line x1="0" y1="0" x2="0" y2="8" stroke="var(--spectrum-red)" strokeWidth="0.9" />
+                        </pattern>
+                        <rect width="100%" height="100%" fill="url(#ov-keyplate-red)" />
+                      </svg>
                       <svg className="w-full h-full absolute inset-0 mix-blend-multiply">
                         <pattern id="ov-keyplate-black" width="8" height="8" patternTransform="rotate(45 0 0)" patternUnits="userSpaceOnUse">
                           <line x1="0" y1="0" x2="0" y2="8" stroke="var(--gray-900)" strokeWidth="1.2" />
@@ -2609,10 +2624,10 @@ export default function App() {
                     </div>
                     <div className="mt-3">
                       <span className="font-mono text-xs font-bold text-[var(--text)] uppercase block">
-                        8. Keyplate on Tone Ground
+                        8. 3-Plate Screen Overprint
                       </span>
                       <span className="text-[11px] text-[var(--text-muted)] font-mono block mt-1 leading-snug">
-                        50% Black Intaglio Crosshatch overprinted directly onto Spot Yellow ground wash.
+                        0° Yellow tint &times; 75° Red screen &times; 45° Black Intaglio Keyplate.
                       </span>
                     </div>
                   </div>

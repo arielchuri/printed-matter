@@ -8,6 +8,8 @@ export interface PatternSwatchProps {
   color?: string;
   /** Density step: 1 (10% sparse) to 5 (90% dense). Defaults to 3 (50% medium) */
   density?: 1 | 2 | 3 | 4 | 5;
+  /** Screen angle rotation in degrees (e.g., 0° Yellow, 15° Cyan, 45° Black, 75° Magenta) */
+  angle?: number;
   id?: string;
   className?: string;
 }
@@ -18,11 +20,14 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
   description,
   color = "var(--gray-900)",
   density = 3,
+  angle,
   id,
   className = "",
 }) => {
   const generatedId = useId();
-  const patternId = id || `pattern-${type}-${density}-${generatedId.replace(/:/g, "")}`;
+  const patternId = id || `pattern-${type}-${density}-${(angle ?? 0)}-${generatedId.replace(/:/g, "")}`;
+
+  const transform = angle !== undefined ? `rotate(${angle} 0 0)` : undefined;
 
   const renderPattern = () => {
     switch (type) {
@@ -43,7 +48,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
               id={patternId}
               width={specs.size}
               height={specs.size}
-              patternTransform="rotate(45 0 0)"
+              patternTransform={transform || "rotate(45 0 0)"}
               patternUnits="userSpaceOnUse"
             >
               <line x1="0" y1="0" x2="0" y2={specs.size} stroke={color} strokeWidth={specs.stroke} />
@@ -67,7 +72,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
               id={patternId}
               width={specs.size}
               height={specs.size}
-              patternTransform="rotate(135 0 0)"
+              patternTransform={transform || "rotate(135 0 0)"}
               patternUnits="userSpaceOnUse"
             >
               <line x1="0" y1="0" x2="0" y2={specs.size} stroke={color} strokeWidth={specs.stroke} />
@@ -91,6 +96,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
               id={patternId}
               width={specs.size}
               height={specs.size}
+              patternTransform={transform}
               patternUnits="userSpaceOnUse"
             >
               <path
@@ -118,6 +124,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
               id={patternId}
               width={specs.size}
               height={specs.size}
+              patternTransform={transform}
               patternUnits="userSpaceOnUse"
             >
               <circle cx={specs.size / 2} cy={specs.size / 2} r={specs.r} fill={color} />
@@ -132,7 +139,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
           case 1:
             return (
               <>
-                <pattern id={patternId} width="16" height="16" patternUnits="userSpaceOnUse">
+                <pattern id={patternId} width="16" height="16" patternTransform={transform} patternUnits="userSpaceOnUse">
                   <circle cx="3" cy="4" r="0.6" fill={color} />
                   <circle cx="11" cy="12" r="0.7" fill={color} />
                 </pattern>
@@ -142,7 +149,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
           case 2:
             return (
               <>
-                <pattern id={patternId} width="14" height="14" patternUnits="userSpaceOnUse">
+                <pattern id={patternId} width="14" height="14" patternTransform={transform} patternUnits="userSpaceOnUse">
                   <circle cx="2" cy="3" r="0.75" fill={color} />
                   <circle cx="9" cy="4" r="0.8" fill={color} />
                   <circle cx="5" cy="11" r="0.75" fill={color} />
@@ -154,7 +161,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
           case 3:
             return (
               <>
-                <pattern id={patternId} width="12" height="12" patternUnits="userSpaceOnUse">
+                <pattern id={patternId} width="12" height="12" patternTransform={transform} patternUnits="userSpaceOnUse">
                   <circle cx="2" cy="2" r="0.9" fill={color} />
                   <circle cx="8" cy="4" r="0.8" fill={color} />
                   <circle cx="4" cy="8" r="1.1" fill={color} />
@@ -167,7 +174,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
           case 4:
             return (
               <>
-                <pattern id={patternId} width="10" height="10" patternUnits="userSpaceOnUse">
+                <pattern id={patternId} width="10" height="10" patternTransform={transform} patternUnits="userSpaceOnUse">
                   <circle cx="2" cy="2" r="1.1" fill={color} />
                   <circle cx="7" cy="2" r="1.0" fill={color} />
                   <circle cx="3" cy="6" r="1.2" fill={color} />
@@ -181,7 +188,7 @@ export const PatternSwatch: React.FC<PatternSwatchProps> = ({
           case 5:
             return (
               <>
-                <pattern id={patternId} width="8" height="8" patternUnits="userSpaceOnUse">
+                <pattern id={patternId} width="8" height="8" patternTransform={transform} patternUnits="userSpaceOnUse">
                   <circle cx="1" cy="1" r="1.3" fill={color} />
                   <circle cx="5" cy="2" r="1.2" fill={color} />
                   <circle cx="2" cy="5" r="1.4" fill={color} />
