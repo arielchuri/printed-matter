@@ -371,3 +371,145 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   font-size: 0.78rem;
   color: var(--text);
 }
+
+/* ============================================================
+   Printed Matter Dark Mode Tokens (Photostat / Negative Print)
+   Metaphor: Deep Slate Carbon Ground, Warm Bone Ink, Muted Hairlines
+   ============================================================ */
+
+[data-theme="dark"],
+:root.dark {
+  /* ─── 1. Surfaces & Canvas ───────────────────────────────── */
+  --white: #161e1d;                  /* Deep slate carbon ground — negative page stock */
+  --true-white: #0f1414;             /* Deepest recessed ground */
+  --true-black: #ffffff;             /* Inverted pure anchor */
+  --surface: #1c2524;                /* Component plate surface */
+  --surface-muted: #131918;          /* Recessed gutter */
+  --surface-subtle: #222d2c;         /* Secondary plate ground */
+  --surface-knockout: #263332;       /* Raised knockout plate */
+
+  /* ─── 2. Brand Primary & Accent ──────────────────────────── */
+  --primary-050: #1c2524;
+  --primary-100: #222d2c;
+  --primary-200: #3e8ac7;            /* Blueprint luminous blue */
+  --primary-300: #3e8ac7;
+  --primary-400: #3e8ac7;
+  --primary-500: #3e8ac7;            /* Canonical dark blue */
+  --primary-600: #559dd6;
+  --primary-700: #7bb4e2;
+  --primary-800: #a8d0f0;
+  --primary-900: #d8eafc;
+  --primary-muted: #6b7b79;
+  --primary-color: #3e8ac7;
+  --anti-primary-color: #0f1414;
+
+  /* Secondary & Spot Colour */
+  --secondary-color: #e26d62;        /* High-visibility spot coral */
+  --secondary-700: #e26d62;
+  --anti-secondary-color: #0f1414;
+
+  /* ─── 3. Full Printed Spectrum (High-Signal on Dark Plate) ── */
+  --spectrum-red: #e26d62;
+  --spectrum-orange: #f5a93b;
+  --spectrum-yellow: #f6da6f;
+  --spectrum-green: #67d353;
+  --spectrum-aqua: #4cd8c9;
+  --spectrum-blue: #3e8ac7;
+  --spectrum-violet: #9e6cdb;
+
+  /* Semantic Status Aliases */
+  --yellow: #f6da6f;
+  --success-color: #67d353;
+  --warning-color: #f5a93b;
+  --danger-color: #e26d62;
+
+  /* ─── 4. Neutrals (Bone Ink over Slate Carbon) ──────────── */
+  --gray-50:  #222d2c;
+  --gray-100: #2a3635;
+  --gray-200: #384645;
+  --gray-300: #4b5a59;
+  --gray-400: #6b7b79;
+  --gray-500: #8e9e9c;
+  --gray-600: #b2c0be;
+  --gray-700: #d0dcda;
+  --gray-800: #e2eceb;
+  --gray-900: #efece6;               /* Warm bone ink — primary light mark */
+  --base-black: #efece6;
+  --base-black-color: #efece6;
+  --base-placeholder-color: #6b7b79;
+
+  /* Semantic Typography & Hairlines */
+  --text: #efece6;
+  --text-muted: #8e9e9c;
+  --text-subtle: #6b7b79;
+  --border-gray: #384645;            /* 1px dark hairline rule */
+  --border-color: #384645;
+  --border-strong: #efece6;
+  --border-subtle: #2a3635;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --white: #161e1d;
+    --true-white: #0f1414;
+    --true-black: #ffffff;
+    --surface: #1c2524;
+    --surface-muted: #131918;
+    --surface-subtle: #222d2c;
+    --surface-knockout: #263332;
+
+    --primary-050: #1c2524;
+    --primary-100: #222d2c;
+    --primary-200: #3e8ac7;
+    --primary-300: #3e8ac7;
+    --primary-400: #3e8ac7;
+    --primary-500: #3e8ac7;
+    --primary-600: #559dd6;
+    --primary-700: #7bb4e2;
+    --primary-800: #a8d0f0;
+    --primary-900: #d8eafc;
+    --primary-muted: #6b7b79;
+    --primary-color: #3e8ac7;
+    --anti-primary-color: #0f1414;
+
+    --secondary-color: #e26d62;
+    --secondary-700: #e26d62;
+    --anti-secondary-color: #0f1414;
+
+    --spectrum-red: #e26d62;
+    --spectrum-orange: #f5a93b;
+    --spectrum-yellow: #f6da6f;
+    --spectrum-green: #67d353;
+    --spectrum-aqua: #4cd8c9;
+    --spectrum-blue: #3e8ac7;
+    --spectrum-violet: #9e6cdb;
+
+    --yellow: #f6da6f;
+    --success-color: #67d353;
+    --warning-color: #f5a93b;
+    --danger-color: #e26d62;
+
+    --gray-50:  #222d2c;
+    --gray-100: #2a3635;
+    --gray-200: #384645;
+    --gray-300: #4b5a59;
+    --gray-400: #6b7b79;
+    --gray-500: #8e9e9c;
+    --gray-600: #b2c0be;
+    --gray-700: #d0dcda;
+    --gray-800: #e2eceb;
+    --gray-900: #efece6;
+    --base-black: #efece6;
+    --base-black-color: #efece6;
+    --base-placeholder-color: #6b7b79;
+
+    --text: #efece6;
+    --text-muted: #8e9e9c;
+    --text-subtle: #6b7b79;
+    --border-gray: #384645;
+    --border-color: #384645;
+    --border-strong: #efece6;
+    --border-subtle: #2a3635;
+  }
+}
+

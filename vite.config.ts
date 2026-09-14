@@ -10,6 +10,18 @@ export default defineConfig({
       "@tokens": path.resolve(__dirname, "./tokens"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        assetFileNames: (assetInfo) => {
+          if (assetInfo.name && assetInfo.name.endsWith(".css")) {
+            return "printed-matter.css";
+          }
+          return "assets/[name]-[hash][extname]";
+        },
+      },
+    },
+  },
   server: {
     port: 5173,
     open: false,
