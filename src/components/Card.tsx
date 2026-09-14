@@ -18,28 +18,27 @@ export const Card: React.FC<CardProps> = ({
   ...props
 }) => {
   const surfaceStyles = {
-    paper: "bg-[#EFECE6]",
-    knockout: "bg-[#FFFFFF]",
-    subtle: "bg-[#DFDDD7]",
+    paper: "bg-[var(--surface)]",
+    knockout: "bg-[var(--gray-50)]",
+    subtle: "bg-[var(--gray-100)]",
   };
 
   return (
     <div
       className={clsx(
-        "border border-[#222D2C] flex flex-col relative",
+        "flex flex-col relative",
         surfaceStyles[surface],
         className
       )}
       style={{
         borderRadius: 0,
-        boxShadow: "1px 1px 1px 0 rgba(128, 128, 128, 0.25)",
       }}
       {...props}
     >
       {(title || badge || actions) && (
-        <div className="flex items-center justify-between px-4 py-2.5 border-b border-[#222D2C]/20">
+        <div className="flex items-center justify-between px-4 py-2.5 border-b border-[var(--border-gray)]/20">
           <div className="flex items-center gap-2">
-            {title && <span className="font-bold text-sm text-[#222D2C]">{title}</span>}
+            {title && <span className="font-bold text-sm text-[var(--text)]">{title}</span>}
             {badge}
           </div>
           {actions && <div className="flex items-center gap-2">{actions}</div>}

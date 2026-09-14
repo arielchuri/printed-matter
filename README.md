@@ -10,8 +10,8 @@ Originally crafted inside `mercury-geosight`, Printed Matter is now a **standalo
 
 ## 🌟 Key Features
 
-- 📜 **Physical Print Aesthetic**: Warm xerox stock (`#EFECE6`), slate ink (`#222D2C`), true white knockout surfaces (`#FFFFFF`).
-- 🔷 **Monochrome Primary Blue**: Single canonical blue (`#1A66A6`). No fake tint ladders — light surfaces are the paper stock showing through.
+- 📜 **Physical Print Aesthetic**: Warm xerox stock (`#EFECE6`), mineral slate ink (`#242220`) with physical paper multiply, true white knockout surfaces (`#FFFFFF`).
+- 🔷 **Monochrome Primary Blue**: Single canonical blue (`#185E96`, paper multiply). No fake tint ladders — light surfaces are the paper stock showing through.
 - 🎯 **7-Color Spot Spectrum**: Red, Orange, Yellow, Green, Aqua, Blue, Violet for high-signal categorical tagging.
 - 📐 **Zero Radius & Flat Geometry**: 0px border radius, 0px box shadows, 1px crisp hairline rules.
 - ⚡ **Interactive Specimen & Doc App**: Full live token cascade inspector, type scale tester, component sandbox, and cartographic chrome preview.

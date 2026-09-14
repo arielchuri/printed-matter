@@ -11,7 +11,7 @@ export const SearchBox = React.forwardRef<HTMLInputElement, SearchBoxProps>(
   ({ className, value, onChange, onClear, isLoading, placeholder = "Search...", ...props }, ref) => {
     return (
       <div className={clsx("relative flex items-center w-full", className)}>
-        <span className="absolute left-3 text-[#5B6360] pointer-events-none flex items-center">
+        <span className="absolute left-3 text-[var(--text-muted)] pointer-events-none flex items-center">
           <Search size={15} />
         </span>
         <input
@@ -20,7 +20,7 @@ export const SearchBox = React.forwardRef<HTMLInputElement, SearchBoxProps>(
           value={value}
           onChange={onChange}
           placeholder={placeholder}
-          className="w-full bg-[#FFFFFF] border border-[#222D2C] text-[#222D2C] text-sm pl-9 pr-8 py-2 font-normal focus:border-[#1A66A6] focus:outline-none"
+          className="w-full bg-[var(--white)] border border-[var(--border-gray)] text-[var(--text)] text-sm pl-9 pr-8 py-2 font-normal focus:border-[var(--primary-500)] focus:outline-none"
           style={{
             borderRadius: 0,
             boxShadow: "1px 1px 1px 0 rgba(128, 128, 128, 0.25)",
@@ -31,7 +31,7 @@ export const SearchBox = React.forwardRef<HTMLInputElement, SearchBoxProps>(
           <button
             type="button"
             onClick={onClear}
-            className="absolute right-2.5 text-[#5B6360] hover:text-[#222D2C] p-0.5 border-none bg-transparent cursor-pointer"
+            className="absolute right-2.5 text-[var(--text-muted)] hover:text-[var(--text)] p-0.5 border-none bg-transparent cursor-pointer"
             title="Clear search"
           >
             <X size={14} />

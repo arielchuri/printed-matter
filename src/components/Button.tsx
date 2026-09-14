@@ -20,17 +20,17 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      primary: "bg-[#1A66A6] text-[#EFECE6] border-none hover:bg-[#145082] active:!bg-[#54C93F] active:!text-white active:!border-[#54C93F]",
-      secondary: "bg-transparent text-[#1A66A6] border border-[#1A66A6] hover:bg-[#1A66A6]/10 active:!bg-[#54C93F] active:!text-white active:!border-[#54C93F]",
-      danger: "bg-[#D35B50] text-white border-none hover:bg-[#b84238] active:!bg-[#54C93F] active:!text-white",
-      ghost: "bg-transparent text-[#222D2C] hover:bg-[#CECDC8]/40 border-none",
+      primary: "bg-[var(--primary-500)] text-[var(--white)] border-none hover:bg-[var(--primary-600)] active:!bg-[var(--success-color)] active:!text-[var(--white)] active:!border-[var(--success-color)]",
+      secondary: "bg-transparent text-[var(--primary-500)] border border-[var(--primary-500)] hover:bg-[var(--primary-500)]/10 active:!bg-[var(--success-color)] active:!text-[var(--white)] active:!border-[var(--success-color)]",
+      danger: "bg-[var(--danger-color)] text-[var(--white)] border-none hover:opacity-90 active:!bg-[var(--success-color)] active:!text-[var(--white)]",
+      ghost: "bg-transparent text-[var(--gray-900)] hover:bg-[var(--gray-200)]/50 border-none",
       "map-control": clsx(
         "w-[32px] h-[32px] p-0 border-none transition-colors",
-        isActive ? "bg-[#1A66A6] text-white" : "bg-[#FFFFFF] text-[#222D2C] hover:bg-[#EFECE6]"
+        isActive ? "bg-[var(--primary-500)] text-[var(--white)]" : "bg-[var(--white)] text-[var(--gray-900)] hover:bg-[var(--gray-100)]"
       ),
     };
 
-    const disabledStyles = disabled ? "!bg-[#CECDC8] !text-[#909390] !border-[#BCBCB8] cursor-not-allowed pointer-events-none" : "cursor-pointer";
+    const disabledStyles = disabled ? "!bg-[var(--gray-200)] !text-[var(--gray-500)] !border-[var(--gray-300)] cursor-not-allowed pointer-events-none" : "cursor-pointer";
 
     return (
       <button

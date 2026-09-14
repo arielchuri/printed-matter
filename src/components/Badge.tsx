@@ -3,7 +3,7 @@ import { clsx } from "clsx";
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: "level" | "status" | "spectrum" | "neutral";
-  color?: "red" | "orange" | "yellow" | "green" | "aqua" | "blue" | "violet" | "gray";
+  color?: "red" | "red-orange" | "orange" | "amber" | "yellow" | "lime" | "green" | "aqua" | "blue" | "indigo" | "violet" | "gray";
   size?: "sm" | "md";
 }
 
@@ -19,9 +19,9 @@ export const Badge: React.FC<BadgeProps> = ({
     return (
       <span
         className={clsx(
-          "inline-flex items-center justify-center font-mono font-bold uppercase tracking-wider",
+          "inline-flex items-center justify-center font-mono font-bold uppercase tracking-wider mix-blend-multiply",
           size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2 py-0.5 text-xs",
-          "bg-[#DFDDD7] text-[#222D2C] border border-[#BCBCB8]",
+          "bg-[var(--gray-100)] text-[var(--gray-900)] border border-[var(--gray-300)]",
           className
         )}
         style={{ borderRadius: 0 }}
@@ -32,21 +32,25 @@ export const Badge: React.FC<BadgeProps> = ({
     );
   }
 
-  const spectrumColors = {
-    red: "bg-[#D35B50]/15 text-[#D35B50] border-[#D35B50]",
-    orange: "bg-[#F39D22]/15 text-[#9e5d00] border-[#F39D22]",
-    yellow: "bg-[#F4D35A]/25 text-[#735c00] border-[#F4D35A]",
-    green: "bg-[#54C93F]/15 text-[#1b6b0e] border-[#54C93F]",
-    aqua: "bg-[#3ABEAE]/15 text-[#006e62] border-[#3ABEAE]",
-    blue: "bg-[#1A66A6]/15 text-[#1A66A6] border-[#1A66A6]",
-    violet: "bg-[#8F57CB]/15 text-[#8F57CB] border-[#8F57CB]",
-    gray: "bg-[#DFDDD7] text-[#222D2C] border-[#BCBCB8]",
+  const spectrumColors: Record<string, string> = {
+    red: "bg-[var(--spectrum-red)]/15 text-[var(--spectrum-red)] border-[var(--spectrum-red)]",
+    "red-orange": "bg-[var(--spectrum-red-orange)]/15 text-[var(--spectrum-red-orange)] border-[var(--spectrum-red-orange)]",
+    orange: "bg-[var(--spectrum-orange)]/15 text-[var(--spectrum-orange)] border-[var(--spectrum-orange)]",
+    amber: "bg-[var(--spectrum-amber)]/20 text-[#855300] border-[var(--spectrum-amber)]",
+    yellow: "bg-[var(--spectrum-yellow)]/25 text-[#735c00] border-[var(--spectrum-yellow)]",
+    lime: "bg-[var(--spectrum-lime)]/20 text-[#546109] border-transparent",
+    green: "bg-[var(--spectrum-green)]/15 text-[var(--spectrum-green)] border-transparent",
+    aqua: "bg-[var(--spectrum-aqua)]/15 text-[var(--spectrum-aqua)] border-transparent",
+    blue: "bg-[var(--spectrum-blue)]/15 text-[var(--spectrum-blue)] border-transparent",
+    indigo: "bg-[var(--spectrum-indigo)]/15 text-[var(--spectrum-indigo)] border-transparent",
+    violet: "bg-[var(--spectrum-violet)]/15 text-[var(--spectrum-violet)] border-transparent",
+    gray: "bg-[var(--gray-100)] text-[var(--gray-900)] border-[var(--gray-300)]",
   };
 
   return (
     <span
       className={clsx(
-        "inline-flex items-center font-mono font-semibold border",
+        "inline-flex items-center font-mono font-semibold mix-blend-multiply border",
         size === "sm" ? "px-1.5 py-0.2 text-[11px]" : "px-2.5 py-0.5 text-xs",
         spectrumColors[color],
         className

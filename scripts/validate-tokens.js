@@ -14,13 +14,13 @@ console.log("Running Printed Matter Design System Validator...\n");
 let errors = 0;
 let warnings = 0;
 
-// Invariant 1: Canvas must be warm paper stock
+// Invariant 1: Canvas must be warm paper stock (Stone 100)
 const paper = PRINTED_MATTER_TOKENS.surfaces.white.value.toUpperCase();
-if (paper !== "#EFECE6") {
-  console.error("FAIL: Canvas paper ground must be #EFECE6, found: " + paper);
+if (paper !== "#F5F5F4") {
+  console.error("FAIL: Canvas paper ground must be #F5F5F4 (Stone 100), found: " + paper);
   errors++;
 } else {
-  console.log("PASS: Canvas ground is canonical Xerox stock #EFECE6");
+  console.log("PASS: Canvas ground is Stone 100 #F5F5F4");
 }
 
 // Invariant 2: Radii must be 0px (except pill)
@@ -41,8 +41,8 @@ for (const [key, item] of Object.entries(PRINTED_MATTER_TOKENS.geometry)) {
 }
 console.log("PASS: Elevation is flat (zero drop shadows)");
 
-// Invariant 4: Contrast check
-const ink = PRINTED_MATTER_TOKENS.neutrals["gray-900"].value;
+// Invariant 4: Contrast check (Stone 800 on Stone 100)
+const ink = PRINTED_MATTER_TOKENS.neutrals["gray-800"].value;
 const ratio = getContrastRatio(ink, paper);
 const grade = getWCAGGrade(ratio);
 if (!grade.aaa) {

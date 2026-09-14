@@ -17,7 +17,7 @@ export interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ tabs, activeId, onChange, className }) => {
   return (
-    <div className={clsx("flex border-b border-[#222D2C] bg-transparent", className)}>
+    <div className={clsx("flex border-b border-[var(--border-gray)] bg-transparent", className)}>
       {tabs.map((tab) => {
         const isActive = tab.id === activeId;
         return (
@@ -27,8 +27,8 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeId, onChange, className 
             className={clsx(
               "px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-none transition-colors",
               isActive
-                ? "bg-[#1A66A6] text-[#EFECE6]"
-                : "bg-transparent text-[#5B6360] hover:text-[#222D2C] hover:bg-[#CECDC8]/30"
+                ? "bg-[var(--primary-500)] text-[var(--white)]"
+                : "bg-transparent text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--gray-200)]/40"
             )}
             style={{ borderRadius: 0, boxShadow: "none" }}
           >
@@ -38,7 +38,7 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeId, onChange, className 
               <span
                 className={clsx(
                   "px-1.5 py-0.2 text-[10px] font-mono",
-                  isActive ? "bg-[#0F3D64] text-white" : "bg-[#DFDDD7] text-[#222D2C]"
+                  isActive ? "bg-[var(--primary-700)] text-[var(--white)]" : "bg-[var(--gray-100)] text-[var(--text)]"
                 )}
               >
                 {tab.count}

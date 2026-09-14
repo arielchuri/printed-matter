@@ -15,31 +15,36 @@ When `#FFFFFF` appears in Printed Matter, it is a **knockout** — an area where
 
 ---
 
-### 2. Ink is Mineral Slate (`#222D2C`), Not Digital Black
-Pure `#000000` on a screen is synthetic and harsh. Printed Matter uses a deep mineral slate ink that feels organic to the paper stock. 
+### 2. Ink is Warm Mineral Slate (`#242220`), Absorbing Paper Warmth via Multiply
+Pure `#000000` on a screen is synthetic and harsh, and cold cyan/slate blacks clash with warm paper. Printed Matter uses a deep warm mineral slate ink that physically absorbs the warmth of the `#EFECE6` stock. 
 
-Hairline rules are drawn with exact `1px solid #222D2C`. When darker contrast is required on technical plates, `--true-black` is deployed with intention.
+All inks and neutrals are derived through physical **multiply blending** on warm xerox paper, ensuring every tone carries the warm unbleached undertones of the press sheet. Hairline rules are drawn with exact `1px solid #242220`. When darker contrast is required on technical plates, `--true-black` is deployed with intention.
 
 ---
 
-### 3. The Single Blue Foundation (`#1A66A6`)
+### 3. The Single Blue Foundation (`#185E96`, Paper Multiply)
 Most design systems invent arbitrary tint scales (e.g. `blue-50`, `blue-100`, `blue-200`... `blue-900`) where each step is a separate, hand-tuned hex. This leads to colour drift and visual clutter.
 
-Printed Matter uses **one primary blue**. Lighter values are not separate blue swatches — they are the **paper stock showing through**. A lighter surface is simply paper (`#EFECE6`).
+Printed Matter uses **one primary blue**, multiplied directly onto the warm paper stock (`#185E96`). Lighter values are not separate blue swatches — they are the **paper stock showing through**. A lighter surface is simply paper (`#EFECE6`).
 
 ---
 
 ### 4. Zero Bevels, Zero Shadows, Zero Radii
 - **No Bevels**: Buttons do not simulate raised plastic keys.
-- **No Shadows**: Paper does not cast drop shadows on itself. Depth is created through hairline borders and typographic hierarchy.
+- **No Shadows**: Paper does not cast drop shadows on itself. Depth is created through hairline borders, typographic hierarchy, and multiply ink densities.
 - **0px Radius**: Print does not round corners. Precision instruments are squared.
 
 ---
 
 ### 5. Interaction as Tactile Press
-When an interactive button or control is pressed (`:active`), it flashes **pure vivid green (`#54C93F`)** while the mouse is down. This provides instant, unmistakable tactile confirmation without requiring artificial spring animations or bouncing physics.
+When an interactive button or control is pressed (`:active`), it flashes **pure vivid green (`#4FBA39`)** while the mouse is down. This provides instant, unmistakable tactile confirmation without requiring artificial spring animations or bouncing physics.
 
 ---
 
 ### 6. Cartographic Isolation Rule
 Brand colors and UI chrome must **never** be used for cartographic data visualizations. Choropleth maps and thematic layers use isolated scientific palettes (e.g. Oranges, Viridis, Magma) so that user interface state is never conflated with geographic reality.
+
+---
+
+### 7. Mechanical Intaglio & Binary Frequency Tones
+Tonal grays and cartographic shading are generated through **mechanical frequency modulation** (line pitch, halftone dot radii, stipple grain dispersion) in Ink Black (`#1C1917` / `var(--gray-900)`) rather than translucent digital alpha. These binary patterns reproduce with 100% fidelity on monochrome print devices and multiply seamlessly with spot color plates.

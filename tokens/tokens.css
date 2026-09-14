@@ -7,74 +7,77 @@
    ============================================================ */
 
 :root {
-  /* ─── 1. Surfaces & Canvas ───────────────────────────────── */
-  --white: #EFECE6;                  /* Warm xerox stock — the primary page ground */
-  --true-white: #FFFFFF;             /* Knockout pure white — strictly for cutouts & readouts */
-  --true-black: #000000;             /* Pure black — high density anchor */
-  --surface: #EFECE6;                /* Default component surface */
-  --surface-muted: #e7e4df;          /* Recessed ground / gutter */
-  --surface-subtle: #dfddd7;         /* Secondary panel ground */
-  --surface-knockout: #FFFFFF;       /* Knockout paper surface */
+  /* ─── 1. Surfaces & Canvas (Ink on Paper Metaphor) ───────── */
+  --white: #F5F5F4;                  /* Stone 100 — the primary page ground (paper white) */
+  --true-white: #F5F5F4;             /* Knockout pure white removed: resolves strictly to warm Stone 100 stock */
+  --true-black: #292524;             /* Stone 800 Ink Black: not glowing digital black #000 */
+  --surface: #F5F5F4;                /* Default component surface (Stone 100 stock) */
+  --surface-muted: #E7E5E4;          /* Stone 200: Recessed warm stone ground / gutter */
+  --surface-subtle: #D6D3D1;         /* Stone 300: Secondary warm stone panel ground */
+  --surface-knockout: #FAFAF9;       /* Stone 50: Clean paper highlight */
 
-  /* ─── 2. Brand Primary & Accent ──────────────────────────── */
-  /* Single Blue: lighter values resolve to paper stock showing through */
-  --primary-050: #EFECE6;            /* Paper ground */
-  --primary-100: #EFECE6;            /* Subtle tint chip */
-  --primary-200: #1a66a6;            /* Primary brand blue */
-  --primary-300: #1a66a6;
-  --primary-400: #1a66a6;
-  --primary-500: #1a66a6;            /* Canonical Printed Matter Blue */
-  --primary-600: #145082;            /* Deepened blue hover */
-  --primary-700: #0f3d64;            /* Accessible link/text */
-  --primary-800: #0a2b47;
-  --primary-900: #061b2c;
-  --primary-muted: #909390;          /* Tonal multiply tone */
-  --primary-color: #1a66a6;
-  --anti-primary-color: #FFFFFF;
+  /* ─── 2. Brand Primary & Accent (Paper Multiply) ─────────── */
+  --primary-050: #F5F5F4;            /* Paper ground (Stone 100) */
+  --primary-100: #F5F5F4;            /* Subtle tint chip (Stone 100) */
+  --primary-200: #4294D7;            /* Itten Blue */
+  --primary-300: #4294D7;
+  --primary-400: #4294D7;
+  --primary-500: #4294D7;            /* Canonical Itten Blue (#4294D7) */
+  --primary-600: #3577B0;            /* Deepened Itten blue hover */
+  --primary-700: #265B8A;            /* Accessible link/text */
+  --primary-800: #1A4164;
+  --primary-900: #0F283E;
+  --primary-muted: #78716C;          /* Stone 500: Tonal warm stone tone */
+  --primary-color: #4294D7;
+  --anti-primary-color: #F5F5F4;
 
-  /* Secondary & Spot Colour */
-  --secondary-color: #d35b50;        /* Printed Matter red — spot ink */
-  --secondary-700: #d35b50;
-  --anti-secondary-color: #FFFFFF;
+  /* Secondary & Spot Colour (Paper Multiply) */
+  --secondary-color: #DB4E46;        /* Printed Matter red — warm spot ink */
+  --secondary-700: #DB4E46;
+  --anti-secondary-color: #F5F5F4;
 
-  /* ─── 3. Full Printed Spectrum (Spot Inks) ────────────────── */
-  --spectrum-red: #d35b50;
-  --spectrum-orange: #f39d22;
-  --spectrum-yellow: #f4d35a;
-  --spectrum-green: #54c93f;
-  --spectrum-aqua: #3abeae;
-  --spectrum-blue: #1a66a6;
-  --spectrum-violet: #8f57cb;
+  /* ─── 3. Full Printed Spectrum (11 Calibrated Press Inks) ─── */
+  --spectrum-red: #E65E59;           /* Pos 0% • Red Swatch */
+  --spectrum-red-orange: #EA7B49;    /* Pos 10% • Spectrum Red-Orange */
+  --spectrum-orange: #ED9235;        /* Pos 20% • Orange Swatch */
+  --spectrum-amber: #EDBC2F;         /* Pos 30% • Spectrum Amber / Warm Gold */
+  --spectrum-yellow: #EDD528;        /* Pos 40% • Yellow Swatch */
+  --spectrum-lime: #BBCA49;          /* Pos 50% • Spectrum Lime */
+  --spectrum-green: #74BE60;         /* Pos 60% • Green Swatch */
+  --spectrum-aqua: #71B197;          /* Pos 70% • Spectrum Aqua / Seafoam */
+  --spectrum-blue: #6EA3BE;          /* Pos 80% • Blue Swatch */
+  --spectrum-indigo: #8E92C6;        /* Pos 90% • Spectrum Indigo / Periwinkle */
+  --spectrum-violet: #A773C4;        /* Pos 100% • Violet Swatch */
 
   /* Semantic Status Aliases */
-  --yellow: #f4d35a;
-  --success-color: #54c93f;
-  --warning-color: #f39d22;
-  --danger-color: #d35b50;
+  --yellow: #EDD528;
+  --success-color: #74BE60;
+  --warning-color: #ED9235;
+  --danger-color: #E65E59;
 
-  /* ─── 4. Derived Neutrals (Paper × Slate Ink Multiplied) ──── */
-  --gray-50:  #e7e4df;
-  --gray-100: #dfddd7;
-  --gray-200: #cecdc8;
-  --gray-300: #bcbcb8;
-  --gray-400: #a1a49f;
-  --gray-500: #909390;
-  --gray-600: #707673;
-  --gray-700: #5b6360;
-  --gray-800: #3e4846;
-  --gray-900: #222d2c;               /* Slate Ink — the primary dark mark */
-  --base-black: #222d2c;
-  --base-black-color: #222d2c;
-  --base-placeholder-color: #909390;
+  /* ─── 4. Derived Neutrals (Tailwind Stone Scale Multiplied) ─── */
+  --gray-50:  #FAFAF9;               /* Stone 50 */
+  --gray-100: #F5F5F4;               /* Stone 100 */
+  --gray-200: #E7E5E4;               /* Stone 200 */
+  --gray-300: #D6D3D1;               /* Stone 300 */
+  --gray-400: #A8A29E;               /* Stone 400 */
+  --gray-500: #78716C;               /* Stone 500 */
+  --gray-600: #57534E;               /* Stone 600 */
+  --gray-700: #44403C;               /* Stone 700 */
+  --gray-800: #292524;               /* Stone 800 */
+  --gray-900: #1C1917;               /* Stone 900 Warm Carbon Ink */
+  --base-black: #292524;             /* Stone 800 Ink Black */
+  --base-black-color: #292524;
+  --base-placeholder-color: #78716C;
 
   /* Semantic Typography & Hairlines */
-  --text: #222d2c;
-  --text-muted: #5b6360;
-  --text-subtle: #909390;
-  --border-gray: #222d2c;            /* Crisp 1px hairline rule */
-  --border-color: #222d2c;
-  --border-strong: #222d2c;
-  --border-subtle: #cecdc8;
+  --text: #292524;                   /* Stone 800 Ink Black */
+  --text-muted: #57534E;             /* Stone 600 */
+  --text-subtle: #78716C;            /* Stone 500 */
+  --border-gray: #292524;            /* Crisp 1px warm stone 800 hairline rule */
+  --border-color: #292524;
+  --border-strong: #292524;
+  --border-subtle: #E7E5E4;
 
   /* ─── 5. Layout & Dimensional Spacing ────────────────────── */
   --nav-header-height: 48px;
@@ -91,6 +94,26 @@
   --space-6: 32px;
   --space-7: 48px;
   --space-8: 64px;
+
+  /* Responsive Width Steps (Extended for 1080p & 2K/4K/Ultrawide Displays) */
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
+  --container-8xl: 90rem;
+  --container-9xl: 108rem;
+  --container-3xl: 120rem;           /* 1920px */
+  --container-4xl: 160rem;           /* 2560px */
+
+  /* Readability & Line Length (Character Count Measure) */
+  --measure-narrow: 45ch;            /* Compact editorial & captions */
+  --measure-optimal: 65ch;           /* Optimal reading measure (45-75ch benchmark) */
+  --measure-wide: 75ch;              /* Extended technical & reference copy */
+  --max-line-length: 65ch;
+
+  /* Column Max-Width Caps & Editorial Flow */
+  --column-max-width-sm: 320px;      /* Narrow ancillary / inspector column */
+  --column-max-width-md: 480px;      /* Standard content / form column */
+  --column-max-width-lg: 640px;      /* Broad editorial / specimen column */
+  --column-max-width: 480px;         /* Default column cap */
 
   /* ─── 6. Geometry & Elevation (Print Rules) ───────────────── */
   /* Print does not round corners — radius is 0 */
@@ -119,14 +142,30 @@
   --base-font-color: var(--text);
 
   /* ─── 8. Interaction & Feedback ──────────────────────────── */
-  --focus-ring: 0 0 0 2px #1a66a6;
+  --focus-ring: 0 0 0 2px #1D5C8A;
   --transition-fast: 0.12s ease;
   --transition: 0.18s cubic-bezier(0.4, 0, 0.2, 1);
-  --disabled-color: #bcbcb8;
+  --disabled-color: #D6D3D1;
+
+  /* ─── 9. Ink & Press Artifact Tokens ──────────────────────── */
+  --ink-squash-rim: 0px;
+  --ink-squash-spread: 10px;
+  --ink-squash-shadow: inset 0 0 8px rgba(0, 0, 0, 0.20), inset 0 0 16px rgba(0, 0, 0, 0.08);
+  --ink-squash-deep: inset 0 0 12px rgba(0, 0, 0, 0.28), inset 0 0 24px rgba(0, 0, 0, 0.12);
+  --ink-squash-subtle: inset 0 0 5px rgba(0, 0, 0, 0.14), inset 0 0 10px rgba(0, 0, 0, 0.05);
+  --ink-squash-heavy: inset 0 0 15px rgba(0, 0, 0, 0.35), inset 0 0 30px rgba(0, 0, 0, 0.15);
+  --misregister-x: 1.5px;
+  --misregister-y: 1.0px;
 
   /* Navbar / Frame */
   --navbar-background-color: var(--primary-color);
   --navbar-font-color: var(--anti-primary-color);
+}
+
+/* ─── Ink Multiply Engine (Physical Print Simulation) ─────── */
+.ink-multiply,
+.ds-ink-multiply {
+  mix-blend-mode: multiply;
 }
 
 /* ─── Global Reset & Typography Baseline ───────────────────── */
@@ -204,6 +243,105 @@ h6, .ds-h6 {
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+}
+
+/* ─── Readability & Editorial Line Length ──────────────────── */
+.ds-reading,
+.max-w-reading {
+  max-width: var(--measure-optimal);
+}
+
+.max-w-reading-sm {
+  max-width: var(--measure-narrow);
+}
+
+.max-w-reading-lg {
+  max-width: var(--measure-wide);
+}
+
+/* ─── Column Caps & Alignment Utilities ────────────────────── */
+.ds-col,
+.ds-column {
+  width: 100%;
+  max-width: var(--column-max-width, 480px);
+}
+
+.ds-col-sm {
+  max-width: var(--column-max-width-sm, 320px);
+}
+
+.ds-col-md {
+  max-width: var(--column-max-width-md, 480px);
+}
+
+.ds-col-lg {
+  max-width: var(--column-max-width-lg, 640px);
+}
+
+/* Column Alignment: Flush Left (Default), Centered, Flush Right */
+.ds-col-left,
+.col-flush-left {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+.ds-col-center,
+.col-center {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.ds-col-right,
+.col-flush-right {
+  margin-left: auto;
+  margin-right: 0;
+}
+
+/* ─── Ink & Press Artifact Utilities ────────────────────────── */
+.ink-multiply,
+.mix-multiply {
+  mix-blend-mode: multiply;
+}
+
+.ink-squash {
+  box-shadow: var(--ink-squash-shadow);
+}
+
+.ink-squash-deep {
+  box-shadow: var(--ink-squash-deep);
+}
+
+.ink-squash-heavy {
+  box-shadow: var(--ink-squash-heavy);
+}
+
+.ink-squash-subtle {
+  box-shadow: var(--ink-squash-subtle);
+}
+
+.ink-squash-color {
+  box-shadow: inset 0 0 8px currentColor, inset 0 0 16px rgba(0, 0, 0, 0.12);
+}
+
+.ink-squash-text {
+  text-shadow: 0 0 1.5px rgba(0, 0, 0, 0.4), 0 0 4px rgba(0, 0, 0, 0.18);
+}
+
+.ink-squash-text-subtle {
+  text-shadow: 0 0 1px rgba(0, 0, 0, 0.25), 0 0 2.5px rgba(0, 0, 0, 0.1);
+}
+
+.ink-misregister-base {
+  position: relative;
+  isolation: isolate;
+}
+
+.ink-misregister-shift {
+  position: absolute;
+  inset: 0;
+  transform: translate(var(--misregister-x, 1.5px), var(--misregister-y, 1.0px));
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
 /* ─── Component Baseline Rules ─────────────────────────────── */
@@ -374,142 +512,233 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
 
 /* ============================================================
    Printed Matter Dark Mode Tokens (Photostat / Negative Print)
-   Metaphor: Deep Slate Carbon Ground, Warm Bone Ink, Muted Hairlines
+/* ============================================================
+   Printed Matter Dark Mode Tokens (Photostat / Negative Print)
+   Metaphor: Deep Stone Ink Black Ground, Warm Paper White Ink, Stone Hairlines
+   Invariant: No pure digital #000000 or #FFFFFF.
    ============================================================ */
 
 [data-theme="dark"],
 :root.dark {
   /* ─── 1. Surfaces & Canvas ───────────────────────────────── */
-  --white: #161e1d;                  /* Deep slate carbon ground — negative page stock */
-  --true-white: #0f1414;             /* Deepest recessed ground */
-  --true-black: #ffffff;             /* Inverted pure anchor */
-  --surface: #1c2524;                /* Component plate surface */
-  --surface-muted: #131918;          /* Recessed gutter */
-  --surface-subtle: #222d2c;         /* Secondary plate ground */
-  --surface-knockout: #263332;       /* Raised knockout plate */
+  --white: #292524;                  /* Stone 800 Ink Black Ground — negative page stock */
+  --true-white: #292524;             /* Inverted surface ground (Stone 800) */
+  --true-black: #F5F5F4;             /* Stone 100 Paper White — inverted primary stroke */
+  --surface: #292524;                /* Stone 800: Component plate surface */
+  --surface-muted: #1C1917;          /* Stone 900: Recessed gutter */
+  --surface-subtle: #44403C;         /* Stone 700: Secondary plate ground */
+  --surface-knockout: #44403C;       /* Stone 700: Knockout card plate */
 
   /* ─── 2. Brand Primary & Accent ──────────────────────────── */
-  --primary-050: #1c2524;
-  --primary-100: #222d2c;
-  --primary-200: #3e8ac7;            /* Blueprint luminous blue */
-  --primary-300: #3e8ac7;
-  --primary-400: #3e8ac7;
-  --primary-500: #3e8ac7;            /* Canonical dark blue */
-  --primary-600: #559dd6;
-  --primary-700: #7bb4e2;
-  --primary-800: #a8d0f0;
-  --primary-900: #d8eafc;
-  --primary-muted: #6b7b79;
-  --primary-color: #3e8ac7;
-  --anti-primary-color: #0f1414;
+  --primary-050: #1C1917;
+  --primary-100: #292524;
+  --primary-200: #4294D7;            /* Itten Blue */
+  --primary-300: #4294D7;
+  --primary-400: #4294D7;
+  --primary-500: #4294D7;            /* Canonical Itten Blue (#4294D7) */
+  --primary-600: #5594BE;
+  --primary-700: #76ABD2;
+  --primary-800: #A2C8E6;
+  --primary-900: #D4E5F5;
+  --primary-muted: #78716C;
+  --primary-color: #4294D7;
+  --anti-primary-color: #F5F5F4;
 
   /* Secondary & Spot Colour */
-  --secondary-color: #e26d62;        /* High-visibility spot coral */
-  --secondary-700: #e26d62;
-  --anti-secondary-color: #0f1414;
+  --secondary-color: #D46A5E;        /* Desaturated spot coral */
+  --secondary-700: #D46A5E;
+  --anti-secondary-color: #292524;
 
-  /* ─── 3. Full Printed Spectrum (High-Signal on Dark Plate) ── */
-  --spectrum-red: #e26d62;
-  --spectrum-orange: #f5a93b;
-  --spectrum-yellow: #f6da6f;
-  --spectrum-green: #67d353;
-  --spectrum-aqua: #4cd8c9;
-  --spectrum-blue: #3e8ac7;
-  --spectrum-violet: #9e6cdb;
+  /* ─── 3. Full Printed Spectrum (11 Calibrated Inks) ── */
+  --spectrum-red: #E65E59;
+  --spectrum-red-orange: #EA7B49;
+  --spectrum-orange: #ED9235;
+  --spectrum-amber: #EDBC2F;
+  --spectrum-yellow: #EDD528;
+  --spectrum-lime: #BBCA49;
+  --spectrum-green: #74BE60;
+  --spectrum-aqua: #71B197;
+  --spectrum-blue: #6EA3BE;
+  --spectrum-indigo: #8E92C6;
+  --spectrum-violet: #A773C4;
 
   /* Semantic Status Aliases */
-  --yellow: #f6da6f;
-  --success-color: #67d353;
-  --warning-color: #f5a93b;
-  --danger-color: #e26d62;
+  --yellow: #EDD528;
+  --success-color: #74BE60;
+  --warning-color: #ED9235;
+  --danger-color: #E65E59;
 
-  /* ─── 4. Neutrals (Bone Ink over Slate Carbon) ──────────── */
-  --gray-50:  #222d2c;
-  --gray-100: #2a3635;
-  --gray-200: #384645;
-  --gray-300: #4b5a59;
-  --gray-400: #6b7b79;
-  --gray-500: #8e9e9c;
-  --gray-600: #b2c0be;
-  --gray-700: #d0dcda;
-  --gray-800: #e2eceb;
-  --gray-900: #efece6;               /* Warm bone ink — primary light mark */
-  --base-black: #efece6;
-  --base-black-color: #efece6;
-  --base-placeholder-color: #6b7b79;
+  /* ─── 4. Neutrals (Paper White Ink over Stone Ink Black) ─── */
+  --gray-50:  #292524;               /* Stone 800 */
+  --gray-100: #44403C;               /* Stone 700 */
+  --gray-200: #57534E;               /* Stone 600 */
+  --gray-300: #78716C;               /* Stone 500 */
+  --gray-400: #A8A29E;               /* Stone 400 */
+  --gray-500: #D6D3D1;               /* Stone 300 */
+  --gray-600: #E7E5E4;               /* Stone 200 */
+  --gray-700: #F5F5F4;               /* Stone 100 */
+  --gray-800: #FAFAF9;               /* Stone 50 */
+  --gray-900: #F5F5F4;               /* Stone 100 Paper White — primary light mark */
+  --base-black: #F5F5F4;
+  --base-black-color: #F5F5F4;
+  --base-placeholder-color: #A8A29E;
 
   /* Semantic Typography & Hairlines */
-  --text: #efece6;
-  --text-muted: #8e9e9c;
-  --text-subtle: #6b7b79;
-  --border-gray: #384645;            /* 1px dark hairline rule */
-  --border-color: #384645;
-  --border-strong: #efece6;
-  --border-subtle: #2a3635;
+  --text: #F5F5F4;                   /* Stone 100 paper white text */
+  --text-muted: #D6D3D1;
+  --text-subtle: #A8A29E;
+  --border-gray: #44403C;            /* Stone 700 1px dark hairline rule */
+  --border-color: #44403C;
+  --border-strong: #F5F5F4;
+  --border-subtle: #292524;
+}
+
+/* ============================================================
+   Printed Matter Stone-400 Midtone Ground Mode
+   Metaphor: Stone-400 Warm Concrete / Paper Board Substrate
+   ============================================================ */
+
+[data-theme="stone"],
+:root.stone {
+  /* ─── 1. Surfaces & Canvas ───────────────────────────────── */
+  --white: #A8A29E;                  /* Stone 400 Ground */
+  --true-white: #A8A29E;
+  --true-black: #292524;             /* Stone 800 Ink Black */
+  --surface: #A8A29E;                /* Component plate surface */
+  --surface-muted: #958F8B;          /* Recessed slightly deeper stone gutter */
+  --surface-subtle: #89837F;         /* Secondary panel ground */
+  --surface-knockout: #D6D3D1;       /* Stone 300 highlight */
+
+  /* ─── 2. Brand Primary & Accent ──────────────────────────── */
+  --primary-050: #A8A29E;
+  --primary-100: #958F8B;
+  --primary-200: #4294D7;
+  --primary-300: #4294D7;
+  --primary-400: #4294D7;
+  --primary-500: #4294D7;            /* Canonical Itten Blue */
+  --primary-600: #3577B0;
+  --primary-700: #265B8A;
+  --primary-800: #1A4164;
+  --primary-900: #0F283E;
+  --primary-muted: #57534E;
+  --primary-color: #4294D7;
+  --anti-primary-color: #F5F5F4;
+
+  /* Secondary & Spot Colour */
+  --secondary-color: #DB4E46;
+  --secondary-700: #DB4E46;
+  --anti-secondary-color: #F5F5F4;
+
+  /* ─── 3. Full Printed Spectrum ───────────────────────────── */
+  --spectrum-red: #E65E59;
+  --spectrum-red-orange: #EA7B49;
+  --spectrum-orange: #ED9235;
+  --spectrum-amber: #EDBC2F;
+  --spectrum-yellow: #EDD528;
+  --spectrum-lime: #BBCA49;
+  --spectrum-green: #74BE60;
+  --spectrum-aqua: #71B197;
+  --spectrum-blue: #6EA3BE;
+  --spectrum-indigo: #8E92C6;
+  --spectrum-violet: #A773C4;
+
+  /* Semantic Status Aliases */
+  --yellow: #EDD528;
+  --success-color: #74BE60;
+  --warning-color: #ED9235;
+  --danger-color: #E65E59;
+
+  /* ─── 4. Neutrals ────────────────────────────────────────── */
+  --gray-50:  #FAFAF9;
+  --gray-100: #F5F5F4;
+  --gray-200: #E7E5E4;
+  --gray-300: #D6D3D1;
+  --gray-400: #A8A29E;
+  --gray-500: #78716C;
+  --gray-600: #57534E;
+  --gray-700: #44403C;
+  --gray-800: #292524;
+  --gray-900: #1C1917;
+  --base-black: #292524;
+  --base-black-color: #292524;
+  --base-placeholder-color: #44403C;
+
+  /* Semantic Typography & Hairlines */
+  --text: #292524;                   /* Stone 800 Ink Black text for optimal contrast on stone-400 */
+  --text-muted: #44403C;
+  --text-subtle: #57534E;
+  --border-gray: #292524;            /* Crisp dark stone 800 hairline rule */
+  --border-color: #292524;
+  --border-strong: #292524;
+  --border-subtle: #78716C;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --white: #161e1d;
-    --true-white: #0f1414;
-    --true-black: #ffffff;
-    --surface: #1c2524;
-    --surface-muted: #131918;
-    --surface-subtle: #222d2c;
-    --surface-knockout: #263332;
+  :root:not([data-theme="light"]):not([data-theme="stone"]) {
+    --white: #292524;
+    --true-white: #292524;
+    --true-black: #F5F5F4;
+    --surface: #292524;
+    --surface-muted: #1C1917;
+    --surface-subtle: #44403C;
+    --surface-knockout: #44403C;
 
-    --primary-050: #1c2524;
-    --primary-100: #222d2c;
-    --primary-200: #3e8ac7;
-    --primary-300: #3e8ac7;
-    --primary-400: #3e8ac7;
-    --primary-500: #3e8ac7;
-    --primary-600: #559dd6;
-    --primary-700: #7bb4e2;
-    --primary-800: #a8d0f0;
-    --primary-900: #d8eafc;
-    --primary-muted: #6b7b79;
-    --primary-color: #3e8ac7;
-    --anti-primary-color: #0f1414;
+    --primary-050: #1C1917;
+    --primary-100: #292524;
+    --primary-200: #4294D7;
+    --primary-300: #4294D7;
+    --primary-400: #4294D7;
+    --primary-500: #4294D7;
+    --primary-600: #5594BE;
+    --primary-700: #76ABD2;
+    --primary-800: #A2C8E6;
+    --primary-900: #D4E5F5;
+    --primary-muted: #78716C;
+    --primary-color: #4294D7;
+    --anti-primary-color: #F5F5F4;
 
-    --secondary-color: #e26d62;
-    --secondary-700: #e26d62;
-    --anti-secondary-color: #0f1414;
+    --secondary-color: #D46A5E;
+    --secondary-700: #D46A5E;
+    --anti-secondary-color: #292524;
 
-    --spectrum-red: #e26d62;
-    --spectrum-orange: #f5a93b;
-    --spectrum-yellow: #f6da6f;
-    --spectrum-green: #67d353;
-    --spectrum-aqua: #4cd8c9;
-    --spectrum-blue: #3e8ac7;
-    --spectrum-violet: #9e6cdb;
+    --spectrum-red: #E65E59;
+    --spectrum-red-orange: #EA7B49;
+    --spectrum-orange: #ED9235;
+    --spectrum-amber: #EDBC2F;
+    --spectrum-yellow: #EDD528;
+    --spectrum-lime: #BBCA49;
+    --spectrum-green: #74BE60;
+    --spectrum-aqua: #71B197;
+    --spectrum-blue: #6EA3BE;
+    --spectrum-indigo: #8E92C6;
+    --spectrum-violet: #A773C4;
 
-    --yellow: #f6da6f;
-    --success-color: #67d353;
-    --warning-color: #f5a93b;
-    --danger-color: #e26d62;
+    --yellow: #EDD528;
+    --success-color: #74BE60;
+    --warning-color: #ED9235;
+    --danger-color: #E65E59;
 
-    --gray-50:  #222d2c;
-    --gray-100: #2a3635;
-    --gray-200: #384645;
-    --gray-300: #4b5a59;
-    --gray-400: #6b7b79;
-    --gray-500: #8e9e9c;
-    --gray-600: #b2c0be;
-    --gray-700: #d0dcda;
-    --gray-800: #e2eceb;
-    --gray-900: #efece6;
-    --base-black: #efece6;
-    --base-black-color: #efece6;
-    --base-placeholder-color: #6b7b79;
+    --gray-50:  #292524;
+    --gray-100: #44403C;
+    --gray-200: #57534E;
+    --gray-300: #78716C;
+    --gray-400: #A8A29E;
+    --gray-500: #D6D3D1;
+    --gray-600: #E7E5E4;
+    --gray-700: #F5F5F4;
+    --gray-800: #FAFAF9;
+    --gray-900: #F5F5F4;
+    --base-black: #F5F5F4;
+    --base-black-color: #F5F5F4;
+    --base-placeholder-color: #A8A29E;
 
-    --text: #efece6;
-    --text-muted: #8e9e9c;
-    --text-subtle: #6b7b79;
-    --border-gray: #384645;
-    --border-color: #384645;
-    --border-strong: #efece6;
-    --border-subtle: #2a3635;
+    --text: #F5F5F4;
+    --text-muted: #D6D3D1;
+    --text-subtle: #A8A29E;
+    --border-gray: #44403C;
+    --border-color: #44403C;
+    --border-strong: #F5F5F4;
+    --border-subtle: #292524;
   }
 }
 

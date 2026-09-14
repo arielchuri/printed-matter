@@ -14,16 +14,25 @@ export interface ColorChipProps {
 export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, description }) => {
   const [copied, setCopied] = useState(false);
   const [computedVal, setComputedVal] = useState(value);
+  const [paperGround, setPaperGround] = useState("#F5F5F4");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const live = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
-      if (live) setComputedVal(live);
-    }
+    const updateLive = () => {
+      if (typeof window !== "undefined") {
+        const live = getComputedStyle(document.documentElement).getPropertyValue(token).trim();
+        if (live) setComputedVal(live);
+        const liveGround = getComputedStyle(document.documentElement).getPropertyValue("--white").trim();
+        if (liveGround) setPaperGround(liveGround);
+      }
+    };
+    updateLive();
+
+    const observer = new MutationObserver(updateLive);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme", "class"] });
+    return () => observer.disconnect();
   }, [token]);
 
   const hexShown = computedVal || value;
-  const paperGround = "#EFECE6";
   const contrastWithPaper = getContrastRatio(hexShown, paperGround);
   const wcag = getWCAGGrade(contrastWithPaper);
   const isLightGround = isLight(hexShown);
@@ -37,8 +46,8 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
   return (
     <div
       onClick={handleCopy}
-      className="flex flex-col border border-[#222D2C] bg-[#FFFFFF] cursor-pointer hover:translate-y-[-2px] transition-transform group relative"
-      style={{ borderRadius: 0, boxShadow: "1px 1px 1px 0 rgba(128, 128, 128, 0.25)" }}
+      className="flex flex-col bg-[var(--white)] cursor-pointer hover:translate-y-[-2px] transition-transform group relative"
+      style={{ borderRadius: 0 }}
     >
       <div
         className="h-20 w-full flex items-end justify-between p-2 relative"
@@ -47,7 +56,7 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
         <span
           className={clsx(
             "font-mono text-xs font-bold px-1.5 py-0.5",
-            isLightGround ? "text-[#222D2C] bg-white/70" : "text-white bg-black/50"
+            isLightGround ? "text-[#292524] bg-[#F5F5F4]/85" : "text-[#F5F5F4] bg-[#292524]/75"
           )}
         >
           {hexShown}
@@ -60,19 +69,19 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
       <div className="p-3 flex flex-col justify-between flex-1">
         <div>
           <div className="flex items-center justify-between">
-            <span className="font-bold text-xs text-[#222D2C]">{name}</span>
+            <span className="font-bold text-xs text-[var(--text)]">{name}</span>
             {copied ? (
-              <span className="text-[10px] text-[#54C93F] font-bold flex items-center gap-0.5">
+              <span className="text-[10px] text-[var(--success-color)] font-bold flex items-center gap-0.5">
                 <Check size={12} /> COPIED
               </span>
             ) : (
-              <Copy size={12} className="text-[#909390] group-hover:text-[#222D2C]" />
+              <Copy size={12} className="text-[var(--text-subtle)] group-hover:text-[var(--text)]" />
             )}
           </div>
-          <span className="font-mono text-[11px] text-[#1A66A6] mt-0.5 block">{token}</span>
+          <span className="font-mono text-[11px] text-[var(--primary-500)] mt-0.5 block">{token}</span>
         </div>
         {description && (
-          <p className="text-[11px] text-[#5B6360] mt-2 line-clamp-2 leading-tight">{description}</p>
+          <p className="text-[11px] text-[var(--text-muted)] mt-2 line-clamp-2 leading-tight">{description}</p>
         )}
       </div>
     </div>

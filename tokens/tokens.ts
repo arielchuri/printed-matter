@@ -7,175 +7,183 @@ export interface TokenItem {
   name: string;
   cssVar: string;
   value: string;
-  category: "surface" | "primary" | "spectrum" | "status" | "neutral" | "typography" | "spacing" | "geometry";
+  category: "surface" | "primary" | "spectrum" | "status" | "neutral" | "typography" | "spacing" | "geometry" | "layout";
   description?: string;
 }
 
 export const PRINTED_MATTER_TOKENS = {
   "surfaces": {
     "white": {
-      "value": "#EFECE6",
-      "description": "Warm xerox stock — the primary page ground"
-    },
-    "true-white": {
-      "value": "#FFFFFF",
-      "description": "Knockout pure white — strictly for cutouts & data readouts"
-    },
-    "true-black": {
-      "value": "#000000",
-      "description": "Pure black — deepest contrast anchor"
+      "value": "#F5F5F4",
+      "description": "Stone 100 — the primary page ground (paper white)"
     },
     "surface": {
-      "value": "#EFECE6",
-      "description": "Default component surface"
+      "value": "#F5F5F4",
+      "description": "Default component surface (Stone 100)"
     },
     "surface-muted": {
-      "value": "#E7E4DF",
-      "description": "Recessed ground / gutter"
+      "value": "#E7E5E4",
+      "description": "Recessed warm stone ground / gutter (Stone 200)"
     },
     "surface-subtle": {
-      "value": "#DFDDD7",
-      "description": "Secondary panel ground"
+      "value": "#D6D3D1",
+      "description": "Secondary warm stone panel ground (Stone 300)"
     }
   },
   "primary": {
     "primary-050": {
-      "value": "#EFECE6",
-      "description": "Paper ground alias"
+      "value": "#F5F5F4",
+      "description": "Paper ground alias (Stone 100)"
     },
     "primary-100": {
-      "value": "#EFECE6",
-      "description": "Paper ground alias"
+      "value": "#F5F5F4",
+      "description": "Paper ground alias (Stone 100)"
     },
     "primary-200": {
-      "value": "#1A66A6",
-      "description": "Brand blue"
+      "value": "#4294D7",
+      "description": "Itten Blue"
     },
     "primary-300": {
-      "value": "#1A66A6",
-      "description": "Brand blue"
+      "value": "#4294D7",
+      "description": "Itten Blue"
     },
     "primary-400": {
-      "value": "#1A66A6",
-      "description": "Brand blue"
+      "value": "#4294D7",
+      "description": "Itten Blue"
     },
     "primary-500": {
-      "value": "#1A66A6",
-      "description": "Canonical Printed Matter Blue"
+      "value": "#4294D7",
+      "description": "Canonical Itten Blue (#4294D7)"
     },
     "primary-600": {
-      "value": "#145082",
-      "description": "Hover / pressed tone"
+      "value": "#3577B0",
+      "description": "Deepened Itten blue hover"
     },
     "primary-700": {
-      "value": "#0F3D64",
+      "value": "#265B8A",
       "description": "Accessible link text"
     },
     "primary-800": {
-      "value": "#0A2B47",
+      "value": "#1A4164",
       "description": "High contrast header"
     },
     "primary-900": {
-      "value": "#061B2C",
-      "description": "Deep navy mark"
+      "value": "#0F283E",
+      "description": "Deep Itten navy mark"
     },
     "primary-muted": {
-      "value": "#909390",
-      "description": "Tonal multiply tone"
+      "value": "#78716C",
+      "description": "Tonal warm multiply stone tone"
     },
     "primary-color": {
-      "value": "#1A66A6",
-      "description": "Primary brand alias"
+      "value": "#4294D7",
+      "description": "Itten Blue"
     }
   },
   "spectrum": {
     "spectrum-red": {
-      "value": "#D35B50",
-      "description": "Printed Matter spot red"
+      "value": "#E65E59",
+      "description": "Pos 0% • Red Swatch (#E65E59)"
+    },
+    "spectrum-red-orange": {
+      "value": "#EA7B49",
+      "description": "Pos 10% • Spectrum Red-Orange (#EA7B49)"
     },
     "spectrum-orange": {
-      "value": "#F39D22",
-      "description": "Printed Matter spot orange"
+      "value": "#ED9235",
+      "description": "Pos 20% • Orange Swatch (#ED9235)"
+    },
+    "spectrum-amber": {
+      "value": "#EDBC2F",
+      "description": "Pos 30% • Spectrum Amber / Warm Gold (#EDBC2F)"
     },
     "spectrum-yellow": {
-      "value": "#F4D35A",
-      "description": "Printed Matter spot yellow"
+      "value": "#EDD528",
+      "description": "Pos 40% • Yellow Swatch (#EDD528)"
+    },
+    "spectrum-lime": {
+      "value": "#BBCA49",
+      "description": "Pos 50% • Spectrum Lime (#BBCA49)"
     },
     "spectrum-green": {
-      "value": "#54C93F",
-      "description": "Printed Matter spot green"
+      "value": "#74BE60",
+      "description": "Pos 60% • Green Swatch (#74BE60)"
     },
     "spectrum-aqua": {
-      "value": "#3ABEAE",
-      "description": "Printed Matter spot aqua"
+      "value": "#71B197",
+      "description": "Pos 70% • Spectrum Aqua / Seafoam (#71B197)"
     },
     "spectrum-blue": {
-      "value": "#1A66A6",
-      "description": "Printed Matter spot blue"
+      "value": "#6EA3BE",
+      "description": "Pos 80% • Blue Swatch (#6EA3BE)"
+    },
+    "spectrum-indigo": {
+      "value": "#8E92C6",
+      "description": "Pos 90% • Spectrum Indigo / Periwinkle (#8E92C6)"
     },
     "spectrum-violet": {
-      "value": "#8F57CB",
-      "description": "Printed Matter spot violet"
+      "value": "#A773C4",
+      "description": "Pos 100% • Violet Swatch (#A773C4)"
     }
   },
   "status": {
     "success-color": {
-      "value": "#54C93F",
-      "description": "Success / positive indicator"
+      "value": "#74BE60",
+      "description": "Success / positive indicator (Green Swatch #74BE60)"
     },
     "warning-color": {
-      "value": "#F39D22",
-      "description": "Warning indicator"
+      "value": "#ED9235",
+      "description": "Warning indicator (Orange Swatch #ED9235)"
     },
     "danger-color": {
-      "value": "#D35B50",
-      "description": "Danger / error indicator"
+      "value": "#E65E59",
+      "description": "Danger / error indicator (Red Swatch #E65E59)"
     },
     "yellow": {
-      "value": "#F4D35A",
-      "description": "Notice indicator"
+      "value": "#EDD528",
+      "description": "Notice indicator (Yellow Swatch #EDD528)"
     }
   },
   "neutrals": {
     "gray-50": {
-      "value": "#E7E4DF",
-      "description": "Derived neutral 50 (Paper x Ink multiply)"
+      "value": "#FAFAF9",
+      "description": "Stone 50 (Warm unprinted ground highlight)"
     },
     "gray-100": {
-      "value": "#DFDDD7",
-      "description": "Derived neutral 100"
+      "value": "#F5F5F4",
+      "description": "Stone 100 (Warm paper tint)"
     },
     "gray-200": {
-      "value": "#CECDC8",
-      "description": "Derived neutral 200"
+      "value": "#E7E5E4",
+      "description": "Stone 200 (Warm hairline gutter rule)"
     },
     "gray-300": {
-      "value": "#BCBCB8",
-      "description": "Derived neutral 300"
+      "value": "#D6D3D1",
+      "description": "Stone 300 (Warm disabled hairline)"
     },
     "gray-400": {
-      "value": "#A1A49F",
-      "description": "Derived neutral 400"
+      "value": "#A8A29E",
+      "description": "Stone 400 (Warm midpoint mark)"
     },
     "gray-500": {
-      "value": "#909390",
-      "description": "Derived neutral 500"
+      "value": "#78716C",
+      "description": "Stone 500 (Warm secondary placeholder)"
     },
     "gray-600": {
-      "value": "#707673",
-      "description": "Derived neutral 600"
+      "value": "#57534E",
+      "description": "Stone 600 (Warm technical caption)"
     },
     "gray-700": {
-      "value": "#5B6360",
-      "description": "Derived neutral 700"
+      "value": "#44403C",
+      "description": "Stone 700 (Warm editorial stone ink)"
     },
     "gray-800": {
-      "value": "#3E4846",
-      "description": "Derived neutral 800"
+      "value": "#292524",
+      "description": "Stone 800 (Deep warm stone mark)"
     },
     "gray-900": {
-      "value": "#222D2C",
-      "description": "Slate Ink (Primary dark mark)"
+      "value": "#1C1917",
+      "description": "Stone 900 Warm Carbon Ink (Primary dark mark)"
     }
   },
   "typography": {
@@ -267,49 +275,97 @@ export const PRINTED_MATTER_TOKENS = {
     "border-width-hairline": {
       "value": "1px"
     }
+  },
+  "layout": {
+    "breakpoint-3xl": {
+      "value": "1920px",
+      "description": "Responsive width step 3xl (FHD desktop)"
+    },
+    "breakpoint-4xl": {
+      "value": "2560px",
+      "description": "Responsive width step 4xl (QHD / Ultrawide workstation)"
+    },
+    "container-3xl": {
+      "value": "1920px",
+      "description": "Max container width step 3xl"
+    },
+    "container-4xl": {
+      "value": "2560px",
+      "description": "Max container width step 4xl"
+    },
+    "max-width-reading-sm": {
+      "value": "45ch",
+      "description": "Narrow editorial line length (45 characters)"
+    },
+    "max-width-reading": {
+      "value": "65ch",
+      "description": "Optimal editorial reading measure (65 characters)"
+    },
+    "max-width-reading-lg": {
+      "value": "75ch",
+      "description": "Extended technical reading measure (75 characters)"
+    },
+    "column-max-width-sm": {
+      "value": "320px",
+      "description": "Narrow column max width"
+    },
+    "column-max-width-md": {
+      "value": "480px",
+      "description": "Standard column max width"
+    },
+    "column-max-width-lg": {
+      "value": "640px",
+      "description": "Wide editorial column max width"
+    },
+    "column-max-width": {
+      "value": "480px",
+      "description": "Default column max width cap"
+    }
   }
 } as const;
 
 export const COLOR_SWATCHES: TokenItem[] = [
-  { name: "white", cssVar: "--white", value: "#EFECE6", category: "surface", description: "Warm xerox stock — the primary page ground" },
-  { name: "true-white", cssVar: "--true-white", value: "#FFFFFF", category: "surface", description: "Knockout pure white — strictly for cutouts & data readouts" },
-  { name: "true-black", cssVar: "--true-black", value: "#000000", category: "surface", description: "Pure black — deepest contrast anchor" },
-  { name: "surface", cssVar: "--surface", value: "#EFECE6", category: "surface", description: "Default component surface" },
-  { name: "surface-muted", cssVar: "--surface-muted", value: "#E7E4DF", category: "surface", description: "Recessed ground / gutter" },
-  { name: "surface-subtle", cssVar: "--surface-subtle", value: "#DFDDD7", category: "surface", description: "Secondary panel ground" },
-  { name: "primary-050", cssVar: "--primary-050", value: "#EFECE6", category: "primary", description: "Paper ground alias" },
-  { name: "primary-100", cssVar: "--primary-100", value: "#EFECE6", category: "primary", description: "Paper ground alias" },
-  { name: "primary-200", cssVar: "--primary-200", value: "#1A66A6", category: "primary", description: "Brand blue" },
-  { name: "primary-300", cssVar: "--primary-300", value: "#1A66A6", category: "primary", description: "Brand blue" },
-  { name: "primary-400", cssVar: "--primary-400", value: "#1A66A6", category: "primary", description: "Brand blue" },
-  { name: "primary-500", cssVar: "--primary-500", value: "#1A66A6", category: "primary", description: "Canonical Printed Matter Blue" },
-  { name: "primary-600", cssVar: "--primary-600", value: "#145082", category: "primary", description: "Hover / pressed tone" },
-  { name: "primary-700", cssVar: "--primary-700", value: "#0F3D64", category: "primary", description: "Accessible link text" },
-  { name: "primary-800", cssVar: "--primary-800", value: "#0A2B47", category: "primary", description: "High contrast header" },
-  { name: "primary-900", cssVar: "--primary-900", value: "#061B2C", category: "primary", description: "Deep navy mark" },
-  { name: "primary-muted", cssVar: "--primary-muted", value: "#909390", category: "primary", description: "Tonal multiply tone" },
-  { name: "primary-color", cssVar: "--primary-color", value: "#1A66A6", category: "primary", description: "Primary brand alias" },
-  { name: "spectrum-red", cssVar: "--spectrum-red", value: "#D35B50", category: "spectrum", description: "Printed Matter spot red" },
-  { name: "spectrum-orange", cssVar: "--spectrum-orange", value: "#F39D22", category: "spectrum", description: "Printed Matter spot orange" },
-  { name: "spectrum-yellow", cssVar: "--spectrum-yellow", value: "#F4D35A", category: "spectrum", description: "Printed Matter spot yellow" },
-  { name: "spectrum-green", cssVar: "--spectrum-green", value: "#54C93F", category: "spectrum", description: "Printed Matter spot green" },
-  { name: "spectrum-aqua", cssVar: "--spectrum-aqua", value: "#3ABEAE", category: "spectrum", description: "Printed Matter spot aqua" },
-  { name: "spectrum-blue", cssVar: "--spectrum-blue", value: "#1A66A6", category: "spectrum", description: "Printed Matter spot blue" },
-  { name: "spectrum-violet", cssVar: "--spectrum-violet", value: "#8F57CB", category: "spectrum", description: "Printed Matter spot violet" },
-  { name: "success-color", cssVar: "--success-color", value: "#54C93F", category: "status", description: "Success / positive indicator" },
-  { name: "warning-color", cssVar: "--warning-color", value: "#F39D22", category: "status", description: "Warning indicator" },
-  { name: "danger-color", cssVar: "--danger-color", value: "#D35B50", category: "status", description: "Danger / error indicator" },
-  { name: "yellow", cssVar: "--yellow", value: "#F4D35A", category: "status", description: "Notice indicator" },
-  { name: "gray-50", cssVar: "--gray-50", value: "#E7E4DF", category: "neutral", description: "Derived neutral 50 (Paper x Ink multiply)" },
-  { name: "gray-100", cssVar: "--gray-100", value: "#DFDDD7", category: "neutral", description: "Derived neutral 100" },
-  { name: "gray-200", cssVar: "--gray-200", value: "#CECDC8", category: "neutral", description: "Derived neutral 200" },
-  { name: "gray-300", cssVar: "--gray-300", value: "#BCBCB8", category: "neutral", description: "Derived neutral 300" },
-  { name: "gray-400", cssVar: "--gray-400", value: "#A1A49F", category: "neutral", description: "Derived neutral 400" },
-  { name: "gray-500", cssVar: "--gray-500", value: "#909390", category: "neutral", description: "Derived neutral 500" },
-  { name: "gray-600", cssVar: "--gray-600", value: "#707673", category: "neutral", description: "Derived neutral 600" },
-  { name: "gray-700", cssVar: "--gray-700", value: "#5B6360", category: "neutral", description: "Derived neutral 700" },
-  { name: "gray-800", cssVar: "--gray-800", value: "#3E4846", category: "neutral", description: "Derived neutral 800" },
-  { name: "gray-900", cssVar: "--gray-900", value: "#222D2C", category: "neutral", description: "Slate Ink (Primary dark mark)" },
+  { name: "white", cssVar: "--white", value: "#F5F5F4", category: "surface", description: "Stone 100 — the primary page ground (paper white)" },
+  { name: "surface", cssVar: "--surface", value: "#F5F5F4", category: "surface", description: "Default component surface (Stone 100)" },
+  { name: "surface-muted", cssVar: "--surface-muted", value: "#E7E5E4", category: "surface", description: "Recessed warm stone ground / gutter (Stone 200)" },
+  { name: "surface-subtle", cssVar: "--surface-subtle", value: "#D6D3D1", category: "surface", description: "Secondary warm stone panel ground (Stone 300)" },
+  { name: "primary-050", cssVar: "--primary-050", value: "#F5F5F4", category: "primary", description: "Paper ground alias (Stone 100)" },
+  { name: "primary-100", cssVar: "--primary-100", value: "#F5F5F4", category: "primary", description: "Paper ground alias (Stone 100)" },
+  { name: "primary-200", cssVar: "--primary-200", value: "#4294D7", category: "primary", description: "Itten Blue" },
+  { name: "primary-300", cssVar: "--primary-300", value: "#4294D7", category: "primary", description: "Itten Blue" },
+  { name: "primary-400", cssVar: "--primary-400", value: "#4294D7", category: "primary", description: "Itten Blue" },
+  { name: "primary-500", cssVar: "--primary-500", value: "#4294D7", category: "primary", description: "Canonical Itten Blue (#4294D7)" },
+  { name: "primary-600", cssVar: "--primary-600", value: "#3577B0", category: "primary", description: "Deepened Itten blue hover" },
+  { name: "primary-700", cssVar: "--primary-700", value: "#265B8A", category: "primary", description: "Accessible link text" },
+  { name: "primary-800", cssVar: "--primary-800", value: "#1A4164", category: "primary", description: "High contrast header" },
+  { name: "primary-900", cssVar: "--primary-900", value: "#0F283E", category: "primary", description: "Deep Itten navy mark" },
+  { name: "primary-muted", cssVar: "--primary-muted", value: "#78716C", category: "primary", description: "Tonal warm multiply stone tone" },
+  { name: "primary-color", cssVar: "--primary-color", value: "#4294D7", category: "primary", description: "Itten Blue" },
+  { name: "spectrum-red", cssVar: "--spectrum-red", value: "#E65E59", category: "spectrum", description: "Pos 0% • Red Swatch (#E65E59)" },
+  { name: "spectrum-red-orange", cssVar: "--spectrum-red-orange", value: "#EA7B49", category: "spectrum", description: "Pos 10% • Spectrum Red-Orange (#EA7B49)" },
+  { name: "spectrum-orange", cssVar: "--spectrum-orange", value: "#ED9235", category: "spectrum", description: "Pos 20% • Orange Swatch (#ED9235)" },
+  { name: "spectrum-amber", cssVar: "--spectrum-amber", value: "#EDBC2F", category: "spectrum", description: "Pos 30% • Spectrum Amber / Warm Gold (#EDBC2F)" },
+  { name: "spectrum-yellow", cssVar: "--spectrum-yellow", value: "#EDD528", category: "spectrum", description: "Pos 40% • Yellow Swatch (#EDD528)" },
+  { name: "spectrum-lime", cssVar: "--spectrum-lime", value: "#BBCA49", category: "spectrum", description: "Pos 50% • Spectrum Lime (#BBCA49)" },
+  { name: "spectrum-green", cssVar: "--spectrum-green", value: "#74BE60", category: "spectrum", description: "Pos 60% • Green Swatch (#74BE60)" },
+  { name: "spectrum-aqua", cssVar: "--spectrum-aqua", value: "#71B197", category: "spectrum", description: "Pos 70% • Spectrum Aqua / Seafoam (#71B197)" },
+  { name: "spectrum-blue", cssVar: "--spectrum-blue", value: "#6EA3BE", category: "spectrum", description: "Pos 80% • Blue Swatch (#6EA3BE)" },
+  { name: "spectrum-indigo", cssVar: "--spectrum-indigo", value: "#8E92C6", category: "spectrum", description: "Pos 90% • Spectrum Indigo / Periwinkle (#8E92C6)" },
+  { name: "spectrum-violet", cssVar: "--spectrum-violet", value: "#A773C4", category: "spectrum", description: "Pos 100% • Violet Swatch (#A773C4)" },
+  { name: "success-color", cssVar: "--success-color", value: "#74BE60", category: "status", description: "Success / positive indicator (Green Swatch #74BE60)" },
+  { name: "warning-color", cssVar: "--warning-color", value: "#ED9235", category: "status", description: "Warning indicator (Orange Swatch #ED9235)" },
+  { name: "danger-color", cssVar: "--danger-color", value: "#E65E59", category: "status", description: "Danger / error indicator (Red Swatch #E65E59)" },
+  { name: "yellow", cssVar: "--yellow", value: "#EDD528", category: "status", description: "Notice indicator (Yellow Swatch #EDD528)" },
+  { name: "gray-50", cssVar: "--gray-50", value: "#FAFAF9", category: "neutral", description: "Stone 50 (Warm unprinted ground highlight)" },
+  { name: "gray-100", cssVar: "--gray-100", value: "#F5F5F4", category: "neutral", description: "Stone 100 (Warm paper tint)" },
+  { name: "gray-200", cssVar: "--gray-200", value: "#E7E5E4", category: "neutral", description: "Stone 200 (Warm hairline gutter rule)" },
+  { name: "gray-300", cssVar: "--gray-300", value: "#D6D3D1", category: "neutral", description: "Stone 300 (Warm disabled hairline)" },
+  { name: "gray-400", cssVar: "--gray-400", value: "#A8A29E", category: "neutral", description: "Stone 400 (Warm midpoint mark)" },
+  { name: "gray-500", cssVar: "--gray-500", value: "#78716C", category: "neutral", description: "Stone 500 (Warm secondary placeholder)" },
+  { name: "gray-600", cssVar: "--gray-600", value: "#57534E", category: "neutral", description: "Stone 600 (Warm technical caption)" },
+  { name: "gray-700", cssVar: "--gray-700", value: "#44403C", category: "neutral", description: "Stone 700 (Warm editorial stone ink)" },
+  { name: "gray-800", cssVar: "--gray-800", value: "#292524", category: "neutral", description: "Stone 800 (Deep warm stone mark)" },
+  { name: "gray-900", cssVar: "--gray-900", value: "#1C1917", category: "neutral", description: "Stone 900 Warm Carbon Ink (Primary dark mark)" },
 ];
 
 export function getLuminance(hex: string): number {

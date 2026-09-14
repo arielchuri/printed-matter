@@ -5,19 +5,19 @@ author: Ariel Churi <ariel@sparklelabs.com>
 license: MIT
 description: "An editorial, high-density design system rooted in physical print, technical cartography, and brutalist utility."
 colors:
-  primary: "#1A66A6"
-  secondary: "#D35B50"
-  neutral: "#222D2C"
+  primary: "#185E96"
+  secondary: "#C65448"
+  neutral: "#242220"
   background: "#EFECE6"
   knockout: "#FFFFFF"
   spectrum:
-    red: "#D35B50"
-    orange: "#F39D22"
-    yellow: "#F4D35A"
-    green: "#54C93F"
-    aqua: "#3ABEAE"
-    blue: "#1A66A6"
-    violet: "#8F57CB"
+    red: "#C65448"
+    orange: "#E4911F"
+    yellow: "#E5C351"
+    green: "#4FBA39"
+    aqua: "#36B09D"
+    blue: "#185E96"
+    violet: "#8651B7"
 typography:
   display:
     fontFamily: Inter
@@ -88,11 +88,11 @@ spacing:
 1. **Warm Paper Stock Canvas (`#EFECE6`)**
    The canvas is warm xerox bond, not blinding `#FFFFFF` screen glare. True white (`#FFFFFF`) is treated as a **knockout** — reserved strictly for technical data readouts, search boxes, and high-contrast cutouts.
 
-2. **Slate Ink (`#222D2C`), Never Synthetic Black**
-   Rules and body copy are set in a deep mineral slate ink. Hairlines are crisp `1px solid #222D2C`.
+2. **Warm Mineral Slate Ink (`#242220`), Derived via Paper Multiply**
+   Rules and body copy are set in a deep warm mineral slate ink. Through physical multiply blending against warm xerox paper (`#EFECE6`), all inks absorb the warmth of the unbleached stock rather than looking cold or synthetic. Hairlines are crisp `1px solid #242220`.
 
-3. **Single Blue Foundation (`#1A66A6`)**
-   The primary brand colour is a single, authoritative editorial blue. Lighter tints are not arbitrary pastel hexes; they are the physical paper stock showing through.
+3. **Single Blue Foundation (`#185E96`, Paper Multiply)**
+   The primary brand colour is a single, authoritative editorial blue multiplied onto warm paper stock. Lighter tints are not arbitrary pastel hexes; they are the physical paper stock showing through.
 
 4. **Zero Bevels & Flat Elevation**
    Buttons do not simulate raised keycaps. Cards do not hover on heavy blur drop shadows. Paper does not cast drop shadows on itself. Depth is communicated strictly through hairline rules, ink densities, and clear layout hierarchies.
@@ -115,18 +115,34 @@ spacing:
 - **Body (15px / 400 weight, 1.5 line-height)**: Highly legible, rhythmic editorial text.
 - **Technical Metadata (JetBrains Mono)**: Slashed-zero numeric figures, coordinates, zoom levels, solar time, hex values, and data source citations.
 
+### Max Line Length for Readability (The Measure)
+To prevent cognitive fatigue and maintain rhythmic scanning on expansive screens, editorial and technical content enforces strict typographic measures:
+- **Optimal Reading Measure (`65ch` / `max-w-reading` / `max-w-prose`)**: 65 characters per line—the classic golden standard for comfortable multi-line body reading.
+- **Narrow Measure (`45ch` / `max-w-reading-sm`)**: 45 characters for introductory lead-ins, side notes, callouts, and compact mobile columns.
+- **Extended Measure (`75ch` / `max-w-reading-lg`)**: 75 characters for technical specifications, tabular annotations, and reference text.
+- **Tailwind Typography Plugin Integration**: Configured with custom brutalist ink-on-paper tokens (slate ink headers, paper blockquote backgrounds, JetBrains Mono inline and fenced code blocks, and 1px hairline rules).
+
+---
+
+## Responsive Width Steps
+
+In addition to standard responsive breakpoints (`sm: 640px`, `md: 768px`, `lg: 1024px`, `xl: 1280px`, `2xl: 1536px`), Printed Matter introduces **2 larger steps of responsive width** to support widescreen cartographic workstations and 4K technical displays:
+- **`3xl` (1920px / 120rem)**: Tailored for standard Full HD (1080p) expansive dashboards and split-pane cartography viewports.
+- **`4xl` (2560px / 160rem)**: Tailored for 1440p QHD, 4K, and Ultrawide workstations where multi-panel telemetry and full-sheet technical documents coexist without cramped viewports.
+- **Responsive Max-Widths**: `max-w-8xl` (90rem / 1440px), `max-w-9xl` (108rem / 1728px), `max-w-3xl` (120rem / 1920px), and `max-w-4xl` (160rem / 2560px).
+
 ---
 
 ## Component Invariants & Rules
 
 ### 1. Buttons
-- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary blue fill with paper-white text, or 1px hairline rule with ink text.
-- **Pressed**: When the mouse is down, buttons flash **solid green (`#54C93F`)** with white text.
-- **Disabled**: Neutral grey fill (`#CECDC8`) with muted text (`#909390`).
+- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary blue fill (`#185E96`) with paper-white text, or 1px hairline rule with ink text.
+- **Pressed**: When the mouse is down, buttons flash **solid green (`#4FBA39`)** with white text.
+- **Disabled**: Neutral warm grey fill (`#CAC8C2`) with muted text (`#797773`).
 
 ### 2. Tabs
 - Square corners.
-- Only the **active** tab carries solid blue fill (`#1A66A6`) with paper-white text.
+- Only the **active** tab carries solid blue fill (`#185E96`) with paper-white text.
 - Inactive tabs are transparent with no bottom underline bars.
 
 ### 3. Administrative Level Badges (C, A1, A2, A3)

@@ -15,53 +15,55 @@ const ROOT = path.resolve(__dirname, "..");
 // Raw Token Definitions
 const tokens = {
   surfaces: {
-    "white": { value: "#EFECE6", description: "Warm xerox stock — the primary page ground" },
-    "true-white": { value: "#FFFFFF", description: "Knockout pure white — strictly for cutouts & data readouts" },
-    "true-black": { value: "#000000", description: "Pure black — deepest contrast anchor" },
-    "surface": { value: "#EFECE6", description: "Default component surface" },
-    "surface-muted": { value: "#E7E4DF", description: "Recessed ground / gutter" },
-    "surface-subtle": { value: "#DFDDD7", description: "Secondary panel ground" },
+    "white": { value: "#F5F5F4", description: "Stone 100 — the primary page ground (paper white)" },
+    "surface": { value: "#F5F5F4", description: "Default component surface (Stone 100)" },
+    "surface-muted": { value: "#E7E5E4", description: "Recessed warm stone ground / gutter (Stone 200)" },
+    "surface-subtle": { value: "#D6D3D1", description: "Secondary warm stone panel ground (Stone 300)" },
   },
   primary: {
-    "primary-050": { value: "#EFECE6", description: "Paper ground alias" },
-    "primary-100": { value: "#EFECE6", description: "Paper ground alias" },
-    "primary-200": { value: "#1A66A6", description: "Brand blue" },
-    "primary-300": { value: "#1A66A6", description: "Brand blue" },
-    "primary-400": { value: "#1A66A6", description: "Brand blue" },
-    "primary-500": { value: "#1A66A6", description: "Canonical Printed Matter Blue" },
-    "primary-600": { value: "#145082", description: "Hover / pressed tone" },
-    "primary-700": { value: "#0F3D64", description: "Accessible link text" },
-    "primary-800": { value: "#0A2B47", description: "High contrast header" },
-    "primary-900": { value: "#061B2C", description: "Deep navy mark" },
-    "primary-muted": { value: "#909390", description: "Tonal multiply tone" },
-    "primary-color": { value: "#1A66A6", description: "Primary brand alias" },
+    "primary-050": { value: "#F5F5F4", description: "Paper ground alias (Stone 100)" },
+    "primary-100": { value: "#F5F5F4", description: "Paper ground alias (Stone 100)" },
+    "primary-200": { value: "#4294D7", description: "Itten Blue" },
+    "primary-300": { value: "#4294D7", description: "Itten Blue" },
+    "primary-400": { value: "#4294D7", description: "Itten Blue" },
+    "primary-500": { value: "#4294D7", description: "Canonical Itten Blue (#4294D7)" },
+    "primary-600": { value: "#3577B0", description: "Deepened Itten blue hover" },
+    "primary-700": { value: "#265B8A", description: "Accessible link text" },
+    "primary-800": { value: "#1A4164", description: "High contrast header" },
+    "primary-900": { value: "#0F283E", description: "Deep Itten navy mark" },
+    "primary-muted": { value: "#78716C", description: "Tonal warm multiply stone tone" },
+    "primary-color": { value: "#4294D7", description: "Itten Blue" },
   },
   spectrum: {
-    "spectrum-red": { value: "#D35B50", description: "Printed Matter spot red" },
-    "spectrum-orange": { value: "#F39D22", description: "Printed Matter spot orange" },
-    "spectrum-yellow": { value: "#F4D35A", description: "Printed Matter spot yellow" },
-    "spectrum-green": { value: "#54C93F", description: "Printed Matter spot green" },
-    "spectrum-aqua": { value: "#3ABEAE", description: "Printed Matter spot aqua" },
-    "spectrum-blue": { value: "#1A66A6", description: "Printed Matter spot blue" },
-    "spectrum-violet": { value: "#8F57CB", description: "Printed Matter spot violet" },
+    "spectrum-red": { value: "#E65E59", description: "Pos 0% • Red Swatch (#E65E59)" },
+    "spectrum-red-orange": { value: "#EA7B49", description: "Pos 10% • Spectrum Red-Orange (#EA7B49)" },
+    "spectrum-orange": { value: "#ED9235", description: "Pos 20% • Orange Swatch (#ED9235)" },
+    "spectrum-amber": { value: "#EDBC2F", description: "Pos 30% • Spectrum Amber / Warm Gold (#EDBC2F)" },
+    "spectrum-yellow": { value: "#EDD528", description: "Pos 40% • Yellow Swatch (#EDD528)" },
+    "spectrum-lime": { value: "#BBCA49", description: "Pos 50% • Spectrum Lime (#BBCA49)" },
+    "spectrum-green": { value: "#74BE60", description: "Pos 60% • Green Swatch (#74BE60)" },
+    "spectrum-aqua": { value: "#71B197", description: "Pos 70% • Spectrum Aqua / Seafoam (#71B197)" },
+    "spectrum-blue": { value: "#6EA3BE", description: "Pos 80% • Blue Swatch (#6EA3BE)" },
+    "spectrum-indigo": { value: "#8E92C6", description: "Pos 90% • Spectrum Indigo / Periwinkle (#8E92C6)" },
+    "spectrum-violet": { value: "#A773C4", description: "Pos 100% • Violet Swatch (#A773C4)" },
   },
   status: {
-    "success-color": { value: "#54C93F", description: "Success / positive indicator" },
-    "warning-color": { value: "#F39D22", description: "Warning indicator" },
-    "danger-color": { value: "#D35B50", description: "Danger / error indicator" },
-    "yellow": { value: "#F4D35A", description: "Notice indicator" },
+    "success-color": { value: "#74BE60", description: "Success / positive indicator (Green Swatch #74BE60)" },
+    "warning-color": { value: "#ED9235", description: "Warning indicator (Orange Swatch #ED9235)" },
+    "danger-color": { value: "#E65E59", description: "Danger / error indicator (Red Swatch #E65E59)" },
+    "yellow": { value: "#EDD528", description: "Notice indicator (Yellow Swatch #EDD528)" },
   },
   neutrals: {
-    "gray-50": { value: "#E7E4DF", description: "Derived neutral 50 (Paper x Ink multiply)" },
-    "gray-100": { value: "#DFDDD7", description: "Derived neutral 100" },
-    "gray-200": { value: "#CECDC8", description: "Derived neutral 200" },
-    "gray-300": { value: "#BCBCB8", description: "Derived neutral 300" },
-    "gray-400": { value: "#A1A49F", description: "Derived neutral 400" },
-    "gray-500": { value: "#909390", description: "Derived neutral 500" },
-    "gray-600": { value: "#707673", description: "Derived neutral 600" },
-    "gray-700": { value: "#5B6360", description: "Derived neutral 700" },
-    "gray-800": { value: "#3E4846", description: "Derived neutral 800" },
-    "gray-900": { value: "#222D2C", description: "Slate Ink (Primary dark mark)" },
+    "gray-50": { value: "#FAFAF9", description: "Stone 50 (Warm unprinted ground highlight)" },
+    "gray-100": { value: "#F5F5F4", description: "Stone 100 (Warm paper tint)" },
+    "gray-200": { value: "#E7E5E4", description: "Stone 200 (Warm hairline gutter rule)" },
+    "gray-300": { value: "#D6D3D1", description: "Stone 300 (Warm disabled hairline)" },
+    "gray-400": { value: "#A8A29E", description: "Stone 400 (Warm midpoint mark)" },
+    "gray-500": { value: "#78716C", description: "Stone 500 (Warm secondary placeholder)" },
+    "gray-600": { value: "#57534E", description: "Stone 600 (Warm technical caption)" },
+    "gray-700": { value: "#44403C", description: "Stone 700 (Warm editorial stone ink)" },
+    "gray-800": { value: "#292524", description: "Stone 800 (Deep warm stone mark)" },
+    "gray-900": { value: "#1C1917", description: "Stone 900 Warm Carbon Ink (Primary dark mark)" },
   },
   typography: {
     "font-family-base": { value: "Inter, -apple-system, sans-serif", description: "Primary sans stack" },
@@ -92,6 +94,19 @@ const tokens = {
     "radius-pill": { value: "9999px" },
     "shadow-none": { value: "none" },
     "border-width-hairline": { value: "1px" },
+  },
+  layout: {
+    "breakpoint-3xl": { value: "1920px", description: "Responsive width step 3xl (FHD desktop)" },
+    "breakpoint-4xl": { value: "2560px", description: "Responsive width step 4xl (QHD / Ultrawide workstation)" },
+    "container-3xl": { value: "1920px", description: "Max container width step 3xl" },
+    "container-4xl": { value: "2560px", description: "Max container width step 4xl" },
+    "max-width-reading-sm": { value: "45ch", description: "Narrow editorial line length (45 characters)" },
+    "max-width-reading": { value: "65ch", description: "Optimal editorial reading measure (65 characters)" },
+    "max-width-reading-lg": { value: "75ch", description: "Extended technical reading measure (75 characters)" },
+    "column-max-width-sm": { value: "320px", description: "Narrow column max width" },
+    "column-max-width-md": { value: "480px", description: "Standard column max width" },
+    "column-max-width-lg": { value: "640px", description: "Wide editorial column max width" },
+    "column-max-width": { value: "480px", description: "Default column max width cap" },
   }
 };
 
@@ -121,6 +136,7 @@ function generateTokensStudio() {
       "color": {},
       "spacing": {},
       "radius": {},
+      "layout": {},
       "fontFamilies": {
         "base": { value: "Inter", type: "fontFamilies" },
         "mono": { value: "JetBrains Mono", type: "fontFamilies" }
@@ -154,6 +170,14 @@ function generateTokensStudio() {
     }
   }
 
+  for (const [key, item] of Object.entries(tokens.layout)) {
+    figma.PrintedMatter.layout[key] = {
+      value: item.value,
+      type: "dimension",
+      description: item.description || ""
+    };
+  }
+
   return JSON.stringify(figma, null, 2);
 }
 
@@ -165,7 +189,8 @@ function generateDTCG() {
     "color": {},
     "dimension": {},
     "fontFamily": {},
-    "fontSize": {}
+    "fontSize": {},
+    "layout": {}
   };
 
   for (const group of ["surfaces", "primary", "spectrum", "status", "neutrals"]) {
@@ -182,6 +207,14 @@ function generateDTCG() {
     dtcg.dimension[key] = {
       "$value": item.value,
       "$type": "dimension"
+    };
+  }
+
+  for (const [key, item] of Object.entries(tokens.layout)) {
+    dtcg.layout[key] = {
+      "$value": item.value,
+      "$type": "dimension",
+      "$description": item.description || ""
     };
   }
 
@@ -206,7 +239,7 @@ export interface TokenItem {
   name: string;
   cssVar: string;
   value: string;
-  category: "surface" | "primary" | "spectrum" | "status" | "neutral" | "typography" | "spacing" | "geometry";
+  category: "surface" | "primary" | "spectrum" | "status" | "neutral" | "typography" | "spacing" | "geometry" | "layout";
   description?: string;
 }
 
@@ -271,6 +304,11 @@ function generateSCSS() {
     }
     scss += "\n";
   }
+  scss += "// layout\n";
+  for (const [key, item] of Object.entries(tokens.layout)) {
+    scss += `$${key}: ${item.value};\n`;
+  }
+  scss += "\n";
   return scss;
 }
 
@@ -294,7 +332,7 @@ console.log("-> Wrote tokens/tokens.scss");
 // Validation Report
 console.log("\n=== TOKEN CONTRAST AUDIT ===");
 const paper = tokens.surfaces["white"].value;
-const ink = tokens.neutrals["gray-900"].value;
+const ink = tokens.neutrals["gray-800"].value;
 const blue = tokens.primary["primary-500"].value;
 const red = tokens.spectrum["spectrum-red"].value;
 

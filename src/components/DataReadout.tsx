@@ -26,24 +26,24 @@ export const DataReadout: React.FC<DataReadoutProps> = ({
   return (
     <div
       className={clsx(
-        "flex flex-wrap items-center justify-between px-4 py-2 bg-[#FFFFFF] border border-[#222D2C] font-mono text-xs text-[#222D2C]",
+        "flex flex-wrap items-center justify-between px-4 py-2 bg-[var(--white)] font-mono text-xs text-[var(--text)]",
         className
       )}
-      style={{ borderRadius: 0, boxShadow: "1px 1px 1px 0 rgba(128, 128, 128, 0.25)" }}
+      style={{ borderRadius: 0 }}
     >
       <div className="flex items-center gap-4 flex-wrap">
-        <span className="font-bold text-[#1A66A6] uppercase tracking-wider">LOC</span>
+        <span className="font-bold text-[var(--primary-500)] uppercase tracking-wider">LOC</span>
         <span>{location.placeName}</span>
-        <span className="text-[#5B6360]">{location.lat}, {location.lon}</span>
-        {location.elevation && <span className="text-[#5B6360]">ELEV: {location.elevation}</span>}
+        <span className="text-[var(--text-muted)]">{location.lat}, {location.lon}</span>
+        {location.elevation && <span className="text-[var(--text-muted)]">ELEV: {location.elevation}</span>}
       </div>
 
-      <div className="flex items-center gap-4 border-l border-[#222D2C]/20 pl-4 mt-1 sm:mt-0 flex-wrap">
-        <span className="font-bold text-[#D35B50] uppercase tracking-wider">CAM</span>
+      <div className="flex items-center gap-4 border-l border-[var(--border-gray)]/20 pl-4 mt-1 sm:mt-0 flex-wrap">
+        <span className="font-bold text-[var(--secondary-color)] uppercase tracking-wider">CAM</span>
         {camera.altitude && <span>ALT: {camera.altitude}</span>}
-        {camera.facing && <span className="text-[#5B6360]">HDG: {camera.facing}</span>}
-        {camera.zoom && <span className="text-[#5B6360]">Z: {camera.zoom}</span>}
-        {camera.solarClock && <span className="font-bold text-[#222D2C] bg-[#DFDDD7] px-1.5 py-0.5">{camera.solarClock}</span>}
+        {camera.facing && <span className="text-[var(--text-muted)]">HDG: {camera.facing}</span>}
+        {camera.zoom && <span className="text-[var(--text-muted)]">Z: {camera.zoom}</span>}
+        {camera.solarClock && <span className="font-bold text-[var(--text)] bg-[var(--gray-100)] px-1.5 py-0.5">{camera.solarClock}</span>}
       </div>
     </div>
   );

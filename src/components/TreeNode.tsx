@@ -30,8 +30,8 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, selectedId, onSelect, 
         className={clsx(
           "flex items-center justify-between py-1.5 px-2 border mb-1 cursor-pointer transition-colors",
           isSelected
-            ? "bg-[#1A66A6] text-white border-[#1A66A6]"
-            : "bg-[#FFFFFF] text-[#222D2C] border-[#DFDDD7] hover:border-[#222D2C]"
+            ? "bg-[var(--primary-500)] text-[var(--white)] border-[var(--primary-500)]"
+            : "bg-[var(--white)] text-[var(--text)] border-[var(--gray-200)] hover:border-[var(--border-gray)]"
         )}
         style={{ borderRadius: 0 }}
       >
@@ -48,12 +48,12 @@ export const TreeNode: React.FC<TreeNodeProps> = ({ node, selectedId, onSelect, 
 
         <div className="flex items-center gap-2">
           {node.level && (
-            <Badge variant="level" size="sm" className={isSelected ? "!bg-[#0F3D64] !text-white !border-none" : ""}>
+            <Badge variant="level" size="sm" className={isSelected ? "!bg-[#0E385B] !text-white !border-none" : ""}>
               {node.level}
             </Badge>
           )}
           {node.count !== undefined && (
-            <span className={clsx("font-mono text-[10px]", isSelected ? "text-white/80" : "text-[#5B6360]")}>
+            <span className={clsx("font-mono text-[10px]", isSelected ? "text-white/80" : "text-[#4B4846]")}>
               ({node.count})
             </span>
           )}
