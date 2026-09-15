@@ -3592,7 +3592,10 @@ export default function App() {
                   {paperDarkEnabled && (
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{ mixBlendMode: "multiply" }}
+                      style={{
+                        mixBlendMode: "multiply",
+                        opacity: Math.min(1.0, Math.max(0, paperDarkOpacity * paperDarkGain * 3.0)),
+                      }}
                       aria-hidden="true"
                     >
                       <filter id="pm-svg-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
@@ -3609,9 +3612,9 @@ export default function App() {
                           const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                           const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                           const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                          const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-                          const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-                          const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+                          const sR = 1 - darkR;
+                          const sG = 1 - darkG;
+                          const sB = 1 - darkB;
                           return (
                             <feColorMatrix
                               in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
@@ -3619,9 +3622,9 @@ export default function App() {
                               values={
                                 paperDarkInvert
                                   ? `
-                                    ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}
-                                    ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}
-                                    ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}
+                                    ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
+                                    ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
+                                    ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
                                     0 0 0 0 1
                                   `
                                   : `
@@ -3644,7 +3647,10 @@ export default function App() {
                   {paperLightEnabled && (
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{ mixBlendMode: "screen" }}
+                      style={{
+                        mixBlendMode: "screen",
+                        opacity: Math.min(1.0, Math.max(0, paperLightOpacity * paperLightGain * 2.0)),
+                      }}
                       aria-hidden="true"
                     >
                       <filter id="pm-svg-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
@@ -3658,7 +3664,7 @@ export default function App() {
                         {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
                         {/* Monochromatic luminance mapping with noise floor clipping to eliminate flat gray fogging */}
                         {(() => {
-                          const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                          const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
                           const kL = (effScale / 3).toFixed(5);
                           const bL = (-(paperLightFloor * effScale)).toFixed(5);
                           return (
@@ -3693,19 +3699,21 @@ export default function App() {
                       const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                       const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                       const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                      const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-                      const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-                      const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+                      const sR = 1 - darkR;
+                      const sG = 1 - darkG;
+                      const sB = 1 - darkB;
                       const darkValues = paperDarkInvert
-                        ? `${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}   ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}   ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}   0 0 0 0 1`
+                        ? `${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}   ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}   ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}   0 0 0 0 1`
                         : `${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1   ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1   ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1   0 0 0 0 1`;
-                      const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                      const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
                       const kL = (effScale / 3).toFixed(5);
                       const bL = (-(paperLightFloor * effScale)).toFixed(5);
+                      const darkOpacity = (Math.min(1.0, Math.max(0, paperDarkOpacity * paperDarkGain * 3.0))).toFixed(4);
+                      const lightOpacity = (Math.min(1.0, Math.max(0, paperLightOpacity * paperLightGain * 2.0))).toFixed(4);
                       const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Multiply Inverted Dark + Screen Light) */
 <div className="relative w-full h-full">
   <!-- 1. Dark Shadow Layer: mix-blend-mode: multiply (Valleys darkened into Paper Ground, 0% Lightening on Black Ink) -->
-  ${paperDarkEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }}>
+  ${paperDarkEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply", opacity: ${darkOpacity} }}>
     <filter id="paper-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
       <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(2)}" dy="${paperDarkOffsetY.toFixed(2)}" result="offsetDark" />
@@ -3720,7 +3728,7 @@ export default function App() {
   </svg>` : "<!-- Dark Shadow Channel Disabled -->"}
 
   <!-- 2. Light Highlight Layer: mix-blend-mode: screen (Peaks highlighted on Dark Ink, 0% Darkening on Paper Ground) -->
-  ${paperLightEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }}>
+  ${paperLightEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen", opacity: ${lightOpacity} }}>
     <filter id="paper-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
       <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(2)}" dy="${paperLightOffsetY.toFixed(2)}" result="offsetLight" />
@@ -3745,7 +3753,7 @@ export default function App() {
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
                   {`/* Option 1: Dual Blend Modes (Dark: Multiply ${paperDarkInvert ? '[Inverted/Troughs]' : '[Direct]'}, Light: Screen [Peaks] | Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, ${paperOctaves} oct) */
 <!-- Layer 1: Dark Shadows (Multiply) -->
-<svg style={{ mixBlendMode: "multiply" }} className="absolute inset-0 w-full h-full pointer-events-none">
+<svg style={{ mixBlendMode: "multiply", opacity: ${(Math.min(1.0, Math.max(0, paperDarkOpacity * paperDarkGain * 3.0))).toFixed(4)} }} className="absolute inset-0 w-full h-full pointer-events-none">
   <filter id="paper-dark-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(2)}" dy="${paperDarkOffsetY.toFixed(2)}" result="offsetDark" />
@@ -3753,11 +3761,11 @@ export default function App() {
       const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
       const darkG = Math.min(1.0, Math.max(0, paperDarkG));
       const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-      const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-      const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-      const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+      const sR = 1 - darkR;
+      const sG = 1 - darkG;
+      const sB = 1 - darkB;
       return paperDarkInvert
-        ? `${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}   ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}   ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}   0 0 0 0 1`
+        ? `${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}   ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}   ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}   0 0 0 0 1`
         : `${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1   ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1   ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1   0 0 0 0 1`;
     })()}" />
   </filter>
@@ -3765,12 +3773,12 @@ export default function App() {
 </svg>
 
 <!-- Layer 2: Light Highlights (Screen) -->
-<svg style={{ mixBlendMode: "screen" }} className="absolute inset-0 w-full h-full pointer-events-none">
+<svg style={{ mixBlendMode: "screen", opacity: ${(Math.min(1.0, Math.max(0, paperLightOpacity * paperLightGain * 2.0))).toFixed(4)} }} className="absolute inset-0 w-full h-full pointer-events-none">
   <filter id="paper-light-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(2)}" dy="${paperLightOffsetY.toFixed(2)}" result="offsetLight" />
     <feColorMatrix in="offsetLight" type="matrix" values="${(() => {
-      const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+      const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
       const kL = (effScale / 3).toFixed(5);
       const bL = (-(paperLightFloor * effScale)).toFixed(5);
       return `${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   0 0 0 0 1`;
@@ -3790,7 +3798,14 @@ export default function App() {
           <div className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150">
             {/* Global Dark Layer (Multiply) */}
             {paperDarkEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }} aria-hidden="true">
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                  mixBlendMode: "multiply",
+                  opacity: Math.min(1.0, Math.max(0, paperDarkOpacity * paperDarkGain * 3.0)),
+                }}
+                aria-hidden="true"
+              >
                 <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3804,9 +3819,9 @@ export default function App() {
                     const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                     const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                     const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                    const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-                    const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-                    const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+                    const sR = 1 - darkR;
+                    const sG = 1 - darkG;
+                    const sB = 1 - darkB;
                     return (
                       <feColorMatrix
                         in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
@@ -3814,9 +3829,9 @@ export default function App() {
                         values={
                           paperDarkInvert
                             ? `
-                              ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}
-                              ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}
-                              ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}
+                              ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
+                              ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
+                              ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
                               0 0 0 0 1
                             `
                             : `
@@ -3837,7 +3852,14 @@ export default function App() {
 
             {/* Global Light Layer (Screen) */}
             {paperLightEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }} aria-hidden="true">
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                  mixBlendMode: "screen",
+                  opacity: Math.min(1.0, Math.max(0, paperLightOpacity * paperLightGain * 2.0)),
+                }}
+                aria-hidden="true"
+              >
                 <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3848,7 +3870,7 @@ export default function App() {
                   <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                   {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
                   {(() => {
-                    const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                    const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
                     const kL = (effScale / 3).toFixed(5);
                     const bL = (-(paperLightFloor * effScale)).toFixed(5);
                     return (
