@@ -41,25 +41,25 @@ export default function App() {
   
   // Light Channel (Highlights on Dark Ink & Color Fields)
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
-  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.08); // 8%
-  const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.0x
-  const [paperLightFloor, setPaperLightFloor] = useState<number>(0.0); // Floor clip (0.0 to 0.8) to eliminate fog on black ink
-  const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-0.5); // -0.5px
-  const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-0.5); // -0.5px
-  const [paperLightBlur, setPaperLightBlur] = useState<number>(0.0); // 0.0px
+  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0086); // 0.86%
+  const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.00x
+  const [paperLightFloor, setPaperLightFloor] = useState<number>(0.29); // 29% Floor clip to eliminate fog on black ink
+  const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-1.0); // -1.00px
+  const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
+  const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
   // Dark Channel (Shadows on Light Paper Ground - Deep Warm Shade of Paper Color)
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
-  const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(true); // Invert phase: shadows deposit in valleys (L -> 0)
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.08); // 8%
-  const [paperDarkGain, setPaperDarkGain] = useState<number>(1.0); // 1.0x
-  const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(0.5); // +0.5px
-  const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(0.5); // +0.5px
-  const [paperDarkBlur, setPaperDarkBlur] = useState<number>(0.0); // 0.0px
+  const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply (from user screenshot)
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0998); // 9.98%
+  const [paperDarkGain, setPaperDarkGain] = useState<number>(0.74); // 0.74x
+  const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
+  const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
+  const [paperDarkBlur, setPaperDarkBlur] = useState<number>(0.0); // 0.00px
   const [paperDarkR, setPaperDarkR] = useState<number>(0.38); // Deep warm paper red component
   const [paperDarkG, setPaperDarkG] = useState<number>(0.32); // Deep warm paper green component
   const [paperDarkB, setPaperDarkB] = useState<number>(0.24); // Deep warm paper blue component
-  const [paperDarkWarmth, setPaperDarkWarmth] = useState<number>(1.2); // Warmth multiplier (1.0 - 1.5)
+  const [paperDarkWarmth, setPaperDarkWarmth] = useState<number>(1.42); // 1.42x Warmth multiplier (#81522E)
 
   // Offset Symmetry & Global Overlay
   const [paperSymmetricOffset, setPaperSymmetricOffset] = useState<boolean>(true);
@@ -3106,11 +3106,11 @@ export default function App() {
                   <div className="flex items-center gap-1.5 flex-wrap">
                     <span className="text-[var(--text-muted)] text-[11px] font-bold mr-1">PRESETS:</span>
                     {[
-                      { id: "user", label: "Requested (.45 × .20, 2 oct, Light 8% / Dark 8%)", freqX: 0.45, freqY: 0.20, oct: 2, type: "turbulence", lOp: 0.08, dOp: 0.08, lOffX: -0.5, lOffY: -0.5, dOffX: 0.5, dOffY: 0.5 },
-                      { id: "rag", label: "Cotton Rag (.12 × .12, 4 oct, 10%)", freqX: 0.12, freqY: 0.12, oct: 4, type: "fractalNoise", lOp: 0.10, dOp: 0.10, lOffX: -0.4, lOffY: -0.4, dOffX: 0.4, dOffY: 0.4 },
-                      { id: "micro", label: "Ultra Micro-Tooth (.40 × .40, 5 oct, 7%)", freqX: 0.40, freqY: 0.40, oct: 5, type: "fractalNoise", lOp: 0.07, dOp: 0.07, lOffX: -0.2, lOffY: -0.2, dOffX: 0.2, dOffY: 0.2 },
-                      { id: "laid", label: "Directional Laid Grain (.48 × .08, 3 oct, 12%)", freqX: 0.48, freqY: 0.08, oct: 3, type: "turbulence", lOp: 0.12, dOp: 0.10, lOffX: -0.8, lOffY: -0.2, dOffX: 0.8, dOffY: 0.2 },
-                      { id: "washi", label: "Coarse Washi (.04 × .04, 4 oct, 15%)", freqX: 0.04, freqY: 0.04, oct: 4, type: "turbulence", lOp: 0.15, dOp: 0.14, lOffX: -0.6, lOffY: -0.6, dOffX: 0.6, dOffY: 0.6 },
+                      { id: "user", label: "Requested (.45 × .20, 2 oct, Light 0.86% / Dark 9.98%)", freqX: 0.45, freqY: 0.20, oct: 2, type: "turbulence", lOp: 0.0086, dOp: 0.0998, lOffX: -1.0, lOffY: -1.0, dOffX: 1.0, dOffY: 1.0, lGain: 1.0, dGain: 0.74, lBlur: 0.4, dBlur: 0.0, lFloor: 0.29, dWarmth: 1.42, dInvert: false },
+                      { id: "rag", label: "Cotton Rag (.12 × .12, 4 oct, 10%)", freqX: 0.12, freqY: 0.12, oct: 4, type: "fractalNoise", lOp: 0.10, dOp: 0.10, lOffX: -0.4, lOffY: -0.4, dOffX: 0.4, dOffY: 0.4, lGain: 1.0, dGain: 1.0, lBlur: 0.0, dBlur: 0.0, lFloor: 0.0, dWarmth: 1.2, dInvert: true },
+                      { id: "micro", label: "Ultra Micro-Tooth (.40 × .40, 5 oct, 7%)", freqX: 0.40, freqY: 0.40, oct: 5, type: "fractalNoise", lOp: 0.07, dOp: 0.07, lOffX: -0.2, lOffY: -0.2, dOffX: 0.2, dOffY: 0.2, lGain: 1.0, dGain: 1.0, lBlur: 0.0, dBlur: 0.0, lFloor: 0.0, dWarmth: 1.2, dInvert: true },
+                      { id: "laid", label: "Directional Laid Grain (.48 × .08, 3 oct, 12%)", freqX: 0.48, freqY: 0.08, oct: 3, type: "turbulence", lOp: 0.12, dOp: 0.10, lOffX: -0.8, lOffY: -0.2, dOffX: 0.8, dOffY: 0.2, lGain: 1.0, dGain: 1.0, lBlur: 0.0, dBlur: 0.0, lFloor: 0.0, dWarmth: 1.2, dInvert: true },
+                      { id: "washi", label: "Coarse Washi (.04 × .04, 4 oct, 15%)", freqX: 0.04, freqY: 0.04, oct: 4, type: "turbulence", lOp: 0.15, dOp: 0.14, lOffX: -0.6, lOffY: -0.6, dOffX: 0.6, dOffY: 0.6, lGain: 1.0, dGain: 1.0, lBlur: 0.0, dBlur: 0.0, lFloor: 0.0, dWarmth: 1.2, dInvert: true },
                     ].map((p) => (
                       <button
                         key={p.id}
@@ -3127,6 +3127,13 @@ export default function App() {
                           setPaperLightOffsetY(p.lOffY);
                           setPaperDarkOffsetX(p.dOffX);
                           setPaperDarkOffsetY(p.dOffY);
+                          if (p.lGain !== undefined) setPaperLightGain(p.lGain);
+                          if (p.dGain !== undefined) setPaperDarkGain(p.dGain);
+                          if (p.lBlur !== undefined) setPaperLightBlur(p.lBlur);
+                          if (p.dBlur !== undefined) setPaperDarkBlur(p.dBlur);
+                          if (p.lFloor !== undefined) setPaperLightFloor(p.lFloor);
+                          if (p.dWarmth !== undefined) setPaperDarkWarmth(p.dWarmth);
+                          if (p.dInvert !== undefined) setPaperDarkInvert(p.dInvert);
                           setPaperLightEnabled(true);
                           setPaperDarkEnabled(true);
                         }}
