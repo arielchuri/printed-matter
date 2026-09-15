@@ -3444,30 +3444,53 @@ export default function App() {
                       </button>
                     </div>
 
+                    {/* Fiber Density Control */}
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Fibers (100–10,000):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{canvasFiberCount}</span>
+                        <span className="font-bold">Fiber Density (100–15,000):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{canvasFiberCount.toLocaleString()} threads</span>
                       </div>
                       <input
                         type="range"
                         min="100"
-                        max="10000"
-                        step="200"
+                        max="15000"
+                        step="250"
                         value={canvasFiberCount}
                         onChange={(e) => setCanvasFiberCount(parseInt(e.target.value))}
                         className="w-full accent-[var(--primary-500)] cursor-pointer"
                       />
+                      {/* Fast Density Presets */}
+                      <div className="flex gap-1 mt-1">
+                        {[
+                          { label: "1k Sparse", val: 1000 },
+                          { label: "3k Rag", val: 3000 },
+                          { label: "7k Dense", val: 7000 },
+                          { label: "15k Ultra", val: 15000 },
+                        ].map((dp) => (
+                          <button
+                            key={dp.val}
+                            onClick={() => setCanvasFiberCount(dp.val)}
+                            className={`flex-1 py-0.5 text-[8px] font-bold border transition-colors ${
+                              canvasFiberCount === dp.val
+                                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                                : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
+                            }`}
+                          >
+                            {dp.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
 
+                    {/* Frequency & Length Controls */}
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="font-bold block mb-0.5">Frequency: {canvasFiberFrequency.toFixed(1)} waves</span>
+                        <span className="font-bold block mb-0.5">Wave Freq: {canvasFiberFrequency.toFixed(1)} waves</span>
                         <input
                           type="range"
                           min="0.5"
-                          max="8.0"
-                          step="0.5"
+                          max="12.0"
+                          step="0.2"
                           value={canvasFiberFrequency}
                           onChange={(e) => setCanvasFiberFrequency(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
@@ -3487,6 +3510,7 @@ export default function App() {
                       </div>
                     </div>
 
+                    {/* Curvature & Specks Controls */}
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
                         <span className="font-bold block mb-0.5">Curvature: {canvasFiberCurvature}</span>
@@ -3501,12 +3525,12 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Specks: {canvasSpeckCount}</span>
+                        <span className="font-bold block mb-0.5">Speck Density: {canvasSpeckCount}</span>
                         <input
                           type="range"
                           min="0"
-                          max="6000"
-                          step="200"
+                          max="8000"
+                          step="250"
                           value={canvasSpeckCount}
                           onChange={(e) => setCanvasSpeckCount(parseInt(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
