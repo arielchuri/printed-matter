@@ -365,6 +365,61 @@ h6, .ds-h6 {
   pointer-events: none;
 }
 
+/* ─── Global Chromatic Plate Misregistration ───────────────── */
+[data-misregistration="on"] [data-color-plate="blue"],
+[data-misregistration="on"] [data-plate="blue"],
+[data-misregistration="on"] [data-plate="indigo"],
+[data-misregistration="on"] .color-plate-blue {
+  transform: translate(var(--misregister-blue-x, 0.75px), var(--misregister-blue-y, -0.50px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="red"],
+[data-misregistration="on"] [data-plate="red"],
+[data-misregistration="on"] .color-plate-red {
+  transform: translate(var(--misregister-red-x, -0.80px), var(--misregister-red-y, 0.60px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="yellow"],
+[data-misregistration="on"] [data-plate="yellow"],
+[data-misregistration="on"] [data-plate="amber"],
+[data-misregistration="on"] .color-plate-yellow {
+  transform: translate(var(--misregister-yellow-x, 0.60px), var(--misregister-yellow-y, 0.75px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="green"],
+[data-misregistration="on"] [data-plate="green"],
+[data-misregistration="on"] [data-plate="lime"],
+[data-misregistration="on"] .color-plate-green {
+  transform: translate(var(--misregister-green-x, -0.65px), var(--misregister-green-y, -0.65px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="purple"],
+[data-misregistration="on"] [data-plate="purple"],
+[data-misregistration="on"] [data-plate="violet"],
+[data-misregistration="on"] .color-plate-purple {
+  transform: translate(var(--misregister-purple-x, 0.70px), var(--misregister-purple-y, 0.40px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="aqua"],
+[data-misregistration="on"] [data-plate="aqua"],
+[data-misregistration="on"] .color-plate-aqua {
+  transform: translate(var(--misregister-aqua-x, -0.55px), var(--misregister-aqua-y, 0.45px));
+  transition: transform 0.15s ease-out;
+}
+
+[data-misregistration="on"] [data-color-plate="orange"],
+[data-misregistration="on"] [data-plate="orange"],
+[data-misregistration="on"] [data-plate="red-orange"],
+[data-misregistration="on"] .color-plate-orange {
+  transform: translate(var(--misregister-orange-x, 0.65px), var(--misregister-orange-y, -0.60px));
+  transition: transform 0.15s ease-out;
+}
+
 /* ─── Component Baseline Rules ─────────────────────────────── */
 
 /* 1. Buttons: No bevel, no shadow, sharp corners. Pressed flashes green */

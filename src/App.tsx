@@ -39,20 +39,20 @@ export default function App() {
   const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
   const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
   
-  // Light Channel (Highlights on Dark Ink & Color Fields)
+  // Light Channel (Highlights on Dark Ink & Color Fields) - Calibrated to 70% of 0.86% = 0.60%
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
-  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0086); // 0.86%
+  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0060); // 0.60% (70% of 0.86%)
   const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.00x
   const [paperLightFloor, setPaperLightFloor] = useState<number>(0.29); // 29% Floor clip to eliminate fog on black ink
   const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-1.0); // -1.00px
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
-  // Dark Channel (Shadows on Light Paper Ground - Deep Warm Shade of Paper Color)
+  // Dark Channel (Shadows on Light Paper Ground) - Calibrated to 70% of 1.85% = 1.30%
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
-  const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply (from user screenshot)
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0185); // 1.85% (from user screenshot)
-  const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x (from user screenshot)
+  const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0130); // 1.30% (70% of 1.85%)
+  const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
   const [paperDarkBlur, setPaperDarkBlur] = useState<number>(0.0); // 0.00px
@@ -65,6 +65,33 @@ export default function App() {
   const [paperSymmetricOffset, setPaperSymmetricOffset] = useState<boolean>(true);
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(true);
   const [inkSquashEnabled, setInkSquashEnabled] = useState<boolean>(true);
+  
+  // Global Multi-Plate Chromatic Misregistration (Each spot ink shifted randomly/subtly)
+  const [globalMisregistration, setGlobalMisregistration] = useState<boolean>(false);
+  const [misregisterIntensity, setMisregisterIntensity] = useState<number>(1.0);
+  const [plateOffsets, setPlateOffsets] = useState<Record<string, { x: number; y: number }>>({
+    blue: { x: 0.75, y: -0.50 },
+    red: { x: -0.80, y: 0.60 },
+    yellow: { x: 0.60, y: 0.75 },
+    green: { x: -0.65, y: -0.65 },
+    purple: { x: 0.70, y: 0.40 },
+    aqua: { x: -0.55, y: 0.45 },
+    orange: { x: 0.65, y: -0.60 },
+  });
+
+  const randomizePlates = () => {
+    const plates = ["blue", "red", "yellow", "green", "purple", "aqua", "orange"];
+    const next: Record<string, { x: number; y: number }> = {};
+    plates.forEach((p) => {
+      const angle = Math.random() * Math.PI * 2;
+      const dist = 0.4 + Math.random() * 0.8;
+      next[p] = {
+        x: parseFloat((Math.cos(angle) * dist).toFixed(2)),
+        y: parseFloat((Math.sin(angle) * dist).toFixed(2)),
+      };
+    });
+    setPlateOffsets(next);
+  };
   const [paperPreset, setPaperPreset] = useState<"user" | "rag" | "micro" | "laid" | "washi">("user");
 
   // Option 2: CSS Micro-Grain Stipple (Ultra-fine down to 1px)
@@ -128,6 +155,21 @@ export default function App() {
     }
   }, [inkSquashEnabled]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    if (globalMisregistration) {
+      root.setAttribute("data-misregistration", "on");
+      root.classList.remove("no-misregistration");
+      Object.entries(plateOffsets).forEach(([plate, offset]) => {
+        root.style.setProperty(`--misregister-${plate}-x`, `${(offset.x * misregisterIntensity).toFixed(2)}px`);
+        root.style.setProperty(`--misregister-${plate}-y`, `${(offset.y * misregisterIntensity).toFixed(2)}px`);
+      });
+    } else {
+      root.setAttribute("data-misregistration", "off");
+      root.classList.add("no-misregistration");
+    }
+  }, [globalMisregistration, plateOffsets, misregisterIntensity]);
+
   const sampleTree = {
     id: "root",
     name: "Kenya (National)",
@@ -166,7 +208,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--white)] text-[var(--text)] font-sans selection:bg-[var(--primary-500)] selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[var(--white)] text-[var(--text)] font-sans selection:bg-[var(--primary-500)] selection:text-white flex flex-col relative">
       {/* ─── Header ────────────────────────────────────────────── */}
       <header className="border-b border-[var(--border-gray)] bg-[var(--primary-500)] text-[var(--anti-primary-color)] px-6 py-3 flex items-center justify-between z-30">
         <div className="flex items-center gap-3">
@@ -211,6 +253,33 @@ export default function App() {
             <Droplet size={12} className={inkSquashEnabled ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
             <span>INK SQUASH: {inkSquashEnabled ? "ON" : "OFF"}</span>
           </button>
+
+          {/* Global Chromatic Misregistration Toggle */}
+          <div className="flex items-center">
+            <button
+              onClick={() => setGlobalMisregistration(!globalMisregistration)}
+              className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
+                globalMisregistration
+                  ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                  : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+              }`}
+              style={{ borderRadius: 0 }}
+              title="Toggle Global Multi-Plate Chromatic Misregistration (Hairline Plate Shifts)"
+            >
+              <Layers size={12} className={globalMisregistration ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
+              <span>MISREGISTER: {globalMisregistration ? "ON" : "OFF"}</span>
+            </button>
+            {globalMisregistration && (
+              <button
+                onClick={randomizePlates}
+                className="bg-black/40 text-white hover:bg-black/60 px-1.5 py-1 border border-l-0 border-white/20 transition-colors"
+                style={{ borderRadius: 0 }}
+                title="Randomize Plate Shift Angles (Hairline Jitter)"
+              >
+                <RefreshCw size={11} className="text-[var(--spectrum-yellow)]" />
+              </button>
+            )}
+          </div>
 
           {/* Ground / Theme 3-way Switch */}
           <div className="flex items-center bg-black/30 border border-white/20 p-0.5">
@@ -2574,6 +2643,77 @@ export default function App() {
                 <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">2-COLOR OVERPRINT &amp; KNOCKOUT</span>
               </div>
 
+              {/* ─── GLOBAL MULTI-PLATE CHROMATIC MISREGISTRATION HUD ─── */}
+              <div className="mb-6 bg-[var(--surface-muted)] p-5 border border-[var(--primary-500)]/40 space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-gray)]/30 pb-3">
+                  <div className="flex items-center gap-3">
+                    <button
+                      onClick={() => setGlobalMisregistration(!globalMisregistration)}
+                      className={`flex items-center gap-2 px-3 py-1.5 text-xs font-mono font-bold border transition-colors ${
+                        globalMisregistration
+                          ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                          : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface)]"
+                      }`}
+                      style={{ borderRadius: 0 }}
+                    >
+                      <Layers size={13} className={globalMisregistration ? "text-[var(--spectrum-yellow)]" : "text-[var(--primary-500)]"} />
+                      <span>Global Misregistration: {globalMisregistration ? "ACTIVE (ON)" : "DISABLED (OFF)"}</span>
+                    </button>
+                    <button
+                      onClick={randomizePlates}
+                      className="flex items-center gap-1.5 px-3 py-1.5 bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface)] text-xs font-mono font-bold transition-colors"
+                      style={{ borderRadius: 0 }}
+                      title="Randomize each ink plate's micro-hairline angle and offset vector"
+                    >
+                      <RefreshCw size={12} className="text-[var(--primary-500)]" />
+                      <span>Randomize Plate Jitter</span>
+                    </button>
+                  </div>
+                  <div className="flex items-center gap-3 text-xs font-mono">
+                    <span className="text-[var(--text-muted)]">Plate Jitter Intensity:</span>
+                    <strong className="text-[var(--primary-500)] font-bold">{misregisterIntensity.toFixed(2)}&times;</strong>
+                    <input
+                      type="range"
+                      min="0.20"
+                      max="3.00"
+                      step="0.05"
+                      value={misregisterIntensity}
+                      onChange={(e) => setMisregisterIntensity(parseFloat(e.target.value))}
+                      className="w-28 accent-[var(--primary-500)]"
+                    />
+                  </div>
+                </div>
+
+                {/* 7-Plate Vector Readout Grid */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 font-mono text-[10px]">
+                  {[
+                    { id: "blue", name: "Primary Blue", color: "var(--primary-500)" },
+                    { id: "red", name: "Spot Red", color: "var(--spectrum-red)" },
+                    { id: "yellow", name: "Spot Yellow", color: "var(--spectrum-yellow)" },
+                    { id: "green", name: "Emerald Green", color: "var(--spectrum-green)" },
+                    { id: "purple", name: "Violet", color: "var(--spectrum-purple)" },
+                    { id: "aqua", name: "Hydro Aqua", color: "var(--spectrum-aqua)" },
+                    { id: "orange", name: "Amber Orange", color: "var(--spectrum-orange)" },
+                  ].map((p) => {
+                    const off = plateOffsets[p.id] || { x: 0, y: 0 };
+                    const curX = (off.x * misregisterIntensity).toFixed(2);
+                    const curY = (off.y * misregisterIntensity).toFixed(2);
+                    return (
+                      <div key={p.id} className="p-2 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col justify-between">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <div className="w-2.5 h-2.5 shrink-0" style={{ backgroundColor: p.color }} />
+                          <span className="font-bold truncate text-[var(--text)]">{p.name}</span>
+                        </div>
+                        <div className="text-[9px] text-[var(--text-muted)] flex justify-between">
+                          <span>dx: <strong className="text-[var(--text)]">{curX > "0" ? `+${curX}` : curX}px</strong></span>
+                          <span>dy: <strong className="text-[var(--text)]">{curY > "0" ? `+${curY}` : curY}px</strong></span>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Interactive Misregistration Offset Controls */}
               <div className="mb-6 bg-[var(--surface-muted)] p-5 border border-[var(--border-gray)]/30 space-y-4">
                 <div className="flex flex-wrap items-center justify-between gap-3">
@@ -3851,9 +3991,9 @@ export default function App() {
         )}
         </main>
 
-        {/* ─── Global Option 1 Paper Texture Overlay (Dual-Relief Multiply + Screen) ─── */}
+        {/* ─── Global Option 1 Paper Texture Overlay (Dual-Relief Multiply + Screen - Scrolls with Page) ─── */}
         {globalPaperTexture && (
-          <div className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150">
+          <div className="absolute inset-0 w-full min-h-full pointer-events-none z-30 transition-opacity duration-150 overflow-hidden">
             {/* Global Dark Layer (Multiply - Deep warm shadow valleys on paper, 0% lightening on black) */}
             {paperDarkEnabled && (
               <svg

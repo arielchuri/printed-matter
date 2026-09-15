@@ -49,6 +49,7 @@ export const Badge: React.FC<BadgeProps> = ({
 
   return (
     <span
+      data-plate={color}
       className={clsx(
         "inline-flex items-center font-mono font-semibold mix-blend-multiply border",
         size === "sm" ? "px-1.5 py-0.2 text-[11px]" : "px-2.5 py-0.5 text-xs",

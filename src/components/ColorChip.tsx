@@ -38,6 +38,18 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
   const isLightGround = isLight(hexShown);
   const isPaperOrLighter = getLuminance(hexShown) >= 0.70 || token === "--white" || token.includes("gray-50") || token.includes("gray-100") || token.includes("gray-200");
 
+  const getPlate = (tok: string): string => {
+    if (tok.includes("primary") || tok.includes("blue")) return "blue";
+    if (tok.includes("red-orange") || tok.includes("orange")) return "orange";
+    if (tok.includes("red")) return "red";
+    if (tok.includes("yellow") || tok.includes("amber")) return "yellow";
+    if (tok.includes("green") || tok.includes("lime")) return "green";
+    if (tok.includes("purple") || tok.includes("violet") || tok.includes("indigo")) return "purple";
+    if (tok.includes("aqua")) return "aqua";
+    return "neutral";
+  };
+  const plate = getPlate(token);
+
   const handleCopy = () => {
     navigator.clipboard.writeText(token);
     setCopied(true);
@@ -51,6 +63,8 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
       style={{ borderRadius: 0 }}
     >
       <div
+        data-plate={plate}
+        data-color-plate={plate}
         className={clsx(
           "h-20 w-full flex items-end justify-between p-2 relative",
           !isPaperOrLighter && "ink-squash-subtle"
