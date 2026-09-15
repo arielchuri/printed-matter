@@ -323,12 +323,16 @@ h6, .ds-h6 {
   box-shadow: inset 0 0 8px currentColor, inset 0 0 16px rgba(0, 0, 0, 0.12);
 }
 
+.ink-squash-plate {
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.22), inset 0 0 14px rgba(0, 0, 0, 0.08);
+}
+
 .ink-squash-text {
-  text-shadow: 0 0 1.5px rgba(0, 0, 0, 0.4), 0 0 4px rgba(0, 0, 0, 0.18);
+  text-shadow: 0 0 0.8px currentColor, 0 0 2px rgba(0, 0, 0, 0.28), 0 0 4px rgba(0, 0, 0, 0.12);
 }
 
 .ink-squash-text-subtle {
-  text-shadow: 0 0 1px rgba(0, 0, 0, 0.25), 0 0 2.5px rgba(0, 0, 0, 0.1);
+  text-shadow: 0 0 0.5px currentColor, 0 0 1.5px rgba(0, 0, 0, 0.18);
 }
 
 /* Global Ink Squash Disable Override */
@@ -337,11 +341,13 @@ h6, .ds-h6 {
 [data-ink-squash="off"] .ink-squash-heavy,
 [data-ink-squash="off"] .ink-squash-subtle,
 [data-ink-squash="off"] .ink-squash-color,
+[data-ink-squash="off"] .ink-squash-plate,
 .no-ink-squash .ink-squash,
 .no-ink-squash .ink-squash-deep,
 .no-ink-squash .ink-squash-heavy,
 .no-ink-squash .ink-squash-subtle,
-.no-ink-squash .ink-squash-color {
+.no-ink-squash .ink-squash-color,
+.no-ink-squash .ink-squash-plate {
   box-shadow: none !important;
 }
 

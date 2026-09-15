@@ -64,10 +64,10 @@ export default function App() {
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
-  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 20% to 0.52%
+  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 25% to 0.39%
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0052); // 0.52% (reduced 20% from 0.65%)
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0039); // 0.39% (reduced 25% from 0.52%)
   const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
@@ -804,14 +804,14 @@ export default function App() {
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* On Yellow */}
-                      <div className="p-3.5 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] border border-[var(--gray-900)]/40 flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT YELLOW</span>
+                            <span className="ink-squash-text">ON SPOT YELLOW</span>
                             <span className="bg-[var(--gray-900)] text-white px-1.5 py-0.2">10.8:1 AAA</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Administrative Notice</h5>
-                          <p className="text-[11px] leading-snug">Boundary revisions active for sector 4 telemetry.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Administrative Notice</h5>
+                          <p className="text-[11px] leading-snug ink-squash-text-subtle">Boundary revisions active for sector 4 telemetry.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)]">
                           #EDD528 Spot Yellow
@@ -819,14 +819,14 @@ export default function App() {
                       </div>
 
                       {/* On Amber Gold */}
-                      <div className="p-3.5 bg-[var(--spectrum-amber)] text-[var(--gray-900)] border border-[var(--gray-900)]/40 flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-amber)] text-[var(--gray-900)] border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON AMBER GOLD</span>
+                            <span className="ink-squash-text">ON AMBER GOLD</span>
                             <span className="bg-[var(--gray-900)] text-white px-1.5 py-0.2">8.9:1 AAA</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Caution Advisory</h5>
-                          <p className="text-[11px] leading-snug">Precipitation delta exceeding seasonal baseline.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Caution Advisory</h5>
+                          <p className="text-[11px] leading-snug ink-squash-text-subtle">Precipitation delta exceeding seasonal baseline.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)]">
                           #EDBC2F Amber Gold
@@ -834,14 +834,14 @@ export default function App() {
                       </div>
 
                       {/* On Green */}
-                      <div className="p-3.5 bg-[var(--spectrum-green)] text-[var(--gray-900)] border border-[var(--gray-900)]/40 flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-green)] text-[var(--gray-900)] border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT GREEN</span>
+                            <span className="ink-squash-text">ON SPOT GREEN</span>
                             <span className="bg-[var(--gray-900)] text-white px-1.5 py-0.2">6.8:1 AAA</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Confirmed Parity</h5>
-                          <p className="text-[11px] leading-snug">All 47 county registries synchronized.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Confirmed Parity</h5>
+                          <p className="text-[11px] leading-snug ink-squash-text-subtle">All 47 county registries synchronized.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)]">
                           #74BE60 Green Spot
@@ -849,14 +849,14 @@ export default function App() {
                       </div>
 
                       {/* On Aqua */}
-                      <div className="p-3.5 bg-[var(--spectrum-aqua)] text-[var(--gray-900)] border border-[var(--gray-900)]/40 flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-aqua)] text-[var(--gray-900)] border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON AQUA SEAFOAM</span>
+                            <span className="ink-squash-text">ON AQUA SEAFOAM</span>
                             <span className="bg-[var(--gray-900)] text-white px-1.5 py-0.2">7.2:1 AAA</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Hydrologic Flow</h5>
-                          <p className="text-[11px] leading-snug">Lake Turkana reservoir telemetry active.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Hydrologic Flow</h5>
+                          <p className="text-[11px] leading-snug ink-squash-text-subtle">Lake Turkana reservoir telemetry active.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)]">
                           #71B197 Aqua Seafoam
@@ -872,14 +872,14 @@ export default function App() {
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* On Spot Blue */}
-                      <div className="p-3.5 bg-[var(--primary-500)] text-white border border-[var(--primary-600)] flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--primary-500)] text-white border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT BLUE</span>
+                            <span className="ink-squash-text">ON SPOT BLUE</span>
                             <span className="bg-white text-[var(--primary-900)] px-1.5 py-0.2">3.0:1 AA Lrg</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Brand Banner Action</h5>
-                          <p className="text-[11px] text-white/90 leading-snug">Primary geographic command heading plate.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Brand Banner Action</h5>
+                          <p className="text-[11px] text-white/90 leading-snug ink-squash-text-subtle">Primary geographic command heading plate.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
                           #6EA3BE Spot Blue
@@ -887,14 +887,14 @@ export default function App() {
                       </div>
 
                       {/* On Red */}
-                      <div className="p-3.5 bg-[var(--spectrum-red)] text-white border border-[var(--spectrum-red)] flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-red)] text-white border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT RED</span>
+                            <span className="ink-squash-text">ON SPOT RED</span>
                             <span className="bg-white text-[var(--gray-900)] px-1.5 py-0.2">3.2:1 AA Lrg</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Critical Alarm</h5>
-                          <p className="text-[11px] text-white/90 leading-snug">High vulnerability anomaly threshold.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Critical Alarm</h5>
+                          <p className="text-[11px] text-white/90 leading-snug ink-squash-text-subtle">High vulnerability anomaly threshold.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
                           #E65E59 Spot Red
@@ -902,14 +902,14 @@ export default function App() {
                       </div>
 
                       {/* On Orange */}
-                      <div className="p-3.5 bg-[var(--spectrum-orange)] text-[var(--gray-900)] border border-[var(--spectrum-orange)] flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-orange)] text-[var(--gray-900)] border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT ORANGE</span>
+                            <span className="ink-squash-text">ON SPOT ORANGE</span>
                             <span className="bg-[var(--gray-900)] text-white px-1.5 py-0.2">7.1:1 AAA</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Telemetry Alert</h5>
-                          <p className="text-[11px] text-[var(--gray-800)] leading-snug">Sensor ping deviation detected in ADM2.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Telemetry Alert</h5>
+                          <p className="text-[11px] text-[var(--gray-800)] leading-snug ink-squash-text-subtle">Sensor ping deviation detected in ADM2.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)]">
                           #ED9235 Spot Orange
@@ -917,14 +917,14 @@ export default function App() {
                       </div>
 
                       {/* On Violet */}
-                      <div className="p-3.5 bg-[var(--spectrum-violet)] text-white border border-[var(--spectrum-violet)] flex flex-col justify-between">
+                      <div className="p-3.5 bg-[var(--spectrum-violet)] text-white border border-[var(--border-gray)] flex flex-col justify-between ink-squash-plate">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON SPOT VIOLET</span>
+                            <span className="ink-squash-text">ON SPOT VIOLET</span>
                             <span className="bg-white text-[var(--gray-900)] px-1.5 py-0.2">3.8:1 AA Lrg</span>
                           </div>
-                          <h5 className="font-bold text-sm leading-tight mb-1">Spatial Category</h5>
-                          <p className="text-[11px] text-white/90 leading-snug">Geodesic triangulation sector reference.</p>
+                          <h5 className="font-bold text-sm leading-tight mb-1 ink-squash-text">Spatial Category</h5>
+                          <p className="text-[11px] text-white/90 leading-snug ink-squash-text-subtle">Geodesic triangulation sector reference.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
                           #A773C4 Spot Violet
@@ -941,19 +941,19 @@ export default function App() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* C1: Yellow Knockout in Spot Blue Plate */}
                       <div
-                        className="p-3.5 bg-[var(--primary-500)] text-[var(--spectrum-yellow)] border border-[var(--primary-600)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--primary-500)] text-[var(--spectrum-yellow)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                         data-plate="blue"
                       >
                         <div data-plate="yellow" className="ko-fringe-yellow">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="text-white/90">YELLOW ON BLUE</span>
+                            <span className="text-white/90 ink-squash-text">YELLOW ON BLUE</span>
                             <span className="bg-[var(--spectrum-yellow)] text-[var(--primary-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
                           </div>
-                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-yellow)]">
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-yellow)] ink-squash-text">
                             Boundary Override
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-yellow)]/90 leading-snug font-medium">
+                          <p className="text-[11px] text-[var(--spectrum-yellow)]/90 leading-snug font-medium ink-squash-text-subtle">
                             Yellow underplate revealed cleanly through solid Spot Blue intaglio cutout aperture.
                           </p>
                         </div>
@@ -964,19 +964,19 @@ export default function App() {
 
                       {/* C2: Aqua Seafoam Knockout in Spot Violet Plate */}
                       <div
-                        className="p-3.5 bg-[var(--spectrum-violet)] text-[var(--spectrum-aqua)] border border-[var(--spectrum-violet)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--spectrum-violet)] text-[var(--spectrum-aqua)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                         data-plate="violet"
                       >
                         <div data-plate="aqua" className="ko-fringe-aqua">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="text-white/90">AQUA ON VIOLET</span>
+                            <span className="text-white/90 ink-squash-text">AQUA ON VIOLET</span>
                             <span className="bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
                           </div>
-                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-aqua)]">
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-aqua)] ink-squash-text">
                             Geodesic Vertex
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-aqua)]/90 leading-snug font-medium">
+                          <p className="text-[11px] text-[var(--spectrum-aqua)]/90 leading-snug font-medium ink-squash-text-subtle">
                             High-frequency aqua plate exposed cleanly through dense violet field mask.
                           </p>
                         </div>
@@ -987,19 +987,19 @@ export default function App() {
 
                       {/* C3: Spot Red Knockout in Spot Lime Plate (Pure Spot on Spot) */}
                       <div
-                        className="p-3.5 bg-[var(--spectrum-lime)] text-[var(--spectrum-red)] border border-[var(--spectrum-lime)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--spectrum-lime)] text-[var(--spectrum-red)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                         data-plate="lime"
                       >
                         <div data-plate="red" className="ko-fringe-red">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="text-[var(--gray-900)]">RED ON LIME</span>
+                            <span className="text-[var(--gray-900)] ink-squash-text">RED ON LIME</span>
                             <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2 font-black">KNOCKOUT</span>
                           </div>
-                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-red)]">
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-red)] ink-squash-text">
                             Spectral Chromatic Gap
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-red)]/95 leading-snug font-medium">
+                          <p className="text-[11px] text-[var(--spectrum-red)]/95 leading-snug font-medium ink-squash-text-subtle">
                             Saturated red plate exposed cleanly through brilliant lime ground cutout.
                           </p>
                         </div>
@@ -1010,19 +1010,19 @@ export default function App() {
 
                       {/* C4: Amber Gold Knockout in Carbon Black Plate */}
                       <div
-                        className="p-3.5 bg-[var(--gray-900)] text-[var(--spectrum-amber)] border border-[var(--gray-900)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--gray-900)] text-[var(--spectrum-amber)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                         data-plate="black"
                       >
                         <div data-plate="amber" className="ko-fringe-amber">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="text-white/90">AMBER ON BLACK</span>
+                            <span className="text-white/90 ink-squash-text">AMBER ON BLACK</span>
                             <span className="bg-[var(--spectrum-amber)] text-[var(--gray-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
                           </div>
-                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-amber)]">
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-amber)] ink-squash-text">
                             Carbon Relief
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-amber)]/95 leading-snug font-medium">
+                          <p className="text-[11px] text-[var(--spectrum-amber)]/95 leading-snug font-medium ink-squash-text-subtle">
                             Amber gold text punch cut through heavy 100% carbon black bed.
                           </p>
                         </div>
@@ -1041,7 +1041,7 @@ export default function App() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* D1: Spot Red Type overprinted on Spot Yellow Ground -> Optical Cadmium Orange */}
                       <div
-                        className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-amber)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                       >
                         <div
@@ -1050,13 +1050,13 @@ export default function App() {
                           style={{ mixBlendMode: "multiply" }}
                         >
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="font-mono font-black">RED ON YELLOW</span>
+                            <span className="font-mono font-black ink-squash-text">RED ON YELLOW</span>
                             <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2 font-black">MULTIPLY</span>
                           </div>
-                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-red)]">
+                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-red)] ink-squash-text">
                             Optical Cadmium Orange
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-red)] leading-snug font-semibold">
+                          <p className="text-[11px] text-[var(--spectrum-red)] leading-snug font-semibold ink-squash-text-subtle">
                             Spot red ink multiplies over yellow ground, absorbing blue spectra to synthesize vibrant cadmium vermilion orange text.
                           </p>
                           <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold">
@@ -1071,7 +1071,7 @@ export default function App() {
 
                       {/* D2: Spot Blue Type overprinted on Spot Yellow Ground -> Optical Forest Green */}
                       <div
-                        className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-green)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                       >
                         <div
@@ -1080,13 +1080,13 @@ export default function App() {
                           style={{ mixBlendMode: "multiply" }}
                         >
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="font-mono font-black">BLUE ON YELLOW</span>
+                            <span className="font-mono font-black ink-squash-text">BLUE ON YELLOW</span>
                             <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.2 font-black">MULTIPLY</span>
                           </div>
-                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--primary-500)]">
+                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--primary-500)] ink-squash-text">
                             Optical Emerald Forest Green
                           </h5>
-                          <p className="text-[11px] text-[var(--primary-500)] leading-snug font-semibold">
+                          <p className="text-[11px] text-[var(--primary-500)] leading-snug font-semibold ink-squash-text-subtle">
                             Spot blue ink multiplies over yellow ground, filtering red wavelengths to forge rich organic forest green typography.
                           </p>
                           <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold">
@@ -1101,7 +1101,7 @@ export default function App() {
 
                       {/* D3: Spot Violet Type overprinted on Aqua Seafoam Ground -> Optical Navy */}
                       <div
-                        className="p-3.5 bg-[var(--spectrum-aqua)] border border-[var(--spectrum-blue)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--spectrum-aqua)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                       >
                         <div
@@ -1110,13 +1110,13 @@ export default function App() {
                           style={{ mixBlendMode: "multiply" }}
                         >
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="font-mono font-black">VIOLET ON AQUA</span>
+                            <span className="font-mono font-black ink-squash-text">VIOLET ON AQUA</span>
                             <span className="bg-[var(--spectrum-violet)] text-white px-1.5 py-0.2 font-black">MULTIPLY</span>
                           </div>
-                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-violet)]">
+                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-violet)] ink-squash-text">
                             Deep Marine Navy Overprint
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-violet)] leading-snug font-semibold">
+                          <p className="text-[11px] text-[var(--spectrum-violet)] leading-snug font-semibold ink-squash-text-subtle">
                             Spot violet ink multiplies over aqua seafoam ground, absorbing warm spectra to produce heavy maritime navy letterforms.
                           </p>
                           <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold">
@@ -1131,7 +1131,7 @@ export default function App() {
 
                       {/* D4: Spot Red Type overprinted on Spot Blue Ground -> Royal Aubergine Plum */}
                       <div
-                        className="p-3.5 bg-[var(--primary-500)] border border-[var(--primary-700)] flex flex-col justify-between relative overflow-hidden select-none"
+                        className="p-3.5 bg-[var(--primary-500)] border border-[var(--border-gray)] flex flex-col justify-between relative overflow-hidden select-none ink-squash-plate"
                         style={{ isolation: "isolate" }}
                       >
                         <div
@@ -1140,13 +1140,13 @@ export default function App() {
                           style={{ mixBlendMode: "multiply" }}
                         >
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span className="font-mono font-black">RED ON BLUE</span>
+                            <span className="font-mono font-black ink-squash-text">RED ON BLUE</span>
                             <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2 font-black">MULTIPLY</span>
                           </div>
-                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-red)]">
+                          <h5 className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-red)] ink-squash-text">
                             Royal Aubergine Plum
                           </h5>
-                          <p className="text-[11px] text-[var(--spectrum-red)] leading-snug font-semibold">
+                          <p className="text-[11px] text-[var(--spectrum-red)] leading-snug font-semibold ink-squash-text-subtle">
                             Spot red ink multiplies directly over spot blue ground, synthesizing deep royal aubergine plum typography without a third plate.
                           </p>
                           <div className="mt-2 flex items-center gap-1.5 text-[10px] font-mono font-bold">
