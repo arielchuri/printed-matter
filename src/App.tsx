@@ -44,8 +44,8 @@ export default function App() {
   const [columnAlign, setColumnAlign] = useState<"left" | "center" | "right">("center");
   const [themeMode, setThemeMode] = useState<"light" | "dark" | "stone">("light");
   const [patternSpotColor, setPatternSpotColor] = useState<string>("var(--primary-500)");
-  const [misregisterX, setMisregisterX] = useState<number>(1.5);
-  const [misregisterY, setMisregisterY] = useState<number>(1.0);
+  const [misregisterX, setMisregisterX] = useState<number>(0.75);
+  const [misregisterY, setMisregisterY] = useState<number>(0.50);
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
   
   // SVG feTurbulence Dual-Relief Ground State (Identical Base Noise with Separate Light/Dark Controls)
@@ -83,17 +83,17 @@ export default function App() {
   const [inkSquashEnabled, setInkSquashEnabled] = useState<boolean>(true);
   const [blackInkSquashEnabled, setBlackInkSquashEnabled] = useState<boolean>(true);
   
-  // Global Multi-Plate Chromatic Misregistration (Default ON)
+  // Global Multi-Plate Chromatic Misregistration (Default ON - Uniform Hairline Displacement)
   const [globalMisregistration, setGlobalMisregistration] = useState<boolean>(true);
   const [misregisterIntensity, setMisregisterIntensity] = useState<number>(1.0);
   const [plateOffsets, setPlateOffsets] = useState<Record<string, { x: number; y: number }>>({
-    blue: { x: 0.75, y: -0.50 },
-    red: { x: -0.80, y: 0.60 },
-    yellow: { x: 0.60, y: 0.75 },
-    green: { x: -0.65, y: -0.65 },
-    purple: { x: 0.70, y: 0.40 },
-    aqua: { x: -0.55, y: 0.45 },
-    orange: { x: 0.65, y: -0.60 },
+    blue: { x: 0.65, y: -0.45 },
+    red: { x: -0.65, y: 0.45 },
+    yellow: { x: 0.50, y: 0.60 },
+    green: { x: -0.55, y: -0.55 },
+    purple: { x: 0.60, y: 0.35 },
+    aqua: { x: -0.45, y: 0.40 },
+    orange: { x: 0.55, y: -0.50 },
   });
 
   const randomizePlates = () => {
@@ -101,7 +101,7 @@ export default function App() {
     const next: Record<string, { x: number; y: number }> = {};
     plates.forEach((p) => {
       const angle = Math.random() * Math.PI * 2;
-      const dist = 0.4 + Math.random() * 0.8;
+      const dist = 0.50 + Math.random() * 0.25;
       next[p] = {
         x: parseFloat((Math.cos(angle) * dist).toFixed(2)),
         y: parseFloat((Math.sin(angle) * dist).toFixed(2)),
