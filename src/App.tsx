@@ -49,10 +49,8 @@ export default function App() {
   const [simulatedBreakpoint, setSimulatedBreakpoint] = useState<BreakpointKey>("fluid");
   const [themeMode, setThemeMode] = useState<"light" | "dark" | "stone">("light");
   const [patternSpotColor, setPatternSpotColor] = useState<string>("var(--primary-500)");
-  const [squashIntensity, setSquashIntensity] = useState<"subtle" | "medium" | "heavy">("medium");
   const [misregisterX, setMisregisterX] = useState<number>(1.5);
   const [misregisterY, setMisregisterY] = useState<number>(1.0);
-  const [misregisterColor, setMisregisterColor] = useState<string>("var(--spectrum-red)");
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1440
@@ -385,7 +383,7 @@ export default function App() {
                 <div>
                   <h2 className="text-2xl font-bold tracking-tight m-0">Surfaces &amp; Primary Blue</h2>
                   <p className="text-sm text-[var(--text-muted)] mt-0.5">
-                    Stone 100 paper ground (#F5F5F4), recessed stone gutters, and Itten Blue (#4294D7). In dark mode, inverts to Stone 800 (#292524).
+                    Stone 100 paper ground (#F5F5F4), recessed stone gutters, and Itten Blue (#6EA3BE). In dark mode, inverts to Stone 800 (#292524).
                   </p>
                 </div>
                 <span className="text-xs font-mono text-[var(--text-muted)]">CORE FOUNDATIONS</span>
@@ -406,9 +404,9 @@ export default function App() {
                 />
                 <ColorChip
                   token="--primary-500"
-                  name="ITTEN BLUE (#4294D7)"
-                  value="#4294D7"
-                  description="The single authoritative brand blue. Itten Blue (#4294D7)."
+                  name="ITTEN BLUE (#6EA3BE)"
+                  value="#6EA3BE"
+                  description="The single authoritative brand blue. Itten Blue (#6EA3BE)."
                 />
               </div>
             </section>
@@ -759,7 +757,7 @@ export default function App() {
                           <p className="text-[11px] text-white/90 leading-snug">Primary geographic command heading plate.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
-                          #4294D7 Itten Blue
+                          #6EA3BE Itten Blue
                         </div>
                       </div>
 
@@ -1635,7 +1633,7 @@ export default function App() {
 
                 <div className="flex flex-wrap gap-2">
                   {[
-                    { name: "ITTEN BLUE", val: "var(--primary-500)", hex: "#4294D7" },
+                    { name: "ITTEN BLUE", val: "var(--primary-500)", hex: "#6EA3BE" },
                     { name: "RED SWATCH", val: "var(--spectrum-red)", hex: "#E65E59" },
                     { name: "ORANGE SWATCH", val: "var(--spectrum-orange)", hex: "#ED9235" },
                     { name: "AMBER GOLD", val: "var(--spectrum-amber)", hex: "#EDBC2F" },
@@ -1921,34 +1919,16 @@ export default function App() {
                 <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">SATURATED PIGMENT SQUEEZE</span>
               </div>
 
-              {/* Squash Intensity Selector & Pressure Calibration */}
+              {/* Saturated Meniscus Calibration HUD */}
               <div className="flex flex-wrap items-center justify-between gap-3 mb-6 bg-[var(--surface-muted)] p-4 border border-[var(--border-gray)]/30">
                 <div className="flex items-center gap-2 font-mono text-xs">
                   <span className="font-bold text-[var(--text)] uppercase">Platen Squeeze Depth:</span>
                   <span className="text-[var(--primary-500)] font-bold bg-[var(--white)] px-2 py-0.5 border border-[var(--border-gray)]">
-                    {squashIntensity === "subtle" ? "5px–10px Saturated Kiss" : squashIntensity === "medium" ? "8px–16px Saturated Meniscus" : "15px–30px Deep Saturated Squeeze"}
+                    5px–10px Subtle Saturated Meniscus (Kiss Impression)
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    { id: "subtle", label: "Subtle (5px–10px)", desc: "Delicate 5px–10px soft saturated kiss impression" },
-                    { id: "medium", label: "Medium (8px–16px)", desc: "Standard proof press with rich 8px–16px saturated meniscus" },
-                    { id: "heavy", label: "Heavy (15px–30px)", desc: "Heavy compression with pronounced 15px–30px deep saturated squeeze" },
-                  ].map((s) => (
-                    <button
-                      key={s.id}
-                      onClick={() => setSquashIntensity(s.id as any)}
-                      className={`px-3 py-1.5 text-xs font-mono font-bold transition-all ${
-                        squashIntensity === s.id
-                          ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                          : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface)]"
-                      }`}
-                      style={{ borderRadius: 0 }}
-                      title={s.desc}
-                    >
-                      {s.label}
-                    </button>
-                  ))}
+                <div className="text-[11px] font-mono text-[var(--text-muted)]">
+                  PHYSICAL PRESS PROFILE: FEATHERED SATURATED EDGE &bull; ZERO HARSH VECTOR STROKES
                 </div>
               </div>
 
@@ -1959,7 +1939,7 @@ export default function App() {
                     A. Spot Ink Solid Field Plates (Pigment Meniscus Concentrates into Saturated Hue, Not Black):
                   </span>
                   <span className="text-[11px] font-mono text-[var(--text-muted)]">
-                    PRESS STOCK: 100# UNCOATED STONE &bull; INSET DEPTH: 6PX–20PX
+                    PRESS STOCK: 100# UNCOATED STONE &bull; INSET DEPTH: 5PX–10PX
                   </span>
                 </div>
 
@@ -1967,11 +1947,11 @@ export default function App() {
                   {[
                     {
                       name: "ITTEN BLUE",
-                      hex: "#4294D7",
-                      rimHex: "#0C4B82",
+                      hex: "#6EA3BE",
+                      rimHex: "#356A85",
                       token: "var(--primary-500)",
-                      viscosity: "Medium-High",
-                      desc: "Mineral cobalt blue; concentrates into hyper-saturated cobalt (#0C4B82)",
+                      viscosity: "Standard Press",
+                      desc: "Mineral blue press ink; concentrates into saturated slate-blue (#356A85)",
                     },
                     {
                       name: "SPOT RED",
@@ -2014,12 +1994,7 @@ export default function App() {
                       desc: "Lamp black intaglio; deep velvet carbon meniscus (#000000)",
                     },
                   ].map((chip) => {
-                    const shadowStyle =
-                      squashIntensity === "subtle"
-                        ? `inset 0 0 6px ${chip.rimHex}88, inset 0 0 12px ${chip.rimHex}33`
-                        : squashIntensity === "medium"
-                        ? `inset 0 0 10px ${chip.rimHex}BB, inset 0 0 20px ${chip.rimHex}66, inset 0 0 32px ${chip.rimHex}26`
-                        : `inset 0 0 15px ${chip.rimHex}, inset 0 0 28px ${chip.rimHex}88, inset 0 0 44px ${chip.rimHex}38`;
+                    const shadowStyle = `inset 0 0 6px ${chip.rimHex}88, inset 0 0 12px ${chip.rimHex}33`;
 
                     return (
                       <div
@@ -2034,14 +2009,14 @@ export default function App() {
                             style={{
                               backgroundColor: chip.hex,
                               boxShadow: shadowStyle,
-                              color: chip.name === "INK BLACK" || chip.name === "SPOT RED" || chip.name === "ITTEN BLUE" ? "#FFFFFF" : "#1C1917",
+                              color: chip.name === "INK BLACK" || chip.name === "SPOT RED" ? "#FFFFFF" : "#1C1917",
                             }}
                           >
                             {/* Inner Stamp Header */}
                             <div className="flex items-center justify-between font-mono text-[10px] tracking-wider uppercase opacity-90">
                               <span className="font-bold">PLATE REF: {chip.name}</span>
                               <span className="bg-black/40 text-white px-2 py-0.5 backdrop-blur-xs font-bold">
-                                SATURATED INK MENISCUS
+                                SUBTLE INK MENISCUS
                               </span>
                             </div>
 
@@ -2058,7 +2033,7 @@ export default function App() {
                             {/* Bottom Edge Annotation */}
                             <div className="flex items-center justify-between font-mono text-[9px] uppercase opacity-80 border-t border-current/20 pt-1.5">
                               <span>SATURATED RIM: {chip.rimHex}</span>
-                              <span>INWARD FALLOFF: {squashIntensity === "subtle" ? "5px–10px" : squashIntensity === "medium" ? "8px–16px" : "15px–30px"}</span>
+                              <span>INWARD FALLOFF: 5px–10px (Subtle)</span>
                             </div>
                           </div>
                         </div>
@@ -2119,12 +2094,7 @@ export default function App() {
                       <div
                         className="text-6xl sm:text-7xl font-black font-sans text-[var(--gray-900)] leading-none select-none tracking-tighter transition-all duration-200"
                         style={{
-                          textShadow:
-                            squashIntensity === "subtle"
-                              ? "0 0 1.5px rgba(0,0,0,0.4), 0 0 3px rgba(0,0,0,0.15)"
-                              : squashIntensity === "medium"
-                              ? "0 0 2.5px rgba(0,0,0,0.5), 0 0 6px rgba(0,0,0,0.25)"
-                              : "0 0 4px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.35)",
+                          textShadow: "0 0 1.5px rgba(0,0,0,0.4), 0 0 3px rgba(0,0,0,0.15)",
                         }}
                       >
                         PRINTED
@@ -2132,12 +2102,7 @@ export default function App() {
                       <div
                         className="text-4xl sm:text-5xl font-mono font-bold text-[var(--gray-900)] leading-none select-none tracking-tight transition-all duration-200"
                         style={{
-                          textShadow:
-                            squashIntensity === "subtle"
-                              ? "0 0 1.5px rgba(0,0,0,0.4), 0 0 3px rgba(0,0,0,0.15)"
-                              : squashIntensity === "medium"
-                              ? "0 0 2.5px rgba(0,0,0,0.5), 0 0 6px rgba(0,0,0,0.25)"
-                              : "0 0 4px rgba(0,0,0,0.6), 0 0 10px rgba(0,0,0,0.35)",
+                          textShadow: "0 0 1.5px rgba(0,0,0,0.4), 0 0 3px rgba(0,0,0,0.15)",
                         }}
                       >
                         MATTER 1954
@@ -2733,7 +2698,7 @@ export default function App() {
                       plate1: "var(--spectrum-red)",
                       plate2: "var(--primary-500)",
                       p1Hex: "#E65E59",
-                      p2Hex: "#4294D7",
+                      p2Hex: "#6EA3BE",
                       resultName: "Royal Violet Field",
                     },
                     {
@@ -2741,7 +2706,7 @@ export default function App() {
                       name: "ITTEN BLUE × SPOT YELLOW",
                       plate1: "var(--primary-500)",
                       plate2: "var(--spectrum-yellow)",
-                      p1Hex: "#4294D7",
+                      p1Hex: "#6EA3BE",
                       p2Hex: "#EDD528",
                       resultName: "Forest Green Field",
                     },
@@ -2803,9 +2768,9 @@ export default function App() {
                   {(() => {
                     const currentPair =
                       knockoutPair === "red-blue"
-                        ? { p1: "var(--spectrum-red)", p2: "var(--primary-500)", p1Name: "Spot Red", p2Name: "Itten Blue", p1Hex: "#E65E59", p2Hex: "#4294D7" }
+                        ? { p1: "var(--spectrum-red)", p2: "var(--primary-500)", p1Name: "Spot Red", p2Name: "Itten Blue", p1Hex: "#E65E59", p2Hex: "#6EA3BE" }
                         : knockoutPair === "blue-yellow"
-                        ? { p1: "var(--primary-500)", p2: "var(--spectrum-yellow)", p1Name: "Itten Blue", p2Name: "Spot Yellow", p1Hex: "#4294D7", p2Hex: "#EDD528" }
+                        ? { p1: "var(--primary-500)", p2: "var(--spectrum-yellow)", p1Name: "Itten Blue", p2Name: "Spot Yellow", p1Hex: "#6EA3BE", p2Hex: "#EDD528" }
                         : knockoutPair === "red-yellow"
                         ? { p1: "var(--spectrum-red)", p2: "var(--spectrum-yellow)", p1Name: "Spot Red", p2Name: "Spot Yellow", p1Hex: "#E65E59", p2Hex: "#EDD528" }
                         : { p1: "var(--spectrum-aqua)", p2: "var(--gray-900)", p1Name: "Spot Aqua", p2Name: "Ink Black", p1Hex: "#71B197", p2Hex: "#1C1917" };
@@ -3013,113 +2978,11 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* ─── SPECIMEN 3: LARGE 2-COLOR POSTER & KEYLINE OVERPRINT ─── */}
+                {/* ─── SPECIMEN 3: CARTOGRAPHIC TOPOGRAPHY & COASTLINE DRIFT ─── */}
                 <div className="p-6 bg-[var(--surface)] border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
                   <div className="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs gap-2">
                     <span className="font-bold text-[var(--text)] uppercase tracking-tight">
-                      Specimen 3: Two-Color Editorial Poster &amp; Keyline Overprint
-                    </span>
-                    <span className="text-[var(--text-muted)]">
-                      PLATE 1: SPOT INK (BASE) &nbsp;|&nbsp; PLATE 2: INK BLACK KEYLINE (SHIFT: {misregisterX}px, {misregisterY}px)
-                    </span>
-                  </div>
-
-                  <div className="relative p-8 bg-[var(--white)] border border-[var(--border-gray)] min-h-[300px] overflow-hidden select-none">
-                    <div className="absolute inset-0 opacity-15 pointer-events-none" style={{ backgroundImage: "radial-gradient(var(--gray-900) 0.75px, transparent 0.75px)", backgroundSize: "16px 16px" }} />
-
-                    {/* PLATE 1: Spot Color Plate */}
-                    <div className="relative z-0 pointer-events-none mix-blend-multiply">
-                      <div
-                        className="w-full py-3 px-4 mb-4 flex items-center justify-between"
-                        style={{ backgroundColor: misregisterColor }}
-                      >
-                        <span className="font-mono text-xs font-bold text-white uppercase tracking-widest">
-                          PRINTED MATTER SERIES &bull; EXP-1954
-                        </span>
-                        <span className="font-mono text-[10px] text-white/90">
-                          PLATE 1 SPOT SOLID
-                        </span>
-                      </div>
-
-                      <div className="space-y-1">
-                        <div
-                          className="text-5xl sm:text-7xl font-extrabold tracking-tighter uppercase leading-none"
-                          style={{ color: misregisterColor }}
-                        >
-                          LITHOGRAPHIC
-                        </div>
-                        <div
-                          className="text-3xl sm:text-5xl font-mono font-bold tracking-tight uppercase leading-none"
-                          style={{ color: misregisterColor }}
-                        >
-                          MISREGISTRATION
-                        </div>
-                      </div>
-
-                      <div className="mt-6 flex gap-4">
-                        <div
-                          className="h-14 flex-1 flex items-center justify-center font-mono text-xs font-bold text-white uppercase"
-                          style={{ backgroundColor: misregisterColor }}
-                        >
-                          SPOT FIELD A (100% INK FILM)
-                        </div>
-                        <div
-                          className="h-14 w-32 flex items-center justify-center font-mono text-xs font-bold text-white uppercase"
-                          style={{ backgroundColor: misregisterColor }}
-                        >
-                          CHOP #04
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* PLATE 2: Ink Black Keyplate (Shifted) */}
-                    <div
-                      className="absolute inset-0 p-8 z-10 pointer-events-none mix-blend-multiply transition-transform duration-75"
-                      style={{
-                        transform: `translate(${misregisterX}px, ${misregisterY}px)`,
-                      }}
-                    >
-                      <div className="w-full py-3 px-4 mb-4 flex items-center justify-between border-2 border-[var(--gray-900)] bg-transparent">
-                        <span className="font-mono text-xs font-bold text-[var(--gray-900)] uppercase tracking-widest">
-                          PRINTED MATTER SERIES &bull; EXP-1954
-                        </span>
-                        <span className="font-mono text-[10px] text-[var(--gray-900)] font-bold">
-                          PLATE 2 KEYLINE [OVERPRINT]
-                        </span>
-                      </div>
-
-                      <div className="space-y-1">
-                        <div className="text-5xl sm:text-7xl font-extrabold tracking-tighter uppercase leading-none text-[var(--gray-900)]">
-                          LITHOGRAPHIC
-                        </div>
-                        <div className="text-3xl sm:text-5xl font-mono font-bold tracking-tight uppercase leading-none text-[var(--gray-900)]">
-                          MISREGISTRATION
-                        </div>
-                      </div>
-
-                      <div className="mt-6 flex gap-4">
-                        <div className="h-14 flex-1 border-2 border-[var(--gray-900)] flex items-center justify-center font-mono text-xs font-bold text-[var(--gray-900)] uppercase bg-transparent">
-                          SPOT FIELD A (100% INK FILM)
-                        </div>
-                        <div className="h-14 w-32 border-2 border-[var(--gray-900)] flex items-center justify-center font-mono text-xs font-bold text-[var(--gray-900)] uppercase bg-transparent">
-                          CHOP #04
-                        </div>
-                      </div>
-
-                      <div className="mt-6 pt-4 border-t border-[var(--gray-900)] flex flex-wrap items-center justify-between font-mono text-xs text-[var(--gray-900)]">
-                        <span className="font-bold">⨁ REG TARGET: ALPHA-10</span>
-                        <span>LAT: 03°36'00"N / LON: 35°59'48"E</span>
-                        <span>STATUS: {misregisterX !== 0 || misregisterY !== 0 ? "2-INK FRINGE EXPOSED" : "PERFECT PARITY"}</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* ─── SPECIMEN 4: CARTOGRAPHIC TOPOGRAPHY & COASTLINE DRIFT ─── */}
-                <div className="p-6 bg-[var(--surface)] border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
-                  <div className="flex flex-wrap items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs gap-2">
-                    <span className="font-bold text-[var(--text)] uppercase tracking-tight">
-                      Specimen 4: Cartographic Topography &amp; Maritime Coastline Drift
+                      Specimen 3: Cartographic Topography &amp; Maritime Coastline Drift
                     </span>
                     <span className="text-[var(--text-muted)]">
                       PLATE 1: HYDRO TINT (AQUA) &nbsp;|&nbsp; PLATE 2: CONTOUR KEYLINES (BLACK SHIFT: {misregisterX}px, {misregisterY}px)
