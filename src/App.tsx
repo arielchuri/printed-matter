@@ -3807,12 +3807,12 @@ export default function App() {
         )}
         </main>
 
-        {/* ─── Global Option 1 Paper Texture Overlay (Dual Blend Mode: Multiply + Screen) ─── */}
+        {/* ─── Global Option 1 Paper Texture Overlay (Alpha-Safe Composited) ─── */}
         {globalPaperTexture && (
           <div className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150">
-            {/* Global Dark Layer (Multiply) */}
+            {/* Global Dark Layer (Subtractive Alpha) */}
             {paperDarkEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }} aria-hidden="true">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
                 <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3826,40 +3826,29 @@ export default function App() {
                     const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                     const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                     const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                    const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-                    const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-                    const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+                    const kA = (paperDarkOpacity * paperDarkGain * 1.5).toFixed(4);
                     return (
                       <feColorMatrix
                         in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                         type="matrix"
-                        values={
-                          paperDarkInvert
-                            ? `
-                              ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}
-                              ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}
-                              ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}
-                              0 0 0 0 1
-                            `
-                            : `
-                              ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1
-                              ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1
-                              ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1
-                              0 0 0 0 1
-                            `
-                        }
-                        result="darkMultiplyMap"
+                        values={`
+                          0 0 0 0 ${darkR.toFixed(4)}
+                          0 0 0 0 ${darkG.toFixed(4)}
+                          0 0 0 0 ${darkB.toFixed(4)}
+                          -${kA} -${kA} -${kA} 0 ${kA}
+                        `}
+                        result="darkAlphaMap"
                       />
                     );
                   })()}
                 </filter>
-                <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="white" />
+                <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="transparent" />
               </svg>
             )}
 
-            {/* Global Light Layer (Screen) */}
+            {/* Global Light Layer (Additive Alpha) */}
             {paperLightEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }} aria-hidden="true">
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
                 <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3870,7 +3859,7 @@ export default function App() {
                   <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                   {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
                   {(() => {
-                    const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                    const effScale = (paperLightOpacity * paperLightGain * 2.0) / Math.max(0.01, 1.0 - paperLightFloor);
                     const kL = (effScale / 3).toFixed(5);
                     const bL = (-(paperLightFloor * effScale)).toFixed(5);
                     return (
@@ -3878,17 +3867,17 @@ export default function App() {
                         in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
                         type="matrix"
                         values={`
-                          ${kL} ${kL} ${kL} 0 ${bL}
-                          ${kL} ${kL} ${kL} 0 ${bL}
-                          ${kL} ${kL} ${kL} 0 ${bL}
                           0 0 0 0 1
+                          0 0 0 0 1
+                          0 0 0 0 1
+                          ${kL} ${kL} ${kL} 0 ${bL}
                         `}
-                        result="lightScreenMap"
+                        result="lightAlphaMap"
                       />
                     );
                   })()}
                 </filter>
-                <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="black" />
+                <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="transparent" />
               </svg>
             )}
           </div>
