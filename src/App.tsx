@@ -33,6 +33,7 @@ export default function App() {
   const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.038);
   const [paperOctaves, setPaperOctaves] = useState<number>(4);
   const [paperOpacity, setPaperOpacity] = useState<number>(0.28);
+  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "multiply" | "overlay">("lighten");
   const [paperPreset, setPaperPreset] = useState<"rag" | "laid" | "kraft" | "bristol">("rag");
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
@@ -3057,8 +3058,45 @@ export default function App() {
               </div>
 
               {/* ─── Interactive Physics & Synthesis Controls ─── */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs">
-                {/* Param 1: Base Frequency */}
+              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs">
+                {/* Param 1: Blend Mode (Lighten vs Multiply vs Screen vs Overlay) */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-[var(--text)] uppercase">Blend Transfer</span>
+                    <span className="text-[var(--primary-600)] font-bold uppercase">{paperBlendMode}</span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-1 mt-1">
+                    {[
+                      { id: "lighten", label: "Lighten Only", desc: "Pure white fiber highlights; never darkens ground or ink" },
+                      { id: "screen", label: "Screen", desc: "Soft luminous fiber diffusion" },
+                      { id: "multiply", label: "Multiply", desc: "Subtractive dark ink/pulp tooth" },
+                      { id: "overlay", label: "Overlay", desc: "Dual crest/trough relief" },
+                    ].map((m) => (
+                      <button
+                        key={m.id}
+                        onClick={() => setPaperBlendMode(m.id as any)}
+                        className={`py-1 px-1.5 text-[10px] font-bold border transition-colors ${
+                          paperBlendMode === m.id
+                            ? "bg-[var(--primary-500)] text-white border-[var(--primary-700)]"
+                            : "bg-[var(--surface)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
+                        }`}
+                        style={{ borderRadius: 0 }}
+                        title={m.desc}
+                      >
+                        {m.label}
+                      </button>
+                    ))}
+                  </div>
+                  <span className="text-[10px] text-[var(--text-muted)] block mt-1">
+                    {paperBlendMode === "lighten"
+                      ? "Lighten: Only lifts highlights; zero darkening"
+                      : paperBlendMode === "multiply"
+                      ? "Multiply: Subtractive pulp darkening"
+                      : `${paperBlendMode.toUpperCase()} transfer active`}
+                  </span>
+                </div>
+
+                {/* Param 2: Base Frequency */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-[var(--text)] uppercase">Granularity (Freq)</span>
@@ -3082,7 +3120,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Param 2: Num Octaves */}
+                {/* Param 3: Num Octaves */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-[var(--text)] uppercase">Depth (Octaves)</span>
@@ -3106,7 +3144,7 @@ export default function App() {
                   </div>
                 </div>
 
-                {/* Param 3: Opacity */}
+                {/* Param 4: Opacity */}
                 <div>
                   <div className="flex justify-between items-center mb-1">
                     <span className="font-bold text-[var(--text)] uppercase">Tooth Density (Alpha)</span>
@@ -3115,7 +3153,7 @@ export default function App() {
                   <input
                     type="range"
                     min="0.05"
-                    max="0.60"
+                    max="0.80"
                     step="0.01"
                     value={paperOpacity}
                     onChange={(e) => {
@@ -3126,7 +3164,7 @@ export default function App() {
                   />
                   <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
                     <span>5% Whispered</span>
-                    <span>60% Heavy</span>
+                    <span>80% Heavy</span>
                   </div>
                 </div>
 
@@ -3141,10 +3179,10 @@ export default function App() {
                     }`}
                     style={{ borderRadius: 0 }}
                   >
-                    <span>GLOBAL TOOTH: {globalPaperTexture ? "ACTIVE ON PAGE" : "OFF"}</span>
+                    <span>GLOBAL TOOTH: {globalPaperTexture ? "ACTIVE" : "OFF"}</span>
                   </button>
                   <span className="text-[10px] text-[var(--text-muted)] mt-1 text-center font-mono">
-                    Toggles physical rag overlay across entire UI.
+                    Mode: {paperBlendMode.toUpperCase()} ({Math.round(paperOpacity * 100)}%)
                   </span>
                 </div>
               </div>
@@ -3206,8 +3244,11 @@ export default function App() {
                 <div className="p-6 bg-[var(--white)] border-2 border-[var(--primary-500)] relative overflow-hidden flex flex-col justify-between select-none shadow-sm">
                   {/* Procedural SVG feTurbulence Paper Texture Layer */}
                   <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none mix-blend-multiply z-10"
-                    style={{ opacity: paperOpacity }}
+                    className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                    style={{
+                      opacity: paperOpacity,
+                      mixBlendMode: paperBlendMode as any,
+                    }}
                     aria-hidden="true"
                   >
                     <filter id="pm-paper-specimen-filter" x="0%" y="0%" width="100%" height="100%">
@@ -3219,7 +3260,13 @@ export default function App() {
                       />
                       <feColorMatrix
                         type="matrix"
-                        values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                        values={
+                          paperBlendMode === "lighten" || paperBlendMode === "screen"
+                            ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+                            : paperBlendMode === "overlay"
+                            ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+                            : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                        }
                         result="coloredNoise"
                       />
                     </filter>
@@ -3229,23 +3276,25 @@ export default function App() {
                   <div className="relative z-0">
                     <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
                       <span className="font-bold text-[var(--primary-600)] uppercase tracking-wider">
-                        Canvas B: Option 1 SVG Rag Paper Ground
+                        Canvas B: Option 1 SVG Paper Ground ({paperBlendMode.toUpperCase()})
                       </span>
                       <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold">
-                        feTurbulence ACTIVE
+                        {paperBlendMode === "lighten" ? "LIGHTEN ONLY ACTIVE" : "feTurbulence ACTIVE"}
                       </span>
                     </div>
 
                     <div className="space-y-4">
                       <div>
                         <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--primary-600)] font-bold block mb-1">
-                          TYPOGRAPHIC RELIEF PROOF (INK SQUASH + PAPER TOOTH)
+                          TYPOGRAPHIC RELIEF PROOF ({paperBlendMode.toUpperCase()} TOOTH)
                         </span>
                         <h3 className="text-4xl font-extrabold tracking-tighter uppercase text-[var(--gray-900)] leading-tight ink-squash-text">
                           ARCHIVAL FIBER
                         </h3>
                         <p className="text-xs font-mono text-[var(--gray-800)] mt-1">
-                          Synthesized organic cotton pulp tooth with microscopic paper crevices and letterpress ink meniscus.
+                          {paperBlendMode === "lighten"
+                            ? "Specular white fiber tooth crests lifting out of dark ink strokes without darkening background ground."
+                            : "Synthesized organic cotton pulp tooth with microscopic paper crevices and letterpress ink meniscus."}
                         </p>
                       </div>
 
@@ -3270,7 +3319,7 @@ export default function App() {
                   </div>
 
                   <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--primary-700)] font-bold relative z-0">
-                    <span>GROUND: STONE-100 WITH TACTILE TOOTH</span>
+                    <span>MODE: {paperBlendMode.toUpperCase()} &bull; ZERO DIRTY ARTIFACTS</span>
                     <span>0KB PAYLOAD &bull; INFINITE RESOLUTION</span>
                   </div>
                 </div>
@@ -3280,11 +3329,17 @@ export default function App() {
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Option 1 Production Implementation Code
+                    Option 1 ({paperBlendMode.toUpperCase()} Mode) Production Implementation Code
                   </span>
                   <button
                     onClick={() => {
-                      const snippet = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-multiply opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
+                      const matVal =
+                        paperBlendMode === "lighten" || paperBlendMode === "screen"
+                          ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+                          : paperBlendMode === "overlay"
+                          ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+                          : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0";
+                      const snippet = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode} opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="${matVal}" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
                       copyToClipboard(snippet);
                     }}
                     className="px-2 py-1 bg-[var(--gray-800)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] text-white flex items-center gap-1 text-[11px]"
@@ -3294,10 +3349,16 @@ export default function App() {
                   </button>
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
-{`<svg className="fixed inset-0 w-full h-full pointer-events-none mix-blend-multiply" style={{ opacity: ${paperOpacity} }}>
+{`<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity}, mixBlendMode: "${paperBlendMode}" }}>
   <filter id="pm-paper-tooth" x="0%" y="0%" width="100%" height="100%">
     <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />
-    <feColorMatrix type="matrix" values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0" />
+    <feColorMatrix type="matrix" values="${
+      paperBlendMode === "lighten" || paperBlendMode === "screen"
+        ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+        : paperBlendMode === "overlay"
+        ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+        : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+    }" />
   </filter>
   <rect width="100%" height="100%" filter="url(#pm-paper-tooth)" fill="transparent" />
 </svg>`}
@@ -3311,8 +3372,11 @@ export default function App() {
         {/* ─── Global Option 1 Paper Texture Overlay (when toggled on) ─── */}
         {globalPaperTexture && (
           <svg
-            className="fixed inset-0 w-full h-full pointer-events-none z-30 mix-blend-multiply transition-opacity duration-150"
-            style={{ opacity: paperOpacity }}
+            className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150"
+            style={{
+              opacity: paperOpacity,
+              mixBlendMode: paperBlendMode as any,
+            }}
             aria-hidden="true"
           >
             <filter id="pm-global-paper-tooth" x="0%" y="0%" width="100%" height="100%">
@@ -3324,7 +3388,13 @@ export default function App() {
               />
               <feColorMatrix
                 type="matrix"
-                values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                values={
+                  paperBlendMode === "lighten" || paperBlendMode === "screen"
+                    ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+                    : paperBlendMode === "overlay"
+                    ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+                    : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                }
                 result="coloredNoise"
               />
             </filter>
