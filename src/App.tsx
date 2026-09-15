@@ -3551,64 +3551,79 @@ export default function App() {
                 </div>
               </div>
 
-              {/* ─── GRAND SPECIMEN PROOF (DUAL-RELIEF SVG feTurbulence) ─── */}
+              {/* ─── GRAND SPECIMEN PROOF (DUAL-RELIEF SVG feTurbulence: Multiply + Screen) ─── */}
               <div className="mb-6">
                 <ArchivalPrintSpecimen
                   title="SVG feTurbulence Dual-Relief Ground"
-                  badgeText="INDEPENDENT LIGHT & DARK CONTROLS"
-                  subtitle={`Procedural vector paper ground (Freq: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}, ${paperOctaves} oct | Light: ${paperLightEnabled ? `${Math.round(paperLightOpacity * 100)}% op` : 'OFF'} [${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px] | Dark: ${paperDarkEnabled ? `${Math.round(paperDarkOpacity * 100)}% op` : 'OFF'} [${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px])`}
+                  badgeText="MULTIPLY (DARK) + SCREEN (LIGHT)"
+                  subtitle={`Procedural vector paper ground (Freq: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}, ${paperOctaves} oct | Dark (Multiply): ${paperDarkEnabled ? `${Math.round(paperDarkOpacity * 100)}% op` : 'OFF'} [${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px] | Light (Screen): ${paperLightEnabled ? `${Math.round(paperLightOpacity * 100)}% op` : 'OFF'} [${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px])`}
                   mode="full"
-                  footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)} | LIGHT: ${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px (${Math.round(paperLightOpacity * 100)}%) | DARK: ${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px (${Math.round(paperDarkOpacity * 100)}%)`}
+                  footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)} | DARK [MULTIPLY]: ${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px (${Math.round(paperDarkOpacity * 100)}%) | LIGHT [SCREEN]: ${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px (${Math.round(paperLightOpacity * 100)}%)`}
                   footerRight="PRINTED MATTER DUAL-RELIEF SUITE"
                 >
-                  {/* SVG Dual-Relief Paper Filter Layer */}
-                  <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                    aria-hidden="true"
-                  >
-                    <filter id="pm-svg-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
-                      {/* 1. Base Identical Turbulence Noise Generator */}
-                      <feTurbulence
-                        type={paperNoiseType}
-                        baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                        numOctaves={paperOctaves}
-                        result="baseNoise"
-                      />
+                  {/* 1. Dark Shadow Layer (Multiply - Deep warm shadow valleys on paper, 0% lightening on black) */}
+                  {paperDarkEnabled && (
+                    <svg
+                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                      style={{ mixBlendMode: "multiply" }}
+                      aria-hidden="true"
+                    >
+                      <filter id="pm-svg-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                        <feTurbulence
+                          type={paperNoiseType}
+                          baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                          numOctaves={paperOctaves}
+                          result="baseNoise"
+                        />
+                        <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
+                        {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
+                        <feColorMatrix
+                          in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
+                          type="matrix"
+                          values={`
+                            ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1
+                            0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1
+                            0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1
+                            0 0 0 0 1
+                          `}
+                          result="darkMultiplyMap"
+                        />
+                      </filter>
+                      <rect width="100%" height="100%" filter="url(#pm-svg-dark-tooth)" fill="white" />
+                    </svg>
+                  )}
 
-                      {/* 2. Dark Shadow Texture (Deep warm shade of paper ground) */}
-                      <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
-                      {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
-                      <feColorMatrix
-                        in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
-                        type="matrix"
-                        values={`0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
-                                0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}
-                                0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
-                                ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}`}
-                        result="darkShadow"
-                      />
-
-                      {/* 3. Light Highlight Texture (Highlights dark ink & colors) */}
-                      <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
-                      {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
-                      <feColorMatrix
-                        in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
-                        type="matrix"
-                        values={`0 0 0 0 1
-                                0 0 0 0 1
-                                0 0 0 0 1
-                                ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} 0 ${(paperLightOpacity * paperLightGain * 0.5).toFixed(4)}`}
-                        result="lightHighlight"
-                      />
-
-                      {/* 4. Physical Direct Alpha Merge */}
-                      <feMerge>
-                        {paperDarkEnabled && <feMergeNode in="darkShadow" />}
-                        {paperLightEnabled && <feMergeNode in="lightHighlight" />}
-                      </feMerge>
-                    </filter>
-                    <rect width="100%" height="100%" filter="url(#pm-svg-dual-tooth)" fill="transparent" />
-                  </svg>
+                  {/* 2. Light Highlight Layer (Screen - Bleached fiber highlights on dark ink, 0% darkening on paper) */}
+                  {paperLightEnabled && (
+                    <svg
+                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                      style={{ mixBlendMode: "screen" }}
+                      aria-hidden="true"
+                    >
+                      <filter id="pm-svg-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                        <feTurbulence
+                          type={paperNoiseType}
+                          baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                          numOctaves={paperOctaves}
+                          result="baseNoise"
+                        />
+                        <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
+                        {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
+                        <feColorMatrix
+                          in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
+                          type="matrix"
+                          values={`
+                            ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0
+                            0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0
+                            0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0
+                            0 0 0 0 1
+                          `}
+                          result="lightScreenMap"
+                        />
+                      </filter>
+                      <rect width="100%" height="100%" filter="url(#pm-svg-light-tooth)" fill="black" />
+                    </svg>
+                  )}
                 </ArchivalPrintSpecimen>
               </div>
 
@@ -3616,46 +3631,45 @@ export default function App() {
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Production Implementation Code (SVG feTurbulence Dual-Relief with Warm Deep Paper Shadow)
+                    Production Implementation Code (Dual Blend Modes: Multiply Dark + Screen Light)
                   </span>
                   <button
                     onClick={() => {
-                      const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3);
-                      const darkG = Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3);
-                      const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3);
-                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Deep Warm Paper Shadow & Light Highlight) */
-<svg className="fixed inset-0 w-full h-full pointer-events-none">
-  <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
-    <!-- 1. Single Base Noise Generator (Identical Seed) -->
-    <feTurbulence
-      type="${paperNoiseType}"
-      baseFrequency="${paperBaseFrequency} ${paperFreqY}"
-      numOctaves="${paperOctaves}"
-      result="baseNoise"
-    />
-    <!-- 2. Dark Shadow Component (Deep Warm Shade of Paper Color) -->
-    <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
-    ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(1)}" result="blurredDark" />\n    ` : ""}<feColorMatrix
-      in="${paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}"
-      type="matrix"
-      values="0 0 0 0 ${darkR}   0 0 0 0 ${darkG}   0 0 0 0 ${darkB}   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}"
-      result="darkShadow"
-    />
-    <!-- 3. Light Highlight Component (Highlights Dark Ink & Swatches) -->
-    <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
-    ${paperLightBlur > 0 ? `<feGaussianBlur in="offsetLight" stdDeviation="${paperLightBlur.toFixed(1)}" result="blurredLight" />\n    ` : ""}<feColorMatrix
-      in="${paperLightBlur > 0 ? "blurredLight" : "offsetLight"}"
-      type="matrix"
-      values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} 0 ${(paperLightOpacity * paperLightGain * 0.5).toFixed(4)}"
-      result="lightHighlight"
-    />
-    <!-- 4. Physical Direct Alpha Merge -->
-    <feMerge>
-      ${paperDarkEnabled ? `<feMergeNode in="darkShadow" />\n      ` : ""}${paperLightEnabled ? `<feMergeNode in="lightHighlight" />` : ""}
-    </feMerge>
-  </filter>
-  <rect width="100%" height="100%" filter="url(#paper-dual-tooth)" fill="transparent" />
-</svg>`;
+                      const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
+                      const darkG = Math.min(1.0, Math.max(0, paperDarkG));
+                      const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
+                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Multiply Dark + Screen Light) */
+<div className="relative w-full h-full">
+  <!-- 1. Dark Shadow Layer: mix-blend-mode: multiply (Darkens Paper Ground, 0% Lightening on Black Ink) -->
+  ${paperDarkEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }}>
+    <filter id="paper-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
+      <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
+      ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(1)}" result="blurredDark" />\n      ` : ""}<feColorMatrix
+        in="${paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}"
+        type="matrix"
+        values="${(-(1 - darkR) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1   0 ${(-(1 - darkG) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1   0 0 ${(-(1 - darkB) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1   0 0 0 0 1"
+        result="darkMultiplyMap"
+      />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#paper-dark-tooth)" fill="white" />
+  </svg>` : "<!-- Dark Shadow Channel Disabled -->"}
+
+  <!-- 2. Light Highlight Layer: mix-blend-mode: screen (Highlights Dark Ink, 0% Darkening on Paper Ground) -->
+  ${paperLightEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }}>
+    <filter id="paper-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
+      <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
+      ${paperLightBlur > 0 ? `<feGaussianBlur in="offsetLight" stdDeviation="${paperLightBlur.toFixed(1)}" result="blurredLight" />\n      ` : ""}<feColorMatrix
+        in="${paperLightBlur > 0 ? "blurredLight" : "offsetLight"}"
+        type="matrix"
+        values="${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0   0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0   0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0   0 0 0 0 1"
+        result="lightScreenMap"
+      />
+    </filter>
+    <rect width="100%" height="100%" filter="url(#paper-light-tooth)" fill="black" />
+  </svg>` : "<!-- Light Highlight Channel Disabled -->"}
+</div>`;
                       copyToClipboard(code);
                     }}
                     className="px-2 py-1 bg-[var(--gray-800)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] text-white flex items-center gap-1 text-[11px]"
@@ -3665,19 +3679,25 @@ export default function App() {
                   </button>
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
-                  {`/* Option 1: SVG feTurbulence Dual-Relief Ground (Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, Octaves: ${paperOctaves} | Light: ${Math.round(paperLightOpacity * 100)}% op, Offset: [${paperLightOffsetX > 0 ? `+${paperLightOffsetX.toFixed(1)}` : paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY > 0 ? `+${paperLightOffsetY.toFixed(1)}` : paperLightOffsetY.toFixed(1)}px] | Dark: ${Math.round(paperDarkOpacity * 100)}% op, Offset: [${paperDarkOffsetX > 0 ? `+${paperDarkOffsetX.toFixed(1)}` : paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY > 0 ? `+${paperDarkOffsetY.toFixed(1)}` : paperDarkOffsetY.toFixed(1)}px]) */
-<svg className="fixed inset-0 w-full h-full pointer-events-none">
-  <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                  {`/* Option 1: Dual Blend Modes (Dark: Multiply, Light: Screen | Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, ${paperOctaves} oct) */
+<!-- Layer 1: Dark Shadows (Multiply) -->
+<svg style={{ mixBlendMode: "multiply" }} className="absolute inset-0 w-full h-full pointer-events-none">
+  <filter id="paper-dark-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
-    <feColorMatrix in="offsetDark" type="matrix" values="0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}   0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}   0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}" result="darkShadow" />
-    <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
-    <feColorMatrix in="offsetLight" type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} 0 ${(paperLightOpacity * paperLightGain * 0.5).toFixed(4)}" result="lightHighlight" />
-    <feMerge>
-      ${paperDarkEnabled ? `<feMergeNode in="darkShadow" />\n      ` : ""}${paperLightEnabled ? `<feMergeNode in="lightHighlight" />` : ""}
-    </feMerge>
+    <feColorMatrix in="offsetDark" type="matrix" values="${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1   0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1   0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1   0 0 0 0 1" />
   </filter>
-  <rect width="100%" height="100%" filter="url(#paper-dual-tooth)" fill="transparent" />
+  <rect width="100%" height="100%" filter="url(#paper-dark-tooth)" fill="white" />
+</svg>
+
+<!-- Layer 2: Light Highlights (Screen) -->
+<svg style={{ mixBlendMode: "screen" }} className="absolute inset-0 w-full h-full pointer-events-none">
+  <filter id="paper-light-tooth">
+    <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
+    <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
+    <feColorMatrix in="offsetLight" type="matrix" values="${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0   0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0   0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0   0 0 0 0 1" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#paper-light-tooth)" fill="black" />
 </svg>`}
                 </pre>
               </div>
@@ -3686,48 +3706,65 @@ export default function App() {
         )}
         </main>
 
-        {/* ─── Global Option 1 Paper Texture Overlay (when toggled on) ─── */}
+        {/* ─── Global Option 1 Paper Texture Overlay (Dual Blend Mode: Multiply + Screen) ─── */}
         {globalPaperTexture && (
-          <svg
-            className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150"
-            aria-hidden="true"
-          >
-            <filter id="pm-global-paper-tooth" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence
-                type={paperNoiseType}
-                baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                numOctaves={paperOctaves}
-                result="baseNoise"
-              />
-              <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
-              {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
-              <feColorMatrix
-                in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
-                type="matrix"
-                values={`0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
-                        0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}
-                        0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
-                        ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}`}
-                result="darkShadow"
-              />
-              <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
-              {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
-              <feColorMatrix
-                in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
-                type="matrix"
-                values={`0 0 0 0 1
-                        0 0 0 0 1
-                        0 0 0 0 1
-                        ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} 0 ${(paperLightOpacity * paperLightGain * 0.5).toFixed(4)}`}
-                result="lightHighlight"
-              />
-              <feMerge>
-                {paperDarkEnabled && <feMergeNode in="darkShadow" />}
-                {paperLightEnabled && <feMergeNode in="lightHighlight" />}
-              </feMerge>
-            </filter>
-            <rect width="100%" height="100%" filter="url(#pm-global-paper-tooth)" fill="transparent" />
-          </svg>
+          <div className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150">
+            {/* Global Dark Layer (Multiply) */}
+            {paperDarkEnabled && (
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }} aria-hidden="true">
+                <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                  <feTurbulence
+                    type={paperNoiseType}
+                    baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                    numOctaves={paperOctaves}
+                    result="baseNoise"
+                  />
+                  <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
+                  {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
+                  <feColorMatrix
+                    in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
+                    type="matrix"
+                    values={`
+                      ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1
+                      0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1
+                      0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1
+                      0 0 0 0 1
+                    `}
+                    result="darkMultiplyMap"
+                  />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="white" />
+              </svg>
+            )}
+
+            {/* Global Light Layer (Screen) */}
+            {paperLightEnabled && (
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }} aria-hidden="true">
+                <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                  <feTurbulence
+                    type={paperNoiseType}
+                    baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                    numOctaves={paperOctaves}
+                    result="baseNoise"
+                  />
+                  <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
+                  {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
+                  <feColorMatrix
+                    in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
+                    type="matrix"
+                    values={`
+                      ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0
+                      0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0
+                      0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0
+                      0 0 0 0 1
+                    `}
+                    result="lightScreenMap"
+                  />
+                </filter>
+                <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="black" />
+              </svg>
+            )}
+          </div>
         )}
 
         {copiedToken && (
