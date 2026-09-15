@@ -376,8 +376,8 @@ export default function App() {
               onClick={() => setThemeMode("light")}
               className={`flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-1 transition-colors ${
                 themeMode === "light"
-                  ? "bg-white text-[var(--gray-900)]"
-                  : "text-white/80 hover:text-white"
+                  ? "bg-white text-[var(--gray-900)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                  : "text-white/80 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
               }`}
               style={{ borderRadius: 0 }}
               title="Light Mode: Stone 100 Paper (#F5F5F4)"
@@ -390,8 +390,8 @@ export default function App() {
               onClick={() => setThemeMode("stone")}
               className={`flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-1 transition-colors ${
                 themeMode === "stone"
-                  ? "bg-[#A8A29E] text-[var(--gray-900)] border border-black/30 font-extrabold"
-                  : "text-white/80 hover:text-white"
+                  ? "bg-[#A8A29E] text-[var(--gray-900)] border border-black/30 font-extrabold hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                  : "text-white/80 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
               }`}
               style={{ borderRadius: 0 }}
               title="Stone-400 Midtone Ground Mode (#A8A29E)"
@@ -404,8 +404,8 @@ export default function App() {
               onClick={() => setThemeMode("dark")}
               className={`flex items-center gap-1 text-[11px] font-mono font-bold px-2 py-1 transition-colors ${
                 themeMode === "dark"
-                  ? "bg-[var(--gray-900)] text-white border border-[var(--gray-600)]"
-                  : "text-white/80 hover:text-white"
+                  ? "bg-[var(--gray-900)] text-white border border-[var(--gray-600)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                  : "text-white/80 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
               }`}
               style={{ borderRadius: 0 }}
               title="Dark Mode: Stone 800 (#292524)"
@@ -1341,8 +1341,8 @@ export default function App() {
                     onClick={() => setSelectedMeasure(m.id as any)}
                     className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors ${
                       selectedMeasure === m.id
-                        ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                        : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--gray-100)]"
+                        ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -1445,8 +1445,8 @@ export default function App() {
                       onClick={() => setColumnMaxWidth(col.id as any)}
                       className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors ${
                         columnMaxWidth === col.id
-                          ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                          : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--gray-100)]"
+                          ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -1469,8 +1469,8 @@ export default function App() {
                       onClick={() => setColumnAlign(aln.id as any)}
                       className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors flex items-center gap-1.5 ${
                         columnAlign === aln.id
-                          ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                          : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--gray-100)]"
+                          ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -2101,8 +2101,8 @@ export default function App() {
                         onClick={() => setCabbageFilter(f.id)}
                         className={`px-2.5 py-1 font-bold transition-colors ${
                           cabbageFilter === f.id
-                            ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                            : "bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                            ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                            : "bg-[var(--surface-muted)] text-[var(--primary-500)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                         }`}
                         style={{ borderRadius: 0 }}
                       >

@@ -130,10 +130,10 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                 <div className="flex gap-1">
                   <button
                     onClick={() => setBgMode("paper")}
-                    className={`px-2 py-1 flex-1 text-[10px] font-bold border ${
+                    className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "paper"
-                        ? "bg-[var(--gray-900)] text-white border-[var(--gray-900)]"
-                        : "bg-[var(--white)] border-[var(--border-gray)]"
+                        ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -141,10 +141,10 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                   </button>
                   <button
                     onClick={() => setBgMode("dark")}
-                    className={`px-2 py-1 flex-1 text-[10px] font-bold border ${
+                    className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "dark"
-                        ? "bg-[var(--gray-900)] text-white border-[var(--gray-900)]"
-                        : "bg-[var(--white)] border-[var(--border-gray)]"
+                        ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -152,10 +152,10 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                   </button>
                   <button
                     onClick={() => setBgMode("grid")}
-                    className={`px-2 py-1 flex-1 text-[10px] font-bold border ${
+                    className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "grid"
-                        ? "bg-[var(--gray-900)] text-white border-[var(--gray-900)]"
-                        : "bg-[var(--white)] border-[var(--border-gray)]"
+                        ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -171,10 +171,10 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                     <button
                       key={s}
                       onClick={() => setPreviewScale(s)}
-                      className={`px-1.5 py-1 flex-1 text-[10px] font-bold border ${
+                      className={`px-1.5 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                         previewScale === s
-                          ? "bg-[var(--primary-500)] text-white border-[var(--primary-500)]"
-                          : "bg-[var(--white)] border-[var(--border-gray)]"
+                          ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -250,7 +250,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleDownload}
-                  className="px-3 py-2 bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] font-mono text-xs font-bold hover:bg-[var(--surface)] flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-2 bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] font-mono text-xs font-bold hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] flex items-center gap-1.5 transition-colors"
                   style={{ borderRadius: 0 }}
                 >
                   <Download className="w-3.5 h-3.5" />
@@ -259,10 +259,10 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
 
                 <button
                   onClick={() => onCopySvg(symbol)}
-                  className={`px-4 py-2 font-mono text-xs font-bold flex items-center gap-1.5 transition-all ${
+                  className={`px-4 py-2 font-mono text-xs font-bold flex items-center gap-1.5 transition-colors ${
                     isCopied
                       ? "bg-[var(--success-color)] text-white border border-[var(--success-color)]"
-                      : "bg-[var(--primary-500)] text-white border border-[var(--primary-500)] hover:bg-[var(--primary-600)]"
+                      : "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                   }`}
                   style={{ borderRadius: 0 }}
                 >
