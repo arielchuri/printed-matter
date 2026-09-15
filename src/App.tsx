@@ -43,6 +43,7 @@ export default function App() {
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
   const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.08); // 8%
   const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.0x
+  const [paperLightFloor, setPaperLightFloor] = useState<number>(0.0); // Floor clip (0.0 to 0.8) to eliminate fog on black ink
   const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-0.5); // -0.5px
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-0.5); // -0.5px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.0); // 0.0px
@@ -3196,7 +3197,7 @@ export default function App() {
                         type="range"
                         min="0.005"
                         max="0.500"
-                        step="0.005"
+                        step="0.001"
                         value={paperBaseFrequency}
                         onChange={(e) => {
                           const val = parseFloat(e.target.value);
@@ -3217,7 +3218,7 @@ export default function App() {
                         type="range"
                         min="0.005"
                         max="0.500"
-                        step="0.005"
+                        step="0.001"
                         value={paperFreqY}
                         onChange={(e) => {
                           setPaperFreqY(parseFloat(e.target.value));
@@ -3290,20 +3291,20 @@ export default function App() {
                         </label>
                       </div>
                       <span className="text-[10px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1 font-bold">
-                        {paperLightEnabled ? `${Math.round(paperLightOpacity * 100)}% OPACITY` : "DISABLED"}
+                        {paperLightEnabled ? `${(paperLightOpacity * 100).toFixed(2)}% OPACITY` : "DISABLED"}
                       </span>
                     </div>
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Light Opacity (0%–30%):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{Math.round(paperLightOpacity * 100)}%</span>
+                        <span className="font-bold">Light Opacity (0.00%–25.00%):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{(paperLightOpacity * 100).toFixed(2)}%</span>
                       </div>
                       <input
                         type="range"
-                        min="0.00"
-                        max="0.30"
-                        step="0.01"
+                        min="0.0000"
+                        max="0.2500"
+                        step="0.0002"
                         value={paperLightOpacity}
                         onChange={(e) => setPaperLightOpacity(parseFloat(e.target.value))}
                         className="w-full accent-[var(--spectrum-yellow)] cursor-pointer"
@@ -3312,24 +3313,24 @@ export default function App() {
 
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="font-bold block mb-0.5">Gain: {paperLightGain.toFixed(1)}×</span>
+                        <span className="font-bold block mb-0.5">Gain: {paperLightGain.toFixed(2)}×</span>
                         <input
                           type="range"
-                          min="0.2"
-                          max="2.5"
-                          step="0.1"
+                          min="0.000"
+                          max="2.500"
+                          step="0.005"
                           value={paperLightGain}
                           onChange={(e) => setPaperLightGain(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Blur: {paperLightBlur.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Blur: {paperLightBlur.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="0.0"
-                          max="2.0"
-                          step="0.1"
+                          min="0.00"
+                          max="2.00"
+                          step="0.05"
                           value={paperLightBlur}
                           onChange={(e) => setPaperLightBlur(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
@@ -3337,14 +3338,31 @@ export default function App() {
                       </div>
                     </div>
 
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-bold">Peak Floor / Noise Clip:</span>
+                        <span className="text-[var(--primary-600)] font-bold">{(paperLightFloor * 100).toFixed(0)}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0.00"
+                        max="0.80"
+                        step="0.01"
+                        value={paperLightFloor}
+                        onChange={(e) => setPaperLightFloor(parseFloat(e.target.value))}
+                        className="w-full accent-[var(--primary-500)] cursor-pointer"
+                        title="Clips bottom noise floor to isolate true fiber peaks and prevent flat gray fogging on black ink"
+                      />
+                    </div>
+
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="font-bold block mb-0.5">Offset X: {paperLightOffsetX > 0 ? `+${paperLightOffsetX.toFixed(1)}` : paperLightOffsetX.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Offset X: {paperLightOffsetX > 0 ? `+${paperLightOffsetX.toFixed(2)}` : paperLightOffsetX.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="-5.0"
-                          max="5.0"
-                          step="0.1"
+                          min="-5.00"
+                          max="5.00"
+                          step="0.05"
                           value={paperLightOffsetX}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
@@ -3355,12 +3373,12 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Offset Y: {paperLightOffsetY > 0 ? `+${paperLightOffsetY.toFixed(1)}` : paperLightOffsetY.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Offset Y: {paperLightOffsetY > 0 ? `+${paperLightOffsetY.toFixed(2)}` : paperLightOffsetY.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="-5.0"
-                          max="5.0"
-                          step="0.1"
+                          min="-5.00"
+                          max="5.00"
+                          step="0.05"
                           value={paperLightOffsetY}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
@@ -3394,20 +3412,20 @@ export default function App() {
                         </label>
                       </div>
                       <span className="text-[10px] bg-[var(--gray-800)] text-white px-1 font-bold">
-                        {paperDarkEnabled ? `${Math.round(paperDarkOpacity * 100)}% OPACITY` : "DISABLED"}
+                        {paperDarkEnabled ? `${(paperDarkOpacity * 100).toFixed(2)}% OPACITY` : "DISABLED"}
                       </span>
                     </div>
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Dark Opacity (0%–30%):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{Math.round(paperDarkOpacity * 100)}%</span>
+                        <span className="font-bold">Dark Opacity (0.00%–25.00%):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{(paperDarkOpacity * 100).toFixed(2)}%</span>
                       </div>
                       <input
                         type="range"
-                        min="0.00"
-                        max="0.30"
-                        step="0.01"
+                        min="0.0000"
+                        max="0.2500"
+                        step="0.0002"
                         value={paperDarkOpacity}
                         onChange={(e) => setPaperDarkOpacity(parseFloat(e.target.value))}
                         className="w-full accent-[var(--gray-800)] cursor-pointer"
@@ -3460,13 +3478,13 @@ export default function App() {
                       <div className="pt-1">
                         <div className="flex justify-between text-[9px] mb-0.5">
                           <span className="font-bold">Warmth / Amber Bias:</span>
-                          <span className="text-[var(--primary-600)] font-bold">{paperDarkWarmth.toFixed(1)}×</span>
+                          <span className="text-[var(--primary-600)] font-bold">{paperDarkWarmth.toFixed(2)}×</span>
                         </div>
                         <input
                           type="range"
-                          min="0.6"
-                          max="1.8"
-                          step="0.05"
+                          min="0.60"
+                          max="1.80"
+                          step="0.01"
                           value={paperDarkWarmth}
                           onChange={(e) => setPaperDarkWarmth(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
@@ -3476,24 +3494,24 @@ export default function App() {
 
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="font-bold block mb-0.5">Gain: {paperDarkGain.toFixed(1)}×</span>
+                        <span className="font-bold block mb-0.5">Gain: {paperDarkGain.toFixed(2)}×</span>
                         <input
                           type="range"
-                          min="0.2"
-                          max="2.5"
-                          step="0.1"
+                          min="0.000"
+                          max="2.500"
+                          step="0.005"
                           value={paperDarkGain}
                           onChange={(e) => setPaperDarkGain(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Blur: {paperDarkBlur.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Blur: {paperDarkBlur.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="0.0"
-                          max="2.0"
-                          step="0.1"
+                          min="0.00"
+                          max="2.00"
+                          step="0.05"
                           value={paperDarkBlur}
                           onChange={(e) => setPaperDarkBlur(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
@@ -3503,12 +3521,12 @@ export default function App() {
 
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
-                        <span className="font-bold block mb-0.5">Offset X: {paperDarkOffsetX > 0 ? `+${paperDarkOffsetX.toFixed(1)}` : paperDarkOffsetX.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Offset X: {paperDarkOffsetX > 0 ? `+${paperDarkOffsetX.toFixed(2)}` : paperDarkOffsetX.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="-5.0"
-                          max="5.0"
-                          step="0.1"
+                          min="-5.00"
+                          max="5.00"
+                          step="0.05"
                           value={paperDarkOffsetX}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
@@ -3519,12 +3537,12 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Offset Y: {paperDarkOffsetY > 0 ? `+${paperDarkOffsetY.toFixed(1)}` : paperDarkOffsetY.toFixed(1)}px</span>
+                        <span className="font-bold block mb-0.5">Offset Y: {paperDarkOffsetY > 0 ? `+${paperDarkOffsetY.toFixed(2)}` : paperDarkOffsetY.toFixed(2)}px</span>
                         <input
                           type="range"
-                          min="-5.0"
-                          max="5.0"
-                          step="0.1"
+                          min="-5.00"
+                          max="5.00"
+                          step="0.05"
                           value={paperDarkOffsetY}
                           onChange={(e) => {
                             const val = parseFloat(e.target.value);
@@ -3565,9 +3583,9 @@ export default function App() {
                 <ArchivalPrintSpecimen
                   title="SVG feTurbulence Dual-Relief Ground"
                   badgeText={`MULTIPLY (DARK ${paperDarkInvert ? 'INVERTED' : 'DIRECT'}) + SCREEN (LIGHT)`}
-                  subtitle={`Procedural vector paper ground (Freq: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}, ${paperOctaves} oct | Dark (Multiply ${paperDarkInvert ? 'Inverted' : 'Direct'}): ${paperDarkEnabled ? `${Math.round(paperDarkOpacity * 100)}% op` : 'OFF'} [${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px] | Light (Screen): ${paperLightEnabled ? `${Math.round(paperLightOpacity * 100)}% op` : 'OFF'} [${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px])`}
+                  subtitle={`Procedural vector paper ground (Freq: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}, ${paperOctaves} oct | Dark (Multiply ${paperDarkInvert ? 'Inverted' : 'Direct'}): ${paperDarkEnabled ? `${(paperDarkOpacity * 100).toFixed(2)}% op (${paperDarkGain.toFixed(2)}×)` : 'OFF'} [${paperDarkOffsetX.toFixed(2)}px, ${paperDarkOffsetY.toFixed(2)}px] | Light (Screen): ${paperLightEnabled ? `${(paperLightOpacity * 100).toFixed(2)}% op (${paperLightGain.toFixed(2)}×)` : 'OFF'} [${paperLightOffsetX.toFixed(2)}px, ${paperLightOffsetY.toFixed(2)}px])`}
                   mode="full"
-                  footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)} | DARK [MULTIPLY ${paperDarkInvert ? 'INV' : 'DIR'}]: ${paperDarkOffsetX.toFixed(1)}px, ${paperDarkOffsetY.toFixed(1)}px (${Math.round(paperDarkOpacity * 100)}%) | LIGHT [SCREEN]: ${paperLightOffsetX.toFixed(1)}px, ${paperLightOffsetY.toFixed(1)}px (${Math.round(paperLightOpacity * 100)}%)`}
+                  footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)} | DARK [MULTIPLY ${paperDarkInvert ? 'INV' : 'DIR'}]: ${paperDarkOffsetX.toFixed(2)}px, ${paperDarkOffsetY.toFixed(2)}px (${(paperDarkOpacity * 100).toFixed(2)}%, ${paperDarkGain.toFixed(2)}×) | LIGHT [SCREEN]: ${paperLightOffsetX.toFixed(2)}px, ${paperLightOffsetY.toFixed(2)}px (${(paperLightOpacity * 100).toFixed(2)}%, ${paperLightGain.toFixed(2)}×)`}
                   footerRight="PRINTED MATTER DUAL-RELIEF SUITE"
                 >
                   {/* 1. Dark Shadow Layer (Multiply - Deep warm shadow valleys on paper, 0% lightening on black) */}
@@ -3638,18 +3656,25 @@ export default function App() {
                         />
                         <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                         {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
-                        {/* Monochromatic luminance mapping to eliminate chromatic rainbow noise */}
-                        <feColorMatrix
-                          in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
-                          type="matrix"
-                          values={`
-                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                            0 0 0 0 1
-                          `}
-                          result="lightScreenMap"
-                        />
+                        {/* Monochromatic luminance mapping with noise floor clipping to eliminate flat gray fogging */}
+                        {(() => {
+                          const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                          const kL = (effScale / 3).toFixed(5);
+                          const bL = (-(paperLightFloor * effScale)).toFixed(5);
+                          return (
+                            <feColorMatrix
+                              in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
+                              type="matrix"
+                              values={`
+                                ${kL} ${kL} ${kL} 0 ${bL}
+                                ${kL} ${kL} ${kL} 0 ${bL}
+                                ${kL} ${kL} ${kL} 0 ${bL}
+                                0 0 0 0 1
+                              `}
+                              result="lightScreenMap"
+                            />
+                          );
+                        })()}
                       </filter>
                       <rect width="100%" height="100%" filter="url(#pm-svg-light-tooth)" fill="black" />
                     </svg>
@@ -3674,15 +3699,17 @@ export default function App() {
                       const darkValues = paperDarkInvert
                         ? `${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}   ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}   ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}   0 0 0 0 1`
                         : `${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1   ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1   ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1   0 0 0 0 1`;
-                      const kL = (paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4);
+                      const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                      const kL = (effScale / 3).toFixed(5);
+                      const bL = (-(paperLightFloor * effScale)).toFixed(5);
                       const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Multiply Inverted Dark + Screen Light) */
 <div className="relative w-full h-full">
   <!-- 1. Dark Shadow Layer: mix-blend-mode: multiply (Valleys darkened into Paper Ground, 0% Lightening on Black Ink) -->
   ${paperDarkEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }}>
     <filter id="paper-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
-      <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
-      ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(1)}" result="blurredDark" />\n      ` : ""}<feColorMatrix
+      <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(2)}" dy="${paperDarkOffsetY.toFixed(2)}" result="offsetDark" />
+      ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(2)}" result="blurredDark" />\n      ` : ""}<feColorMatrix
         in="${paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}"
         type="matrix"
         values="${darkValues}"
@@ -3696,11 +3723,11 @@ export default function App() {
   ${paperLightEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "screen" }}>
     <filter id="paper-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
       <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
-      <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
-      ${paperLightBlur > 0 ? `<feGaussianBlur in="offsetLight" stdDeviation="${paperLightBlur.toFixed(1)}" result="blurredLight" />\n      ` : ""}<feColorMatrix
+      <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(2)}" dy="${paperLightOffsetY.toFixed(2)}" result="offsetLight" />
+      ${paperLightBlur > 0 ? `<feGaussianBlur in="offsetLight" stdDeviation="${paperLightBlur.toFixed(2)}" result="blurredLight" />\n      ` : ""}<feColorMatrix
         in="${paperLightBlur > 0 ? "blurredLight" : "offsetLight"}"
         type="matrix"
-        values="${kL} ${kL} ${kL} 0 0   ${kL} ${kL} ${kL} 0 0   ${kL} ${kL} ${kL} 0 0   0 0 0 0 1"
+        values="${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   0 0 0 0 1"
         result="lightScreenMap"
       />
     </filter>
@@ -3721,7 +3748,7 @@ export default function App() {
 <svg style={{ mixBlendMode: "multiply" }} className="absolute inset-0 w-full h-full pointer-events-none">
   <filter id="paper-dark-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
-    <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
+    <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(2)}" dy="${paperDarkOffsetY.toFixed(2)}" result="offsetDark" />
     <feColorMatrix in="offsetDark" type="matrix" values="${(() => {
       const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
       const darkG = Math.min(1.0, Math.max(0, paperDarkG));
@@ -3741,8 +3768,13 @@ export default function App() {
 <svg style={{ mixBlendMode: "screen" }} className="absolute inset-0 w-full h-full pointer-events-none">
   <filter id="paper-light-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
-    <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
-    <feColorMatrix in="offsetLight" type="matrix" values="${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   0 0 0 0 1" />
+    <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(2)}" dy="${paperLightOffsetY.toFixed(2)}" result="offsetLight" />
+    <feColorMatrix in="offsetLight" type="matrix" values="${(() => {
+      const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+      const kL = (effScale / 3).toFixed(5);
+      const bL = (-(paperLightFloor * effScale)).toFixed(5);
+      return `${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   ${kL} ${kL} ${kL} 0 ${bL}   0 0 0 0 1`;
+    })()}" />
   </filter>
   <rect width="100%" height="100%" filter="url(#paper-light-tooth)" fill="black" />
 </svg>`}
@@ -3815,17 +3847,24 @@ export default function App() {
                   />
                   <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                   {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
-                  <feColorMatrix
-                    in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
-                    type="matrix"
-                    values={`
-                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
-                      0 0 0 0 1
-                    `}
-                    result="lightScreenMap"
-                  />
+                  {(() => {
+                    const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                    const kL = (effScale / 3).toFixed(5);
+                    const bL = (-(paperLightFloor * effScale)).toFixed(5);
+                    return (
+                      <feColorMatrix
+                        in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
+                        type="matrix"
+                        values={`
+                          ${kL} ${kL} ${kL} 0 ${bL}
+                          ${kL} ${kL} ${kL} 0 ${bL}
+                          ${kL} ${kL} ${kL} 0 ${bL}
+                          0 0 0 0 1
+                        `}
+                        result="lightScreenMap"
+                      />
+                    );
+                  })()}
                 </filter>
                 <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="black" />
               </svg>
