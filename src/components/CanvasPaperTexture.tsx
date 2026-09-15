@@ -3,6 +3,11 @@ import React, { useEffect, useRef } from "react";
 export interface CanvasPaperTextureProps {
   fiberCount?: number;
   fiberLength?: number;
+  fiberThickness?: number;
+  fiberCurvature?: number;
+  speckCount?: number;
+  speckSize?: number;
+  colorTone?: "white" | "cream" | "charcoal" | "brown";
   opacity?: number;
   seed?: number;
   blendMode?: "lighten" | "screen" | "multiply" | "overlay";
@@ -10,7 +15,7 @@ export interface CanvasPaperTextureProps {
   style?: React.CSSProperties;
 }
 
-// Pseudo-random generator with seed support for deterministic fiber layout
+// Deterministic PRNG with seed
 function createPRNG(seed: number) {
   let s = seed;
   return function () {
@@ -20,8 +25,13 @@ function createPRNG(seed: number) {
 }
 
 export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
-  fiberCount = 1800,
+  fiberCount = 2000,
   fiberLength = 4,
+  fiberThickness = 0.6,
+  fiberCurvature = 4,
+  speckCount = 1500,
+  speckSize = 0.8,
+  colorTone = "white",
   opacity = 0.3,
   seed = 1,
   blendMode = "lighten",
@@ -43,24 +53,37 @@ export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
     const rand = createPRNG(seed);
     const isLighten = blendMode === "lighten" || blendMode === "screen";
 
+    const getBaseRGB = (alpha: number) => {
+      if (colorTone === "white") {
+        return `rgba(255, 255, 255, ${alpha})`;
+      }
+      if (colorTone === "cream") {
+        return isLighten
+          ? `rgba(255, 250, 240, ${alpha})`
+          : `rgba(215, 200, 180, ${alpha})`;
+      }
+      if (colorTone === "charcoal") {
+        return `rgba(40, 35, 30, ${alpha * 0.7})`;
+      }
+      // brown / raw kraft
+      return `rgba(130, 95, 60, ${alpha * 0.8})`;
+    };
+
     // 1. Draw microscopic pulp stipple flecks
-    const speckCount = Math.floor(fiberCount * 1.2);
     for (let i = 0; i < speckCount; i++) {
       const x = rand() * width;
       const y = rand() * height;
-      const r = rand() * 0.8 + 0.3;
-      const a = rand() * 0.5 + 0.1;
+      const r = rand() * speckSize + 0.2;
+      const a = rand() * 0.6 + 0.1;
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = isLighten
-        ? `rgba(255, 255, 255, ${a})`
-        : `rgba(60, 50, 45, ${a * 0.6})`;
+      ctx.fillStyle = getBaseRGB(a);
       ctx.fill();
     }
 
     // 2. Draw organic cotton micro-fibers (curved bezier filaments)
-    ctx.lineWidth = 0.6;
+    ctx.lineWidth = fiberThickness;
     ctx.lineCap = "round";
 
     for (let i = 0; i < fiberCount; i++) {
@@ -70,28 +93,38 @@ export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
       const len = (rand() * 0.7 + 0.3) * fiberLength * 2.5;
 
       // Random control point deviation for natural curled filament
-      const cx = x0 + Math.cos(angle) * (len * 0.5) + (rand() - 0.5) * 4;
-      const cy = y0 + Math.sin(angle) * (len * 0.5) + (rand() - 0.5) * 4;
+      const curl = fiberCurvature * (rand() - 0.5);
+      const cx = x0 + Math.cos(angle) * (len * 0.5) + Math.sin(angle) * curl;
+      const cy = y0 + Math.sin(angle) * (len * 0.5) - Math.cos(angle) * curl;
       const x1 = x0 + Math.cos(angle) * len;
       const y1 = y0 + Math.sin(angle) * len;
 
-      const a = rand() * 0.5 + 0.15;
-      ctx.strokeStyle = isLighten
-        ? `rgba(255, 255, 255, ${a})`
-        : `rgba(70, 60, 55, ${a * 0.5})`;
+      const a = rand() * 0.55 + 0.15;
+      ctx.strokeStyle = getBaseRGB(a);
 
       ctx.beginPath();
       ctx.moveTo(x0, y0);
       ctx.quadraticCurveTo(cx, cy, x1, y1);
       ctx.stroke();
     }
-  }, [fiberCount, fiberLength, opacity, seed, blendMode]);
+  }, [
+    fiberCount,
+    fiberLength,
+    fiberThickness,
+    fiberCurvature,
+    speckCount,
+    speckSize,
+    colorTone,
+    opacity,
+    seed,
+    blendMode,
+  ]);
 
   return (
     <canvas
       ref={canvasRef}
-      width={600}
-      height={400}
+      width={700}
+      height={450}
       className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
       style={{
         opacity,
