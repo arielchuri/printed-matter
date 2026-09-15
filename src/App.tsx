@@ -3577,13 +3577,14 @@ export default function App() {
                         />
                         <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
                         {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
+                        {/* Monochromatic luminance mapping to eliminate chromatic rainbow noise */}
                         <feColorMatrix
                           in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                           type="matrix"
                           values={`
-                            ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1
-                            0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1
-                            0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1
+                            ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
+                            ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
+                            ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
                             0 0 0 0 1
                           `}
                           result="darkMultiplyMap"
@@ -3593,7 +3594,7 @@ export default function App() {
                     </svg>
                   )}
 
-                  {/* 2. Light Highlight Layer (Screen - Bleached fiber highlights on dark ink, 0% darkening on paper) */}
+                  {/* 2. Light Highlight Layer (Screen - Pure monochromatic bleached fiber highlights on dark ink, 0% darkening on paper) */}
                   {paperLightEnabled && (
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -3609,13 +3610,14 @@ export default function App() {
                         />
                         <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                         {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
+                        {/* Monochromatic luminance mapping to eliminate chromatic rainbow noise */}
                         <feColorMatrix
                           in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
                           type="matrix"
                           values={`
-                            ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0
-                            0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0
-                            0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0
+                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
+                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
+                            ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
                             0 0 0 0 1
                           `}
                           result="lightScreenMap"
@@ -3631,14 +3633,18 @@ export default function App() {
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Production Implementation Code (Dual Blend Modes: Multiply Dark + Screen Light)
+                    Production Implementation Code (Monochromatic Dual Blend Modes: Multiply Dark + Screen Light)
                   </span>
                   <button
                     onClick={() => {
                       const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                       const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                       const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Multiply Dark + Screen Light) */
+                      const kR = (-(1 - darkR) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4);
+                      const kG = (-(1 - darkG) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4);
+                      const kB = (-(1 - darkB) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4);
+                      const kL = (paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4);
+                      const code = `/* Option 1: SVG feTurbulence Monochromatic Dual-Relief Ground (Multiply Dark + Screen Light) */
 <div className="relative w-full h-full">
   <!-- 1. Dark Shadow Layer: mix-blend-mode: multiply (Darkens Paper Ground, 0% Lightening on Black Ink) -->
   ${paperDarkEnabled ? `<svg className="absolute inset-0 w-full h-full pointer-events-none" style={{ mixBlendMode: "multiply" }}>
@@ -3648,7 +3654,7 @@ export default function App() {
       ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(1)}" result="blurredDark" />\n      ` : ""}<feColorMatrix
         in="${paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}"
         type="matrix"
-        values="${(-(1 - darkR) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1   0 ${(-(1 - darkG) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1   0 0 ${(-(1 - darkB) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1   0 0 0 0 1"
+        values="${kR} ${kR} ${kR} 0 1   ${kG} ${kG} ${kG} 0 1   ${kB} ${kB} ${kB} 0 1   0 0 0 0 1"
         result="darkMultiplyMap"
       />
     </filter>
@@ -3663,7 +3669,7 @@ export default function App() {
       ${paperLightBlur > 0 ? `<feGaussianBlur in="offsetLight" stdDeviation="${paperLightBlur.toFixed(1)}" result="blurredLight" />\n      ` : ""}<feColorMatrix
         in="${paperLightBlur > 0 ? "blurredLight" : "offsetLight"}"
         type="matrix"
-        values="${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0   0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0   0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0   0 0 0 0 1"
+        values="${kL} ${kL} ${kL} 0 0   ${kL} ${kL} ${kL} 0 0   ${kL} ${kL} ${kL} 0 0   0 0 0 0 1"
         result="lightScreenMap"
       />
     </filter>
@@ -3679,13 +3685,13 @@ export default function App() {
                   </button>
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
-                  {`/* Option 1: Dual Blend Modes (Dark: Multiply, Light: Screen | Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, ${paperOctaves} oct) */
+                  {`/* Option 1: Monochromatic Dual Blend Modes (Dark: Multiply, Light: Screen | Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, ${paperOctaves} oct) */
 <!-- Layer 1: Dark Shadows (Multiply) -->
 <svg style={{ mixBlendMode: "multiply" }} className="absolute inset-0 w-full h-full pointer-events-none">
   <filter id="paper-dark-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
-    <feColorMatrix in="offsetDark" type="matrix" values="${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1   0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1   0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1   0 0 0 0 1" />
+    <feColorMatrix in="offsetDark" type="matrix" values="${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1   ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1   ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1   0 0 0 0 1" />
   </filter>
   <rect width="100%" height="100%" filter="url(#paper-dark-tooth)" fill="white" />
 </svg>
@@ -3695,7 +3701,7 @@ export default function App() {
   <filter id="paper-light-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
-    <feColorMatrix in="offsetLight" type="matrix" values="${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0   0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0   0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0   0 0 0 0 1" />
+    <feColorMatrix in="offsetLight" type="matrix" values="${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0   0 0 0 0 1" />
   </filter>
   <rect width="100%" height="100%" filter="url(#paper-light-tooth)" fill="black" />
 </svg>`}
@@ -3725,9 +3731,9 @@ export default function App() {
                     in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                     type="matrix"
                     values={`
-                      ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 0 1
-                      0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 0 1
-                      0 0 ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * 2).toFixed(4)} 0 1
+                      ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
+                      ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkG))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
+                      ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} ${(-(1 - Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)))) * paperDarkOpacity * paperDarkGain * (2 / 3)).toFixed(4)} 0 1
                       0 0 0 0 1
                     `}
                     result="darkMultiplyMap"
@@ -3753,9 +3759,9 @@ export default function App() {
                     in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
                     type="matrix"
                     values={`
-                      ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0 0
-                      0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0 0
-                      0 0 ${(paperLightOpacity * paperLightGain * 2).toFixed(4)} 0 0
+                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
+                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
+                      ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} ${(paperLightOpacity * paperLightGain * (2 / 3)).toFixed(4)} 0 0
                       0 0 0 0 1
                     `}
                     result="lightScreenMap"
