@@ -29,6 +29,12 @@ export default function App() {
   const [misregisterX, setMisregisterX] = useState<number>(1.5);
   const [misregisterY, setMisregisterY] = useState<number>(1.0);
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
+  const [paperTextureActive, setPaperTextureActive] = useState<boolean>(true);
+  const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.038);
+  const [paperOctaves, setPaperOctaves] = useState<number>(4);
+  const [paperOpacity, setPaperOpacity] = useState<number>(0.28);
+  const [paperPreset, setPaperPreset] = useState<"rag" | "laid" | "kraft" | "bristol">("rag");
+  const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
@@ -3001,9 +3007,330 @@ export default function App() {
                 </div>
               </div>
             </section>
+
+            {/* ─── SECTION 4: PAPER TOOTH & MATERIAL GROUND (OPTION 1: PROCEDURAL SVG feTurbulence) ─── */}
+            <section className="bg-[var(--surface)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
+              <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[var(--border-gray)] pb-4 mb-6 gap-4">
+                <div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-xs font-bold px-1.5 py-0.5 bg-[var(--primary-500)] text-white uppercase">
+                      OPTION 1 SPECIMEN
+                    </span>
+                    <h2 className="text-xl font-extrabold tracking-tight text-[var(--text)] uppercase font-mono m-0">
+                      Physical Paper Tooth &amp; Rag Ground
+                    </h2>
+                  </div>
+                  <p className="text-xs text-[var(--text-muted)] font-mono m-0">
+                    Vector-native procedural micro-grain synthesized via SVG <code className="text-[var(--primary-600)] font-bold">&lt;feTurbulence&gt;</code> fractal noise &amp; subtractive multiply blending. 0KB network payload.
+                  </p>
+                </div>
+
+                {/* Preset Fast Switchers */}
+                <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
+                  <span className="text-[var(--text-muted)] text-[11px] font-bold mr-1">PRESETS:</span>
+                  {[
+                    { id: "rag", label: "Handmade Rag", freq: 0.038, octaves: 4, opacity: 0.28, desc: "Coarse organic cotton tooth" },
+                    { id: "laid", label: "Mould-Made Laid", freq: 0.065, octaves: 3, opacity: 0.20, desc: "Fine stipple fiber tooth" },
+                    { id: "kraft", label: "Unbleached Kraft", freq: 0.026, octaves: 5, opacity: 0.36, desc: "Dense raw cellulose grain" },
+                    { id: "bristol", label: "Smooth Bristol", freq: 0.095, octaves: 2, opacity: 0.12, desc: "Ultra-subtle plate micro-pore" },
+                  ].map((p) => (
+                    <button
+                      key={p.id}
+                      onClick={() => {
+                        setPaperPreset(p.id as any);
+                        setPaperBaseFrequency(p.freq);
+                        setPaperOctaves(p.octaves);
+                        setPaperOpacity(p.opacity);
+                      }}
+                      className={`px-2.5 py-1 text-xs font-bold transition-colors ${
+                        paperPreset === p.id
+                          ? "bg-[var(--primary-500)] text-white border border-[var(--primary-700)]"
+                          : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
+                      }`}
+                      style={{ borderRadius: 0 }}
+                      title={p.desc}
+                    >
+                      {p.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* ─── Interactive Physics & Synthesis Controls ─── */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs">
+                {/* Param 1: Base Frequency */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-[var(--text)] uppercase">Granularity (Freq)</span>
+                    <span className="text-[var(--primary-600)] font-bold">{paperBaseFrequency.toFixed(3)}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.010"
+                    max="0.120"
+                    step="0.002"
+                    value={paperBaseFrequency}
+                    onChange={(e) => {
+                      setPaperBaseFrequency(parseFloat(e.target.value));
+                      setPaperPreset("custom" as any);
+                    }}
+                    className="w-full accent-[var(--primary-500)] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
+                    <span>Coarse Pulp</span>
+                    <span>Micro Tooth</span>
+                  </div>
+                </div>
+
+                {/* Param 2: Num Octaves */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-[var(--text)] uppercase">Depth (Octaves)</span>
+                    <span className="text-[var(--primary-600)] font-bold">{paperOctaves}</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="1"
+                    max="6"
+                    step="1"
+                    value={paperOctaves}
+                    onChange={(e) => {
+                      setPaperOctaves(parseInt(e.target.value));
+                      setPaperPreset("custom" as any);
+                    }}
+                    className="w-full accent-[var(--primary-500)] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
+                    <span>1 (Flat)</span>
+                    <span>6 (Deep Fiber)</span>
+                  </div>
+                </div>
+
+                {/* Param 3: Opacity */}
+                <div>
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="font-bold text-[var(--text)] uppercase">Tooth Density (Alpha)</span>
+                    <span className="text-[var(--primary-600)] font-bold">{Math.round(paperOpacity * 100)}%</span>
+                  </div>
+                  <input
+                    type="range"
+                    min="0.05"
+                    max="0.60"
+                    step="0.01"
+                    value={paperOpacity}
+                    onChange={(e) => {
+                      setPaperOpacity(parseFloat(e.target.value));
+                      setPaperPreset("custom" as any);
+                    }}
+                    className="w-full accent-[var(--primary-500)] cursor-pointer"
+                  />
+                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
+                    <span>5% Whispered</span>
+                    <span>60% Heavy</span>
+                  </div>
+                </div>
+
+                {/* Global Toggle Button */}
+                <div className="flex flex-col justify-end">
+                  <button
+                    onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
+                    className={`w-full py-2 px-3 font-mono text-xs font-bold uppercase transition-colors border flex items-center justify-center gap-1.5 ${
+                      globalPaperTexture
+                        ? "bg-[var(--spectrum-green)] text-white border-[var(--spectrum-green)]"
+                        : "bg-[var(--surface-muted)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/30"
+                    }`}
+                    style={{ borderRadius: 0 }}
+                  >
+                    <span>GLOBAL TOOTH: {globalPaperTexture ? "ACTIVE ON PAGE" : "OFF"}</span>
+                  </button>
+                  <span className="text-[10px] text-[var(--text-muted)] mt-1 text-center font-mono">
+                    Toggles physical rag overlay across entire UI.
+                  </span>
+                </div>
+              </div>
+
+              {/* ─── SIDE-BY-SIDE COMPARISON SPECIMEN ─── */}
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                {/* SPECIMEN A: Raw Digital Screen Ground */}
+                <div className="p-6 bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none">
+                  <div>
+                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                      <span className="font-bold text-[var(--text-muted)] uppercase tracking-wider">
+                        Canvas A: Raw Flat Digital Screen
+                      </span>
+                      <span className="bg-[var(--surface)] text-[var(--text-muted)] px-1.5 py-0.5 border border-[var(--border-gray)] text-[10px]">
+                        NO TEXTURE
+                      </span>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] block mb-1">
+                          TYPOGRAPHIC RELIEF PROOF
+                        </span>
+                        <h3 className="text-4xl font-extrabold tracking-tighter uppercase text-[var(--gray-900)] leading-tight">
+                          ARCHIVAL FIBER
+                        </h3>
+                        <p className="text-xs font-mono text-[var(--gray-700)] mt-1">
+                          Standard digital rasterization lacks the microscopic physical tooth that catches relief ink on press.
+                        </p>
+                      </div>
+
+                      {/* Ink Overprint Block */}
+                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs relative">
+                        <div className="text-2xl font-black text-[var(--primary-500)] tracking-tight">
+                          TWO-COLOR INK OVERPRINT
+                        </div>
+                        <div className="text-sm font-bold text-[var(--spectrum-red)] mt-0.5">
+                          LITHOGRAPHIC PLATE NO. 08
+                        </div>
+                        <div className="mt-3 flex gap-2">
+                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">
+                            ITTEN BLUE #6EA3BE
+                          </div>
+                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">
+                            VERMILION #E65E59
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--text-muted)]">
+                    <span>GROUND: STONE-100 #F5F5F4</span>
+                    <span>SURFACE: PERFECT SCREEN SMOOTH</span>
+                  </div>
+                </div>
+
+                {/* SPECIMEN B: Option 1 Procedural SVG Rag Ground */}
+                <div className="p-6 bg-[var(--white)] border-2 border-[var(--primary-500)] relative overflow-hidden flex flex-col justify-between select-none shadow-sm">
+                  {/* Procedural SVG feTurbulence Paper Texture Layer */}
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none mix-blend-multiply z-10"
+                    style={{ opacity: paperOpacity }}
+                    aria-hidden="true"
+                  >
+                    <filter id="pm-paper-specimen-filter" x="0%" y="0%" width="100%" height="100%">
+                      <feTurbulence
+                        type="fractalNoise"
+                        baseFrequency={paperBaseFrequency}
+                        numOctaves={paperOctaves}
+                        result="noise"
+                      />
+                      <feColorMatrix
+                        type="matrix"
+                        values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                        result="coloredNoise"
+                      />
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#pm-paper-specimen-filter)" fill="transparent" />
+                  </svg>
+
+                  <div className="relative z-0">
+                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                      <span className="font-bold text-[var(--primary-600)] uppercase tracking-wider">
+                        Canvas B: Option 1 SVG Rag Paper Ground
+                      </span>
+                      <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold">
+                        feTurbulence ACTIVE
+                      </span>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div>
+                        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--primary-600)] font-bold block mb-1">
+                          TYPOGRAPHIC RELIEF PROOF (INK SQUASH + PAPER TOOTH)
+                        </span>
+                        <h3 className="text-4xl font-extrabold tracking-tighter uppercase text-[var(--gray-900)] leading-tight ink-squash-text">
+                          ARCHIVAL FIBER
+                        </h3>
+                        <p className="text-xs font-mono text-[var(--gray-800)] mt-1">
+                          Synthesized organic cotton pulp tooth with microscopic paper crevices and letterpress ink meniscus.
+                        </p>
+                      </div>
+
+                      {/* Ink Overprint Block with Letterpress Squash */}
+                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs relative ink-squash">
+                        <div className="text-2xl font-black text-[var(--primary-500)] tracking-tight">
+                          TWO-COLOR INK OVERPRINT
+                        </div>
+                        <div className="text-sm font-bold text-[var(--spectrum-red)] mt-0.5">
+                          LITHOGRAPHIC PLATE NO. 08
+                        </div>
+                        <div className="mt-3 flex gap-2">
+                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">
+                            ITTEN BLUE #6EA3BE
+                          </div>
+                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">
+                            VERMILION #E65E59
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--primary-700)] font-bold relative z-0">
+                    <span>GROUND: STONE-100 WITH TACTILE TOOTH</span>
+                    <span>0KB PAYLOAD &bull; INFINITE RESOLUTION</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* ─── READY-TO-USE CODE SNIPPET ─── */}
+              <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
+                    Option 1 Production Implementation Code
+                  </span>
+                  <button
+                    onClick={() => {
+                      const snippet = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-multiply opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
+                      copyToClipboard(snippet);
+                    }}
+                    className="px-2 py-1 bg-[var(--gray-800)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] text-white flex items-center gap-1 text-[11px]"
+                  >
+                    <Copy size={11} />
+                    <span>COPY SVG CODE</span>
+                  </button>
+                </div>
+                <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
+{`<svg className="fixed inset-0 w-full h-full pointer-events-none mix-blend-multiply" style={{ opacity: ${paperOpacity} }}>
+  <filter id="pm-paper-tooth" x="0%" y="0%" width="100%" height="100%">
+    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />
+    <feColorMatrix type="matrix" values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0" />
+  </filter>
+  <rect width="100%" height="100%" filter="url(#pm-paper-tooth)" fill="transparent" />
+</svg>`}
+                </pre>
+              </div>
+            </section>
           </div>
         )}
         </main>
+
+        {/* ─── Global Option 1 Paper Texture Overlay (when toggled on) ─── */}
+        {globalPaperTexture && (
+          <svg
+            className="fixed inset-0 w-full h-full pointer-events-none z-30 mix-blend-multiply transition-opacity duration-150"
+            style={{ opacity: paperOpacity }}
+            aria-hidden="true"
+          >
+            <filter id="pm-global-paper-tooth" x="0%" y="0%" width="100%" height="100%">
+              <feTurbulence
+                type="fractalNoise"
+                baseFrequency={paperBaseFrequency}
+                numOctaves={paperOctaves}
+                result="noise"
+              />
+              <feColorMatrix
+                type="matrix"
+                values="0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                result="coloredNoise"
+              />
+            </filter>
+            <rect width="100%" height="100%" filter="url(#pm-global-paper-tooth)" fill="transparent" />
+          </svg>
+        )}
 
         {copiedToken && (
           <div className="fixed bottom-4 right-4 bg-[var(--gray-900)] text-white text-xs font-mono px-3 py-1.5 border border-[var(--spectrum-yellow)] shadow-lg z-50 flex items-center gap-2">
