@@ -567,16 +567,23 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: var(--primary-color);
-  border: 1px solid var(--primary-color);
+  color: var(--text);
+  border: 1px solid var(--border-gray);
   border-radius: 0;
   background: transparent;
   cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.ds-chevron.active {
-  background-color: var(--primary-color);
-  color: var(--white);
+.ds-chevron:hover {
+  background-color: var(--surface-muted);
+}
+
+.ds-chevron.active,
+.ds-chevron:active {
+  background-color: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+  color: var(--white) !important;
 }
 
 /* 6. Chips & Status Pills */
@@ -592,12 +599,19 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   background-color: var(--white);
   color: var(--text);
   cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.ds-chip.active {
-  border-color: var(--primary-color);
-  background-color: var(--primary-color);
-  color: var(--white);
+.ds-chip:hover {
+  background-color: var(--surface-muted);
+  border-color: var(--border-gray);
+}
+
+.ds-chip.active,
+.ds-chip:active {
+  border-color: var(--success-color) !important;
+  background-color: var(--success-color) !important;
+  color: var(--white) !important;
 }
 
 /* 7. Level Badge (C, A1, A2, A3) */

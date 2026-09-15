@@ -14,8 +14,10 @@ export const ChevronToggle: React.FC<ChevronToggleProps> = ({ isOpen, onToggle, 
       type="button"
       onClick={onToggle}
       className={clsx(
-        "w-5 h-5 inline-flex items-center justify-center border border-[var(--primary-500)] transition-colors p-0 cursor-pointer",
-        isOpen ? "bg-[var(--primary-500)] text-[var(--white)]" : "bg-transparent text-[var(--primary-500)] hover:bg-[var(--primary-500)]/10",
+        "w-5 h-5 inline-flex items-center justify-center border transition-colors p-0 cursor-pointer active:!bg-[var(--success-color)] active:!text-[var(--white)] active:!border-[var(--success-color)]",
+        isOpen
+          ? "bg-[var(--success-color)] text-[var(--white)] border-[var(--success-color)]"
+          : "bg-transparent text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface-muted)]",
         className
       )}
       style={{ borderRadius: 0, boxShadow: "none" }}

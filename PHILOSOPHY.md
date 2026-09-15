@@ -22,10 +22,10 @@ All inks and neutrals are derived through physical **multiply blending** on warm
 
 ---
 
-### 3. The Single Blue Foundation (`#185E96`, Paper Multiply)
-Most design systems invent arbitrary tint scales (e.g. `blue-50`, `blue-100`, `blue-200`... `blue-900`) where each step is a separate, hand-tuned hex. This leads to colour drift and visual clutter.
+### 3. The Single Primary Ink Foundation (Paper Multiply)
+Most design systems invent arbitrary tint scales (e.g. `50`, `100`, `200`... `900`) where each step is a separate, hand-tuned hex. This leads to colour drift and visual clutter.
 
-Printed Matter uses **one primary blue**, multiplied directly onto the warm paper stock (`#185E96`). Lighter values are not separate blue swatches — they are the **paper stock showing through**. A lighter surface is simply paper (`#EFECE6`).
+Printed Matter uses **one primary brand ink**, multiplied directly onto the warm paper stock. Lighter values are not separate tinted swatches — they are the **paper stock showing through**. A lighter surface is simply paper (`#F5F5F4`).
 
 ---
 

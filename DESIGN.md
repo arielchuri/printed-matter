@@ -136,13 +136,13 @@ In addition to standard responsive breakpoints (`sm: 640px`, `md: 768px`, `lg: 1
 ## Component Invariants & Rules
 
 ### 1. Buttons
-- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary blue fill (`#185E96`) with paper-white text, or 1px hairline rule with ink text.
-- **Pressed**: When the mouse is down, buttons flash **solid green (`#4FBA39`)** with white text.
+- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary ink fill (`var(--primary-500)`) with paper-white text, or 1px hairline rule with ink text.
+- **Pressed**: When the mouse is down, buttons flash **solid green (`#74BE60` / `var(--success-color)`)** with white text.
 - **Disabled**: Neutral warm grey fill (`#CAC8C2`) with muted text (`#797773`).
 
 ### 2. Tabs
 - Square corners.
-- Only the **active** tab carries solid blue fill (`#185E96`) with paper-white text.
+- Only the **active** tab carries solid primary ink fill with paper-white text.
 - Inactive tabs are transparent with no bottom underline bars.
 
 ### 3. Administrative Level Badges (C, A1, A2, A3)
@@ -153,7 +153,7 @@ In addition to standard responsive breakpoints (`sm: 640px`, `md: 768px`, `lg: 1
 - Set in JetBrains Mono with tabular figures.
 
 ### 5. Map & Surface Controls
-- **On Map Imagery**: Borderless ink-on-white square controls. Active state is solid blue fill.
+- **On Map Imagery**: Borderless ink-on-white square controls. Active state is solid green fill.
 - **On Paper Canvas**: Hairline 1px border.
 
 ---

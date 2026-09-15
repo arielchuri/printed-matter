@@ -25,8 +25,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       danger: "bg-[var(--danger-color)] text-[var(--white)] border-none hover:opacity-90 active:!bg-[var(--success-color)] active:!text-[var(--white)]",
       ghost: "bg-transparent text-[var(--gray-900)] hover:bg-[var(--gray-200)]/50 border-none",
       "map-control": clsx(
-        "w-[32px] h-[32px] p-0 border-none transition-colors",
-        isActive ? "bg-[var(--primary-500)] text-[var(--white)]" : "bg-[var(--white)] text-[var(--gray-900)] hover:bg-[var(--gray-100)]"
+        "w-[32px] h-[32px] p-0 border-none transition-colors active:!bg-[var(--success-color)] active:!text-[var(--white)]",
+        isActive ? "bg-[var(--success-color)] text-[var(--white)]" : "bg-[var(--white)] text-[var(--gray-900)] hover:bg-[var(--gray-100)]"
       ),
     };
 

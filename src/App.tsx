@@ -534,10 +534,10 @@ export default function App() {
                         <button
                           key={pal.name}
                           onClick={() => setActivePrimaryColor(pal.name)}
-                          className={`w-6 h-6 border transition-all ${
+                          className={`w-6 h-6 border transition-colors ${
                             activePrimaryColor === pal.name
-                              ? "ring-2 ring-[var(--gray-900)] scale-110 border-white z-10"
-                              : "border-black/30 hover:scale-105"
+                              ? "ring-2 ring-[var(--gray-900)] border-white z-10"
+                              : "border-black/30 hover:border-black hover:opacity-90"
                           }`}
                           style={{ backgroundColor: pal.hex, borderRadius: 0 }}
                           title={`Set primary brand ink to ${pal.name} (${pal.hex})`}
@@ -1196,7 +1196,7 @@ export default function App() {
                       <div className="space-y-3 font-mono text-xs">
                         <div className="p-2.5 bg-[var(--surface)] border border-[var(--border-gray)]/30">
                           <span className="font-bold text-sm block text-[var(--primary-700)] font-sans">
-                            Primary Blue Link &amp; Header (var(--primary-700))
+                            Primary Link &amp; Header (var(--primary-700))
                           </span>
                           <span className="text-[11px] text-[var(--text-muted)] block mt-0.5 font-mono">
                             4.52:1 WCAG AA &bull; Primary navigation markers and data URLs
@@ -1747,7 +1747,7 @@ export default function App() {
                   Zero bevels, zero elevation. When clicked, buttons flash <strong>solid green (var(--spectrum-green))</strong> while held.
                 </p>
                 <div className="flex flex-wrap gap-2 items-center">
-                  <Button variant="primary">Primary Blue</Button>
+                  <Button variant="primary">Primary</Button>
                   <Button variant="secondary">Rule Button</Button>
                   <Button variant="danger">Danger Red</Button>
                   <Button disabled>Disabled</Button>
@@ -2751,7 +2751,7 @@ export default function App() {
                                 title="Click to view full SVG code & scale"
                               >
                                 <div
-                                  className="w-16 h-16 flex items-center justify-center transition-transform group-hover:scale-110"
+                                  className="w-16 h-16 flex items-center justify-center transition-opacity group-hover:opacity-75"
                                   style={{ color: cabbageColor }}
                                   dangerouslySetInnerHTML={{ __html: sym.svgMarkup }}
                                 />
@@ -3196,7 +3196,7 @@ export default function App() {
                               return (
                                 <div
                                   key={cIdx}
-                                  className={`h-7 flex items-center justify-center text-[10px] font-mono border border-black/10 transition-transform hover:scale-105 ${styles.bg}`}
+                                  className={`h-7 flex items-center justify-center text-[10px] font-mono border border-black/10 transition-colors hover:border-[var(--border-gray)] hover:brightness-95 ${styles.bg}`}
                                   title={`Density Tier ${v} (${styles.label})`}
                                 >
                                   {styles.label}
@@ -4338,7 +4338,7 @@ export default function App() {
                 {/* 7-Plate Vector Readout Grid */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 font-mono text-[10px]">
                   {[
-                    { id: "blue", name: "Primary Blue", color: "var(--primary-500)" },
+                    { id: "blue", name: "Primary", color: "var(--primary-500)" },
                     { id: "red", name: "Spot Red", color: "var(--spectrum-red)" },
                     { id: "yellow", name: "Spot Yellow", color: "var(--spectrum-yellow)" },
                     { id: "green", name: "Emerald Green", color: "var(--spectrum-green)" },

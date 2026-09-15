@@ -195,8 +195,8 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                   <button
                     key={pal.name}
                     onClick={() => onSelectColor(pal.hex)}
-                    className={`w-6 h-6 border flex items-center justify-center transition-transform ${
-                      activeColor === pal.hex ? "border-black scale-110 shadow-sm" : "border-black/20 hover:scale-105"
+                    className={`w-6 h-6 border flex items-center justify-center transition-colors ${
+                      activeColor === pal.hex ? "border-black ring-2 ring-[var(--gray-900)] shadow-sm" : "border-black/30 hover:border-black hover:opacity-90"
                     }`}
                     style={{ backgroundColor: pal.hex, borderRadius: 0 }}
                     title={pal.name}
