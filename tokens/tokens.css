@@ -352,6 +352,14 @@ h6, .ds-h6 {
   text-shadow: none !important;
 }
 
+/* Black Ink Squash Specific Disable Override */
+[data-black-ink-squash="off"] .ink-squash-deep,
+[data-black-ink-squash="off"] .ink-squash-black,
+.no-black-ink-squash .ink-squash-deep,
+.no-black-ink-squash .ink-squash-black {
+  box-shadow: none !important;
+}
+
 .ink-misregister-base {
   position: relative;
   isolation: isolate;

@@ -39,9 +39,9 @@ export default function App() {
   const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
   const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
   
-  // Light Channel (Highlights on Dark Ink & Color Fields) - Reduced by 50% to 0.30%
+  // Light Channel (Highlights on Dark Ink & Color Fields) - Scaled to 0.36% (+20%)
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
-  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0030); // 0.30% (50% of 0.60%)
+  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0036); // 0.36% (increased 20% from 0.30%)
   const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.00x
   const [paperLightFloor, setPaperLightFloor] = useState<number>(0.29); // 29% Floor clip to eliminate fog on black ink
   const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-1.0); // -1.00px
@@ -61,13 +61,14 @@ export default function App() {
   const [paperDarkB, setPaperDarkB] = useState<number>(0.24); // Deep warm paper blue component
   const [paperDarkWarmth, setPaperDarkWarmth] = useState<number>(1.42); // 1.42x Warmth multiplier (#81522E)
 
-  // Offset Symmetry, Global Overlay & Global Ink Squash
+  // Offset Symmetry, Global Overlay, Global Ink Squash & Letterpress Black Squash
   const [paperSymmetricOffset, setPaperSymmetricOffset] = useState<boolean>(true);
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(true);
   const [inkSquashEnabled, setInkSquashEnabled] = useState<boolean>(true);
+  const [blackInkSquashEnabled, setBlackInkSquashEnabled] = useState<boolean>(true);
   
-  // Global Multi-Plate Chromatic Misregistration (Each spot ink shifted randomly/subtly)
-  const [globalMisregistration, setGlobalMisregistration] = useState<boolean>(false);
+  // Global Multi-Plate Chromatic Misregistration (Default ON)
+  const [globalMisregistration, setGlobalMisregistration] = useState<boolean>(true);
   const [misregisterIntensity, setMisregisterIntensity] = useState<number>(1.0);
   const [plateOffsets, setPlateOffsets] = useState<Record<string, { x: number; y: number }>>({
     blue: { x: 0.75, y: -0.50 },
@@ -154,6 +155,16 @@ export default function App() {
       document.documentElement.classList.add("no-ink-squash");
     }
   }, [inkSquashEnabled]);
+
+  useEffect(() => {
+    if (blackInkSquashEnabled) {
+      document.documentElement.setAttribute("data-black-ink-squash", "on");
+      document.documentElement.classList.remove("no-black-ink-squash");
+    } else {
+      document.documentElement.setAttribute("data-black-ink-squash", "off");
+      document.documentElement.classList.add("no-black-ink-squash");
+    }
+  }, [blackInkSquashEnabled]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -248,10 +259,25 @@ export default function App() {
                 : "bg-black/30 text-white/80 border-white/20 hover:text-white"
             }`}
             style={{ borderRadius: 0 }}
-            title="Toggle Global Ink Squash (Meniscus & Pigment Perimeter Squeeze)"
+            title="Toggle Global Ink Squash (Meniscus & Pigment Perimeter Squeeze on Colors)"
           >
             <Droplet size={12} className={inkSquashEnabled ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
             <span>INK SQUASH: {inkSquashEnabled ? "ON" : "OFF"}</span>
+          </button>
+
+          {/* Letterpress Black Ink Squash Global Toggle */}
+          <button
+            onClick={() => setBlackInkSquashEnabled(!blackInkSquashEnabled)}
+            className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
+              blackInkSquashEnabled
+                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+            }`}
+            style={{ borderRadius: 0 }}
+            title="Toggle Deep Meniscus Letterpress Ink Squash on Black Ink (Headings & Slabs)"
+          >
+            <Droplet size={12} className={blackInkSquashEnabled ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
+            <span>BLACK SQUASH: {blackInkSquashEnabled ? "ON" : "OFF"}</span>
           </button>
 
           {/* Global Chromatic Misregistration Toggle */}
@@ -335,7 +361,8 @@ export default function App() {
             { id: "tokens", label: "Design Tokens & Spectrum", icon: <Layers size={14} /> },
             { id: "typography", label: "Typography & Type Specimen", icon: <Type size={14} /> },
             { id: "components", label: "Components & Controls", icon: <Sliders size={14} /> },
-            { id: "cartography", label: "Cartography & Chrome", icon: <MapPin size={14} /> },
+            { id: "textures-symbols", label: "Textures & Symbols", icon: <Sparkles size={14} /> },
+            { id: "datavis", label: "Data Visualization", icon: <MapPin size={14} /> },
             { id: "effects", label: "Ink Effects & Plate Artifacts", icon: <Droplet size={14} /> },
           ]}
           activeId={activeTab}
@@ -821,6 +848,198 @@ export default function App() {
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
                           #A773C4 Spot Violet
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2C: Color on Color Knockout (Substrate & Plate Reverse Cutouts) */}
+                  <div className="mt-4">
+                    <span className="text-[11px] font-mono font-bold text-[var(--text-muted)] uppercase block mb-2">
+                      C. Color on Color Knockout (Substrate &amp; Plate Reverse Cutouts):
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      {/* C1: Yellow Knockout on Itten Blue Ground */}
+                      <div className="p-3.5 bg-[var(--primary-500)] text-[var(--spectrum-yellow)] border border-[var(--primary-600)] flex flex-col justify-between relative">
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-white">YELLOW ON BLUE</span>
+                            <span className="bg-[var(--spectrum-yellow)] text-[var(--primary-900)] px-1.5 py-0.2">KNOCKOUT</span>
+                          </div>
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-yellow)]">
+                            Boundary Override
+                          </h5>
+                          <p className="text-[11px] text-white/90 leading-snug">
+                            Yellow plate mask cut directly from solid Itten Blue ground.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70">
+                          Plate Mask: C80 M20 &bull; Knockout: Y100
+                        </div>
+                      </div>
+
+                      {/* C2: Aqua Seafoam Knockout on Spot Violet Ground */}
+                      <div className="p-3.5 bg-[var(--spectrum-violet)] text-[var(--spectrum-aqua)] border border-[var(--spectrum-violet)] flex flex-col justify-between relative">
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-white">AQUA ON VIOLET</span>
+                            <span className="bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-1.5 py-0.2">KNOCKOUT</span>
+                          </div>
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-aqua)]">
+                            Geodesic Vertex
+                          </h5>
+                          <p className="text-[11px] text-white/90 leading-snug">
+                            High-frequency aqua type exposed cleanly through violet plate.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70">
+                          Plate Mask: M70 C40 &bull; Knockout: C45 Y35
+                        </div>
+                      </div>
+
+                      {/* C3: Red & Paper Knockout on Slate Blue Plate */}
+                      <div className="p-3.5 bg-[var(--spectrum-blue)] text-white border border-[var(--spectrum-blue)] flex flex-col justify-between relative">
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-[var(--spectrum-red)] bg-white px-1 font-bold">RED + PAPER</span>
+                            <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2">2-PLATE</span>
+                          </div>
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-white">
+                            Substrate Window: <span className="text-[var(--spectrum-red)] bg-white px-1">ACTIVE</span>
+                          </h5>
+                          <p className="text-[11px] text-white/90 leading-snug">
+                            Dual-aperture knockout exposing raw paper and spot red plate.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70">
+                          Plate Mask: C60 M30 &bull; Knockout: M85 Y60
+                        </div>
+                      </div>
+
+                      {/* C4: Amber Gold Knockout on Ink Black Ground */}
+                      <div className="p-3.5 bg-[var(--gray-900)] text-[var(--spectrum-amber)] border border-[var(--gray-900)] flex flex-col justify-between relative">
+                        <div>
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-white">AMBER ON BLACK</span>
+                            <span className="bg-[var(--spectrum-amber)] text-[var(--gray-900)] px-1.5 py-0.2">KNOCKOUT</span>
+                          </div>
+                          <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-amber)]">
+                            Carbon Relief
+                          </h5>
+                          <p className="text-[11px] text-white/90 leading-snug">
+                            Amber gold text punch cut through heavy 100% carbon black bed.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70">
+                          Plate Mask: K100 &bull; Knockout: Y90 M25
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* 2D: Color on Color Overprint (Subtractive Multiply Overprinting) */}
+                  <div className="mt-4">
+                    <span className="text-[11px] font-mono font-bold text-[var(--text-muted)] uppercase block mb-2">
+                      D. Color on Color Overprint (Subtractive Multiply Ink Layering):
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                      {/* D1: Spot Red Type overprinted on Spot Yellow Ground -> Optical Cadmium Orange */}
+                      <div className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-amber)] flex flex-col justify-between relative overflow-hidden">
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-[var(--gray-900)]">RED ON YELLOW</span>
+                            <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2">MULTIPLY</span>
+                          </div>
+                          <h5
+                            className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-red)]"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Optical Cadmium Orange Overprint
+                          </h5>
+                          <p
+                            className="text-[11px] text-[var(--gray-900)] leading-snug font-medium"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Red ink over yellow ground subtracts blue spectra, creating vivid orange body text.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)] relative z-10">
+                          Overprint: M85 Y60 × Y100
+                        </div>
+                      </div>
+
+                      {/* D2: Itten Blue Type overprinted on Spot Yellow Ground -> Optical Forest Green */}
+                      <div className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-green)] flex flex-col justify-between relative overflow-hidden">
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-[var(--gray-900)]">BLUE ON YELLOW</span>
+                            <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.2">MULTIPLY</span>
+                          </div>
+                          <h5
+                            className="font-black text-sm leading-tight mb-1 text-[var(--primary-700)]"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Optical Emerald Pine Green
+                          </h5>
+                          <p
+                            className="text-[11px] text-[var(--gray-900)] leading-snug font-medium"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Itten blue over yellow ground synthesizes rich organic green without third plate.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)] relative z-10">
+                          Overprint: C80 M20 × Y100
+                        </div>
+                      </div>
+
+                      {/* D3: Spot Violet Type overprinted on Aqua Seafoam Ground -> Optical Navy */}
+                      <div className="p-3.5 bg-[var(--spectrum-aqua)] border border-[var(--spectrum-blue)] flex flex-col justify-between relative overflow-hidden">
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-[var(--gray-900)]">VIOLET ON AQUA</span>
+                            <span className="bg-[var(--spectrum-violet)] text-white px-1.5 py-0.2">MULTIPLY</span>
+                          </div>
+                          <h5
+                            className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-violet)]"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Deep Marine Navy Overprint
+                          </h5>
+                          <p
+                            className="text-[11px] text-[var(--gray-900)] leading-snug font-medium"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Violet over aqua filters warm wavelengths, producing heavy maritime navy.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)] relative z-10">
+                          Overprint: M70 C40 × C45 Y35
+                        </div>
+                      </div>
+
+                      {/* D4: Spot Orange Type overprinted on Itten Blue Ground -> Rich Earth Umber */}
+                      <div className="p-3.5 bg-[var(--primary-500)] border border-[var(--primary-700)] flex flex-col justify-between relative overflow-hidden">
+                        <div className="relative z-10">
+                          <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
+                            <span className="text-white">ORANGE ON BLUE</span>
+                            <span className="bg-[var(--spectrum-orange)] text-[var(--gray-900)] px-1.5 py-0.2">MULTIPLY</span>
+                          </div>
+                          <h5
+                            className="font-black text-sm leading-tight mb-1 text-[var(--spectrum-orange)]"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Warm Terra Cotta Umber
+                          </h5>
+                          <p
+                            className="text-[11px] text-white/90 leading-snug font-medium"
+                            style={{ mixBlendMode: "multiply" }}
+                          >
+                            Complementary orange over blue absorbs full spectrum to form rich terra cotta.
+                          </p>
+                        </div>
+                        <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70 relative z-10">
+                          Overprint: M60 Y90 × C80 M20
                         </div>
                       </div>
                     </div>
@@ -1493,49 +1712,28 @@ export default function App() {
         )}
 
         {/* =========================================================
-            TAB 4: CARTOGRAPHY & CHROME
+            TAB 4: TEXTURES & SYMBOLS
             ========================================================= */}
-        {activeTab === "cartography" && (
+        {activeTab === "textures-symbols" && (
           <div className="flex flex-col gap-8">
             {/* Breakpoint Telemetry Banner */}
-            <div className="bg-[var(--white)] p-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono">
+            <div className="bg-[var(--white)] p-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono border border-[var(--border-gray)]">
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[var(--primary-500)] uppercase">Cartography Viewport Density:</span>
+                <span className="font-bold text-[var(--primary-500)] uppercase">Press Substrate &amp; Control Chrome:</span>
                 <span className="bg-[var(--surface)] px-2 py-0.5 border border-[var(--border-gray)]">
-                  {effectiveWidthPx >= 2560 ? "4XL (2560px) Ultrawide Map Stage" : effectiveWidthPx >= 1920 ? "3XL (1920px) 1080p Stage" : "Standard Desktop Stage"}
+                  Mechanical Screens &bull; Color Cabbages &bull; Registration Targets &bull; Slur Gauges
                 </span>
               </div>
               <span className="text-[var(--text-muted)]">
-                Single-ink hatch patterns and controls scale across multi-monitor geographic consoles.
+                Physical press calibration artifacts, intaglio pattern density scales, and multi-plate overprinting symbols.
               </span>
             </div>
 
-            <Card title="Split Telemetry Readout Dock" badge={<Badge color="blue">LIVE DOCK</Badge>}>
-              <p className="text-xs text-[var(--text-muted)] mb-4">
-                Ink-on-white status dock separating geographic place facts from camera attitude and solar time.
-              </p>
-              <DataReadout />
-            </Card>
-
-            {/* ─── Vector Dymaxion Map (Buckminster Fuller Airocean Projection) ─── */}
+            {/* ─── 1. Baseline Cartographic & Print Patterns (Ink Black) ─── */}
             <section>
               <div className="flex items-baseline justify-between border-b border-[var(--border-gray)] pb-2 mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight m-0">Vector Cartography: Buckminster Fuller Dymaxion Map</h2>
-                  <p className="text-sm text-[var(--text-muted)] mt-0.5">
-                    Continuous icosahedral polyhedron vector unfold with single-ink intaglio patterns, spot-color screens, and geodesic Great Circle chords.
-                  </p>
-                </div>
-                <span className="text-xs font-mono text-[var(--text-muted)]">DYMAXION AIROCEAN VECTOR</span>
-              </div>
-              <FullerMap />
-            </section>
-
-            {/* ─── 1. Baseline Cartographic Patterns (Ink Black) ─── */}
-            <section>
-              <div className="flex items-baseline justify-between border-b border-[var(--border-gray)] pb-2 mb-4">
-                <div>
-                  <h2 className="text-2xl font-bold tracking-tight m-0">Single-Ink Cartographic Overlays (Ink Black)</h2>
+                  <h2 className="text-2xl font-bold tracking-tight m-0">Single-Ink Screen Overlays (Ink Black)</h2>
                   <p className="text-sm text-[var(--text-muted)] mt-0.5">
                     Hatching, crosshatching, dot matrix, and stippling drawn strictly in <strong>Ink Black</strong> (<code className="text-xs bg-[var(--surface-muted)] px-1">var(--gray-900)</code> / Stone 900 carbon ink) over paper stock with physical multiply blending.
                   </p>
@@ -1629,7 +1827,7 @@ export default function App() {
               <div className="flex items-baseline justify-between border-b border-[var(--border-gray)]/20 pb-3 mb-6">
                 <div>
                   <h2 className="text-xl font-bold tracking-tight m-0 text-[var(--primary-500)] uppercase font-mono">
-                    Spot Ink Color Cartographic Patterns
+                    Spot Ink Color Screen Patterns
                   </h2>
                   <p className="text-xs text-[var(--text-muted)] mt-1">
                     Single-ink patterns rendered with Printed Matter&apos;s 11 calibrated spot inks. In print runs, these act as layered spot-color screens over warm paper stock.
@@ -1697,7 +1895,7 @@ export default function App() {
               {/* Multi-Color Pattern Showcase Matrix */}
               <div className="pt-4 border-t border-[var(--border-gray)]/20">
                 <span className="text-xs font-mono font-bold text-[var(--text-muted)] block mb-3 uppercase">
-                  Multi-Spot Ink Cartographic Showcase:
+                  Multi-Spot Ink Showcase:
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
                   <PatternSwatch type="crosshatch" density={3} angle={15} color="var(--primary-500)" label="Itten Blue" description="15° Screen • Cross 50%" />
@@ -1710,8 +1908,451 @@ export default function App() {
               </div>
             </section>
 
-            {/* ─── 4. Map Control Rules ─── */}
-            <Card title="Map Control Rules: On-Map vs. On-Paper" badge={<Badge color="green">CANVAS RULE</Badge>}>
+            {/* ─── 4. PRINTER'S SYMBOLS & COLOR CABBAGES ─── */}
+            <section className="bg-[var(--white)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[var(--border-gray)]/20 pb-3 mb-6 gap-2">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight m-0 text-[var(--primary-500)] uppercase font-mono flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 bg-[var(--spectrum-red)] inline-block" />
+                    Printer&apos;s Calibration Symbols &amp; Color Cabbages
+                  </h2>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    Authentic lithographic &amp; letterpress calibration strip artifacts: 4-color process cabbages, overprinted registration crosshairs, Siemens rosette star targets, slur ladders, and precision trim crop marks.
+                  </p>
+                </div>
+                <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">CMYK &amp; SPOT PRESS TOOLS</span>
+              </div>
+
+              <div className="space-y-8">
+                {/* 4A: Printer's Color Cabbages / Progressive Tint Control Slugs */}
+                <div>
+                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                      <span className="w-2 h-2 bg-[var(--primary-500)] inline-block" />
+                      A. Printer&apos;s Color Cabbages &amp; Progressive Tint Slugs (Densitometer Control Strips)
+                    </span>
+                    <span className="text-[11px] font-mono text-[var(--text-muted)]">100% &rarr; 5% Progressive Tint Density</span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {/* CMYK 4-Color Process Stepped Cabbages */}
+                    <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] font-mono text-xs">
+                      <span className="font-bold text-[var(--text)] uppercase block mb-2.5">
+                        1. Primary Process Cabbages (Cyan/Blue, Magenta/Red, Yellow, Key Black):
+                      </span>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        {/* Cyan / Process Blue */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--primary-700)]">
+                            <span>CYAN / BLUE PLATE</span>
+                            <span className="text-[10px] text-[var(--text-muted)]">C100</span>
+                          </div>
+                          <div className="grid grid-cols-6 gap-1 h-8">
+                            <div className="bg-[var(--primary-700)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                            <div className="bg-[var(--primary-600)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                            <div className="bg-[var(--primary-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                            <div className="bg-[var(--primary-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                            <div className="bg-[var(--primary-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                            <div className="bg-[var(--primary-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                          </div>
+                        </div>
+
+                        {/* Magenta / Process Red */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--spectrum-red)]">
+                            <span>MAGENTA / RED PLATE</span>
+                            <span className="text-[10px] text-[var(--text-muted)]">M100</span>
+                          </div>
+                          <div className="grid grid-cols-6 gap-1 h-8">
+                            <div className="bg-[#B91C1C] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                            <div className="bg-[var(--spectrum-red)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                            <div className="bg-[#F87171] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                            <div className="bg-[#FCA5A5] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                            <div className="bg-[#FECACA] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                            <div className="bg-[#FEF2F2] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                          </div>
+                        </div>
+
+                        {/* Process Yellow */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                          <div className="flex justify-between items-center mb-1.5 font-bold text-[#A16207]">
+                            <span>PROCESS YELLOW</span>
+                            <span className="text-[10px] text-[var(--text-muted)]">Y100</span>
+                          </div>
+                          <div className="grid grid-cols-6 gap-1 h-8">
+                            <div className="bg-[var(--spectrum-yellow)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="100%">100</div>
+                            <div className="bg-[#FDE047] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="80%">80</div>
+                            <div className="bg-[#FEF08A] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="60%">60</div>
+                            <div className="bg-[#FEF9C3] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                            <div className="bg-[#FEFCE8] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                            <div className="bg-[#FFFBEB] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                          </div>
+                        </div>
+
+                        {/* Process Key Black */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--gray-900)]">
+                            <span>KEY CARBON BLACK</span>
+                            <span className="text-[10px] text-[var(--text-muted)]">K100</span>
+                          </div>
+                          <div className="grid grid-cols-6 gap-1 h-8">
+                            <div className="bg-[var(--gray-900)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                            <div className="bg-[var(--gray-700)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                            <div className="bg-[var(--gray-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                            <div className="bg-[var(--gray-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                            <div className="bg-[var(--gray-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                            <div className="bg-[var(--gray-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* 2-Plate & 3-Plate Subtractive Overprint Trap Slugs */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] font-mono text-xs">
+                      <span className="font-bold text-[var(--text)] uppercase block mb-2">
+                        2. Multi-Plate Subtractive Trap &amp; Rich Black Slugs (mix-blend-mode: multiply):
+                      </span>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                        {/* C + M -> Optical Violet */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M (BLUE+RED)</span>
+                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Violet</span>
+                        </div>
+
+                        {/* C + Y -> Optical Green */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + Y (BLUE+YELLOW)</span>
+                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Green</span>
+                        </div>
+
+                        {/* M + Y -> Optical Orange */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">M + Y (RED+YELLOW)</span>
+                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" />
+                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Orange</span>
+                        </div>
+
+                        {/* C + M + Y -> 3-Color Process Umber */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M + Y (3-WAY)</span>
+                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">3-Color Neutral</span>
+                        </div>
+
+                        {/* 4-Color Rich Black (C60 M40 Y40 K100) */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C+M+Y+K RICH BLACK</span>
+                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                            <div className="absolute inset-0 bg-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} />
+                          </div>
+                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Rich Carbon Black</span>
+                        </div>
+
+                        {/* Densitometer Micro-Step Target */}
+                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between bg-[var(--surface-muted)]">
+                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">PRESS DENSITY</span>
+                          <div className="h-10 flex border border-black/20">
+                            <div className="flex-1 bg-[var(--spectrum-red)]" />
+                            <div className="flex-1 bg-[var(--spectrum-yellow)]" />
+                            <div className="flex-1 bg-[var(--spectrum-green)]" />
+                            <div className="flex-1 bg-[var(--primary-500)]" />
+                            <div className="flex-1 bg-[var(--gray-900)]" />
+                          </div>
+                          <span className="text-[10px] font-mono text-[var(--text-muted)] mt-1">0.05D &ndash; 2.20D</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4B: Overprinted Multi-Plate Registration Marks & Targets */}
+                <div>
+                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                      <span className="w-2 h-2 bg-[var(--spectrum-green)] inline-block" />
+                      B. Multi-Plate Overprint Registration Targets &amp; Crop Marks
+                    </span>
+                    <span className="text-[11px] font-mono text-[var(--text-muted)]">Overprinted Red, Yellow, Blue, Key Black</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    {/* Target 1: 4-Color Overprinted Crosshair Target */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>4-PLATE CROSSHAIR</span>
+                        <span className="text-[var(--primary-500)]">⨁ OVERPRINT</span>
+                      </div>
+                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
+                        {/* Red Plate */}
+                        <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-red-x), var(--misregister-red-y))" : "none" }} viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                        </svg>
+                        {/* Yellow Plate */}
+                        <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-yellow-x), var(--misregister-yellow-y))" : "none" }} viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                        </svg>
+                        {/* Blue Plate */}
+                        <svg className="absolute inset-0 w-full h-full text-[var(--primary-500)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-blue-x), var(--misregister-blue-y))" : "none" }} viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                        </svg>
+                        {/* Key Black Plate */}
+                        <svg className="absolute inset-0 w-full h-full text-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1.25" />
+                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="8" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                          <line x1="5" y1="50" x2="95" y2="50" stroke="currentColor" strokeWidth="1" />
+                          <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="1.5" fill="currentColor" />
+                        </svg>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        C+M+Y+K Multi-Plate Optical Trap
+                      </span>
+                    </div>
+
+                    {/* Target 2: Concentric Micro-Tick Vernier Target */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>VERNIER TARGET</span>
+                        <span className="text-[var(--spectrum-red)]">0.05mm GAIN</span>
+                      </div>
+                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
+                        <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
+                          <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                          <circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" strokeWidth="0.75" strokeDasharray="2,2" />
+                          <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                          <circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                          {/* 8-Axis Radial Ticks */}
+                          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                            <line
+                              key={deg}
+                              x1="50"
+                              y1="6"
+                              x2="50"
+                              y2="16"
+                              stroke="currentColor"
+                              strokeWidth="0.75"
+                              transform={`rotate(${deg} 50 50)`}
+                            />
+                          ))}
+                          <circle cx="50" cy="50" r="2" fill="currentColor" />
+                        </svg>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Angular Press Shift Diagnostic
+                      </span>
+                    </div>
+
+                    {/* Target 3: Corner Trim & Bleed Registration Crop Marks */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>CROP &amp; BLEED MARKS</span>
+                        <span className="text-[var(--spectrum-amber)]">3.0mm BLEED</span>
+                      </div>
+                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 overflow-hidden">
+                        {/* Trim area bounds */}
+                        <div className="absolute inset-4 border border-dashed border-[var(--gray-400)] flex items-center justify-center">
+                          <span className="font-mono text-[9px] text-[var(--text-muted)] uppercase">Trim Area</span>
+                        </div>
+                        {/* Overprinted Corner Crop Marks in C, M, Y, K */}
+                        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                          {/* Top-Left Crops */}
+                          <line x1="16" y1="0" x2="16" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
+                          <line x1="0" y1="16" x2="12" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
+                          {/* Top-Right Crops */}
+                          <line x1="84" y1="0" x2="84" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
+                          <line x1="88" y1="16" x2="100" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
+                          {/* Bottom-Left Crops */}
+                          <line x1="16" y1="88" x2="16" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
+                          <line x1="0" y1="84" x2="12" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
+                          {/* Bottom-Right Crops */}
+                          <line x1="84" y1="88" x2="84" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
+                          <line x1="88" y1="84" x2="100" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
+                        </svg>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Precision Guillotine Hairlines
+                      </span>
+                    </div>
+
+                    {/* Target 4: Perforation & Fold Line Chrome */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>FOLD &amp; PERFORATION</span>
+                        <span className="text-[var(--primary-500)]">SCORE RULE</span>
+                      </div>
+                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between p-3 font-mono text-[10px]">
+                        <div>
+                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                            <span>FOLD (DASHED)</span>
+                            <span>SCORE</span>
+                          </div>
+                          <div className="h-0 border-t-2 border-dashed border-[var(--gray-900)] mb-3" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                            <span>PERFORATION (DOTS)</span>
+                            <span>MICRO-TIE</span>
+                          </div>
+                          <div className="h-0 border-t-2 border-dotted border-[var(--spectrum-red)] mb-3" />
+                        </div>
+                        <div>
+                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                            <span>CUT LINE (SOLID)</span>
+                            <span>SLIT</span>
+                          </div>
+                          <div className="h-0 border-t border-[var(--primary-500)]" />
+                        </div>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Mechanical Finishing Indicators
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4C: Siemens Rosette Star Target & Slur / Doubling Gauges */}
+                <div>
+                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                      <span className="w-2 h-2 bg-[var(--spectrum-violet)] inline-block" />
+                      C. Siemens Star Rosette Target &amp; Slur/Doubling Resolution Gauges
+                    </span>
+                    <span className="text-[11px] font-mono text-[var(--text-muted)]">Optical Resolving Power &bull; Hairline Calibrations</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    {/* Siemens Star Rosette */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>SIEMENS STAR ROSETTE</span>
+                        <span className="text-[var(--primary-500)]">36 RAYS</span>
+                      </div>
+                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
+                        <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
+                          {Array.from({ length: 36 }).map((_, i) => {
+                            const angle = (i * 360) / 36;
+                            return (
+                              <line
+                                key={i}
+                                x1="50"
+                                y1="50"
+                                x2="50"
+                                y2="6"
+                                stroke="currentColor"
+                                strokeWidth={i % 2 === 0 ? "1.5" : "0.75"}
+                                transform={`rotate(${angle} 50 50)`}
+                              />
+                            );
+                          })}
+                          <circle cx="50" cy="50" r="4" fill="var(--surface)" stroke="currentColor" strokeWidth="1" />
+                          <circle cx="50" cy="50" r="1" fill="currentColor" />
+                        </svg>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Radial Optical Resolution Limit
+                      </span>
+                    </div>
+
+                    {/* Slur and Doubling Ladder Gauge */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>SLUR &amp; DOUBLING GAUGE</span>
+                        <span className="text-[var(--spectrum-red)]">PRESS SLIP</span>
+                      </div>
+                      <div className="w-full h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 grid grid-cols-2 gap-2">
+                        {/* Horizontal Ladder (Directional Slur) */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
+                          <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">HORIZ. LADDER</span>
+                          <div className="space-y-1">
+                            {Array.from({ length: 7 }).map((_, idx) => (
+                              <div key={idx} className="h-0.5 bg-[var(--gray-900)]" />
+                            ))}
+                          </div>
+                          <span className="font-mono text-[8px] text-[var(--text-muted)]">Circumferential</span>
+                        </div>
+                        {/* Vertical Ladder (Directional Slur) */}
+                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
+                          <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">VERT. LADDER</span>
+                          <div className="flex justify-between h-14 items-stretch">
+                            {Array.from({ length: 7 }).map((_, idx) => (
+                              <div key={idx} className="w-0.5 bg-[var(--gray-900)]" />
+                            ))}
+                          </div>
+                          <span className="font-mono text-[8px] text-[var(--text-muted)]">Lateral Shift</span>
+                        </div>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Detects Directional Cylinder Slippage
+                      </span>
+                    </div>
+
+                    {/* Hairline Calibrated Rule Gauge */}
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                        <span>HAIRLINE RULE GAUGE</span>
+                        <span className="text-[var(--spectrum-green)]">0.1pt &ndash; 2.0pt</span>
+                      </div>
+                      <div className="w-full h-36 bg-[var(--surface)] border border-[var(--border-gray)] p-3 flex flex-col justify-between font-mono text-[10px]">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-[var(--text-muted)]">0.10pt (Ultra)</span>
+                          <div className="w-24 h-[0.5px] bg-[var(--gray-900)]" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-[var(--text-muted)]">0.25pt (Hairline)</span>
+                          <div className="w-24 h-[1px] bg-[var(--gray-900)]" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-[var(--text-muted)]">0.50pt (Light)</span>
+                          <div className="w-24 h-[1.5px] bg-[var(--gray-900)]" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-[var(--text-muted)]">1.00pt (Regular)</span>
+                          <div className="w-24 h-[2px] bg-[var(--gray-900)]" />
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-[9px] text-[var(--text-muted)]">2.00pt (Heavy Rule)</span>
+                          <div className="w-24 h-[3px] bg-[var(--gray-900)]" />
+                        </div>
+                      </div>
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
+                        Stroke Fidelity &amp; Gain Calibration
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            {/* ─── 5. Map & Chrome Control Rules ─── */}
+            <Card title="Map & Canvas Control Rules: On-Map vs. On-Paper" badge={<Badge color="green">CANVAS RULE</Badge>}>
               <div className="grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-2 4xl:grid-cols-2 gap-6">
                 <div className="p-4 bg-[var(--gray-900)] text-white">
                   <span className="text-xs font-mono font-bold block mb-2 text-[var(--spectrum-yellow)]">
@@ -1743,6 +2384,567 @@ export default function App() {
                 </div>
               </div>
             </Card>
+          </div>
+        )}
+
+        {/* =========================================================
+            TAB 5: DATA VISUALIZATION
+            ========================================================= */}
+        {activeTab === "datavis" && (
+          <div className="flex flex-col gap-8">
+            {/* Breakpoint Telemetry Banner */}
+            <div className="bg-[var(--white)] p-4 flex flex-wrap items-center justify-between gap-2 text-xs font-mono border border-[var(--border-gray)]">
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-[var(--primary-500)] uppercase">Data Visualization Density:</span>
+                <span className="bg-[var(--surface)] px-2 py-0.5 border border-[var(--border-gray)]">
+                  Tactile Press Charts &bull; Multi-Plate Overprinting &bull; Fuller Projection
+                </span>
+              </div>
+              <span className="text-[var(--text-muted)]">
+                Leveraging subtractive spot ink blending, intaglio mechanical hatch fills, and tabular numerals.
+              </span>
+            </div>
+
+            {/* Split Telemetry Readout Dock */}
+            <Card title="Split Telemetry Readout Dock" badge={<Badge color="blue">LIVE DOCK</Badge>}>
+              <p className="text-xs text-[var(--text-muted)] mb-4">
+                Ink-on-white status dock separating geographic place facts from camera attitude and solar time.
+              </p>
+              <DataReadout />
+            </Card>
+
+            {/* ─── Vector Dymaxion Map (Buckminster Fuller Airocean Projection) ─── */}
+            <section>
+              <div className="flex items-baseline justify-between border-b border-[var(--border-gray)] pb-2 mb-4">
+                <div>
+                  <h2 className="text-2xl font-bold tracking-tight m-0">Vector Cartography: Buckminster Fuller Dymaxion Map</h2>
+                  <p className="text-sm text-[var(--text-muted)] mt-0.5">
+                    Continuous icosahedral polyhedron vector unfold with single-ink intaglio patterns, spot-color screens, and geodesic Great Circle chords.
+                  </p>
+                </div>
+                <span className="text-xs font-mono text-[var(--text-muted)]">DYMAXION AIROCEAN VECTOR</span>
+              </div>
+              <FullerMap />
+            </section>
+
+            {/* ─── Tactile Data Visualization Specimen Suite ─── */}
+            <section className="bg-[var(--white)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
+              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[var(--border-gray)]/20 pb-3 mb-6 gap-2">
+                <div>
+                  <h2 className="text-xl font-bold tracking-tight m-0 text-[var(--primary-500)] uppercase font-mono flex items-center gap-2">
+                    <span className="w-2.5 h-2.5 bg-[var(--primary-500)] inline-block" />
+                    Tactile Press Data Visualizations (Overprinting &amp; Mechanical Screens)
+                  </h2>
+                  <p className="text-xs text-[var(--text-muted)] mt-1">
+                    Charts built for physical paper reproduction: <strong>Radar spider plots</strong> with multiply overlapping plates, <strong>intaglio coordinate line plots</strong> with crosshatch fills, <strong>density tile heat maps</strong>, <strong>2-plate overprint bar graphs</strong>, and <strong>subtractive cumulative area charts</strong>.
+                  </p>
+                </div>
+                <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">5 DATA SPECIMENS</span>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* ─── Specimen 1: Multi-Plate Radar Plot (Spider Chart) ─── */}
+                <div className="p-5 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 bg-[var(--primary-500)] inline-block" />
+                        1. Multi-Plate Radar Plot (Spider Graph)
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--primary-500)] text-white px-2 py-0.5 font-bold">
+                        3-PLATE MULTIPLY
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--text-muted)] mb-4">
+                      Overlapping spot-ink polygonal plates (Itten Blue, Spot Red, Amber Gold). Intersecting polygons synthesize optical secondary colors physically via <code>mix-blend-mode: multiply</code>.
+                    </p>
+
+                    <div className="flex items-center justify-center p-2 bg-[var(--white)] border border-[var(--border-gray)] relative">
+                      <svg className="w-full max-w-[340px] h-[300px]" viewBox="0 0 340 300">
+                        {/* Concentric Hexagonal Grids (20%, 40%, 60%, 80%, 100%) */}
+                        {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale, sIdx) => {
+                          const cx = 170;
+                          const cy = 150;
+                          const r = 110 * scale;
+                          const points = [0, 60, 120, 180, 240, 300]
+                            .map((deg) => {
+                              const rad = (deg - 90) * (Math.PI / 180);
+                              return `${(cx + r * Math.cos(rad)).toFixed(1)},${(cy + r * Math.sin(rad)).toFixed(1)}`;
+                            })
+                            .join(" ");
+                          return (
+                            <polygon
+                              key={sIdx}
+                              points={points}
+                              fill="none"
+                              stroke="var(--gray-300)"
+                              strokeWidth="0.75"
+                              strokeDasharray={scale === 1.0 ? "none" : "2,2"}
+                            />
+                          );
+                        })}
+
+                        {/* 6 Axis Spoke Hairlines */}
+                        {[0, 60, 120, 180, 240, 300].map((deg, aIdx) => {
+                          const cx = 170;
+                          const cy = 150;
+                          const rad = (deg - 90) * (Math.PI / 180);
+                          const x2 = cx + 115 * Math.cos(rad);
+                          const y2 = cy + 115 * Math.sin(rad);
+                          return (
+                            <line
+                              key={aIdx}
+                              x1={cx}
+                              y1={cy}
+                              x2={x2}
+                              y2={y2}
+                              stroke="var(--gray-400)"
+                              strokeWidth="0.75"
+                            />
+                          );
+                        })}
+
+                        {/* Axis Labels */}
+                        {[
+                          { text: "LATENCY", x: 170, y: 22, anchor: "middle" },
+                          { text: "THROUGHPUT", x: 285, y: 90, anchor: "start" },
+                          { text: "PRECISION", x: 285, y: 215, anchor: "start" },
+                          { text: "DENSITY", x: 170, y: 282, anchor: "middle" },
+                          { text: "RESILIENCE", x: 55, y: 215, anchor: "end" },
+                          { text: "VELOCITY", x: 55, y: 90, anchor: "end" },
+                        ].map((lbl, lIdx) => (
+                          <text
+                            key={lIdx}
+                            x={lbl.x}
+                            y={lbl.y}
+                            textAnchor={lbl.anchor}
+                            className="text-[9px] font-mono font-bold fill-[var(--gray-700)]"
+                          >
+                            {lbl.text}
+                          </text>
+                        ))}
+
+                        {/* Plate A: Itten Blue Polygon (Hatch pattern) */}
+                        <polygon
+                          points="170,55 255,105 240,195 170,225 95,190 100,105"
+                          fill="var(--primary-500)"
+                          fillOpacity="0.55"
+                          stroke="var(--primary-700)"
+                          strokeWidth="1.5"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Plate B: Spot Red Polygon (Multiply) */}
+                        <polygon
+                          points="170,75 235,120 220,175 170,245 80,160 115,120"
+                          fill="var(--spectrum-red)"
+                          fillOpacity="0.55"
+                          stroke="var(--spectrum-red)"
+                          strokeWidth="1.5"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Plate C: Amber Gold Polygon (Multiply) */}
+                        <polygon
+                          points="170,40 220,135 255,200 170,205 120,180 85,90"
+                          fill="var(--spectrum-yellow)"
+                          fillOpacity="0.55"
+                          stroke="var(--spectrum-amber)"
+                          strokeWidth="1.5"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Data Points */}
+                        {[[170, 55], [255, 105], [240, 195], [170, 225], [95, 190], [100, 105]].map(([px, py], pIdx) => (
+                          <circle key={pIdx} cx={px} cy={py} r="2.5" fill="var(--primary-700)" stroke="white" strokeWidth="0.75" />
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 bg-[var(--primary-500)] inline-block" />
+                        Sector Alpha
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 bg-[var(--spectrum-red)] inline-block" />
+                        Sector Beta
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 bg-[var(--spectrum-yellow)] inline-block" />
+                        Sector Gamma
+                      </span>
+                    </div>
+                    <span className="text-[var(--text-muted)]">Overlap = Multiply Secondary</span>
+                  </div>
+                </div>
+
+                {/* ─── Specimen 2: Intaglio Coordinate Plot / Line Graph ─── */}
+                <div className="p-5 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 bg-[var(--spectrum-red)] inline-block" />
+                        2. Intaglio Coordinate Line Plot &amp; Halftone Fill
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--gray-900)] text-white px-2 py-0.5 font-bold">
+                        TABULAR COORD
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--text-muted)] mb-4">
+                      Continuous telemetry line plot with mechanical intaglio screen fill under curve, hairline coordinate grid, and spot color registration points.
+                    </p>
+
+                    <div className="p-2 bg-[var(--white)] border border-[var(--border-gray)] relative">
+                      <svg className="w-full h-[300px]" viewBox="0 0 420 260">
+                        {/* Define Pattern Fills */}
+                        <defs>
+                          <pattern id="datavis-cross-hatch" width="8" height="8" patternUnits="userSpaceOnUse">
+                            <path d="M 0 0 L 8 8 M 8 0 L 0 8" stroke="var(--primary-500)" strokeWidth="0.8" opacity="0.45" />
+                          </pattern>
+                          <pattern id="datavis-dot-fill" width="6" height="6" patternUnits="userSpaceOnUse">
+                            <circle cx="3" cy="3" r="1.2" fill="var(--spectrum-red)" opacity="0.4" />
+                          </pattern>
+                        </defs>
+
+                        {/* Coordinate Grid Hairlines */}
+                        {[40, 85, 130, 175, 220].map((y, yIdx) => (
+                          <g key={yIdx}>
+                            <line x1="45" y1={y} x2="400" y2={y} stroke="var(--gray-200)" strokeWidth="0.75" />
+                            <text x="38" y={y + 3} textAnchor="end" className="text-[9px] font-mono fill-[var(--text-muted)]">
+                              {(220 - y) * 2}k
+                            </text>
+                          </g>
+                        ))}
+
+                        {[45, 104, 163, 222, 281, 340, 400].map((x, xIdx) => (
+                          <g key={xIdx}>
+                            <line x1={x} y1="30" x2={x} y2="220" stroke="var(--gray-200)" strokeWidth="0.75" strokeDasharray="2,2" />
+                            <text x={x} y="235" textAnchor="middle" className="text-[9px] font-mono fill-[var(--text-muted)]">
+                              0{xIdx}:00
+                            </text>
+                          </g>
+                        ))}
+
+                        {/* Baseline Axes */}
+                        <line x1="45" y1="220" x2="400" y2="220" stroke="var(--gray-900)" strokeWidth="1.25" />
+                        <line x1="45" y1="30" x2="45" y2="220" stroke="var(--gray-900)" strokeWidth="1.25" />
+
+                        {/* Series 1 Fill (Under Curve Hatch) */}
+                        <path
+                          d="M 45 220 L 45 160 Q 104 120 163 150 T 281 70 T 340 100 T 400 45 L 400 220 Z"
+                          fill="url(#datavis-cross-hatch)"
+                        />
+
+                        {/* Series 2 Fill (Under Curve Dots) */}
+                        <path
+                          d="M 45 220 L 45 190 Q 104 170 163 180 T 281 125 T 340 140 T 400 95 L 400 220 Z"
+                          fill="url(#datavis-dot-fill)"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Series 1 Stroke (Itten Blue) */}
+                        <path
+                          d="M 45 160 Q 104 120 163 150 T 281 70 T 340 100 T 400 45"
+                          fill="none"
+                          stroke="var(--primary-700)"
+                          strokeWidth="2"
+                        />
+
+                        {/* Series 2 Stroke (Spot Red Dashed) */}
+                        <path
+                          d="M 45 190 Q 104 170 163 180 T 281 125 T 340 140 T 400 95"
+                          fill="none"
+                          stroke="var(--spectrum-red)"
+                          strokeWidth="1.75"
+                          strokeDasharray="4,3"
+                        />
+
+                        {/* Active Coordinate Crosshair Marker */}
+                        <g transform="translate(281, 70)">
+                          <line x1="-8" y1="0" x2="8" y2="0" stroke="var(--gray-900)" strokeWidth="1" />
+                          <line x1="0" y1="-8" x2="0" y2="8" stroke="var(--gray-900)" strokeWidth="1" />
+                          <circle cx="0" cy="0" r="3.5" fill="var(--spectrum-yellow)" stroke="var(--gray-900)" strokeWidth="1.25" />
+                          {/* Value Flag */}
+                          <rect x="10" y="-18" width="60" height="16" fill="var(--gray-900)" />
+                          <text x="40" y="-6" textAnchor="middle" className="text-[9px] font-mono font-bold fill-white">
+                            300.00 kPa
+                          </text>
+                        </g>
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1 font-bold text-[var(--primary-700)]">
+                        <span className="w-3 h-0.5 bg-[var(--primary-700)] inline-block" />
+                        Primary Press Stream
+                      </span>
+                      <span className="flex items-center gap-1 font-bold text-[var(--spectrum-red)]">
+                        <span className="w-3 h-0.5 bg-[var(--spectrum-red)] inline-block border-b border-dashed" />
+                        Baseline Anomaly
+                      </span>
+                    </div>
+                    <span className="text-[var(--text-muted)]">Intaglio Crosshatch + Halftone Screen</span>
+                  </div>
+                </div>
+
+                {/* ─── Specimen 3: Density Tile Heat Map (Matrix Grid) ─── */}
+                <div className="p-5 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 bg-[var(--spectrum-aqua)] inline-block" />
+                        3. Mechanical Density Tile Heat Map (Matrix Grid)
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-2 py-0.5 font-bold">
+                        SPOT CHOROPLETH
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--text-muted)] mb-4">
+                      Quantized matrix cells leveraging physical spot ink saturation and mechanical frequency modulation (from 10% point tint to 100% solid press).
+                    </p>
+
+                    <div className="p-3 bg-[var(--white)] border border-[var(--border-gray)] overflow-x-auto">
+                      <div className="min-w-[360px] font-mono text-xs">
+                        {/* Days of week header */}
+                        <div className="grid grid-cols-8 gap-1 mb-1.5 text-center text-[10px] font-bold text-[var(--text-muted)]">
+                          <span>HRS</span>
+                          <span>MON</span>
+                          <span>TUE</span>
+                          <span>WED</span>
+                          <span>THU</span>
+                          <span>FRI</span>
+                          <span>SAT</span>
+                          <span>SUN</span>
+                        </div>
+
+                        {/* 6 Time Blocks */}
+                        {[
+                          { time: "00-04", vals: [1, 1, 2, 1, 1, 2, 3] },
+                          { time: "04-08", vals: [2, 3, 3, 4, 3, 2, 1] },
+                          { time: "08-12", vals: [4, 5, 5, 5, 5, 4, 2] },
+                          { time: "12-16", vals: [5, 5, 4, 5, 5, 5, 3] },
+                          { time: "16-20", vals: [4, 4, 5, 4, 5, 4, 4] },
+                          { time: "20-24", vals: [2, 3, 3, 3, 4, 4, 3] },
+                        ].map((row, rIdx) => (
+                          <div key={rIdx} className="grid grid-cols-8 gap-1 mb-1 items-center">
+                            <span className="text-[9px] font-bold text-[var(--text-muted)] text-center">
+                              {row.time}
+                            </span>
+                            {row.vals.map((v, cIdx) => {
+                              // Map density level 1-5 to spot color tint
+                              const styles = [
+                                { bg: "bg-[var(--primary-100)]", text: "text-[var(--gray-700)]", label: "10%" },
+                                { bg: "bg-[var(--spectrum-aqua)]/40", text: "text-[var(--gray-800)]", label: "30%" },
+                                { bg: "bg-[var(--spectrum-aqua)]/80", text: "text-[var(--gray-900)]", label: "60%" },
+                                { bg: "bg-[var(--primary-500)] text-white", text: "text-white", label: "80%" },
+                                { bg: "bg-[var(--primary-700)] text-white font-black", text: "text-white", label: "100%" },
+                              ][v - 1];
+                              return (
+                                <div
+                                  key={cIdx}
+                                  className={`h-7 flex items-center justify-center text-[10px] font-mono border border-black/10 transition-transform hover:scale-105 ${styles.bg}`}
+                                  title={`Density Tier ${v} (${styles.label})`}
+                                >
+                                  {styles.label}
+                                </div>
+                              );
+                            })}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+                    <span className="text-[var(--text-muted)]">Density Key: 10% &rarr; 30% &rarr; 60% &rarr; 80% &rarr; 100% Solid</span>
+                    <span className="font-bold text-[var(--primary-700)]">Zero Gradient Invariance</span>
+                  </div>
+                </div>
+
+                {/* ─── Specimen 4: Overprint Bar Graph with Offset Bar Graph ─── */}
+                <div className="p-5 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 bg-[var(--spectrum-yellow)] inline-block" />
+                        4. 2-Plate Overprint Bar Graph &amp; Offset Bars
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-2 py-0.5 font-bold">
+                        OVERPRINT GREEN
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--text-muted)] mb-4">
+                      Budget Target (Spot Yellow) and Actual Realized (Itten Blue) overlap physically. The subtractive intersection forms vivid <strong>Optical Green</strong> via press multiplying.
+                    </p>
+
+                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)]">
+                      <div className="space-y-4 font-mono text-xs">
+                        {[
+                          { label: "ADM1 Turkana Central", target: 82, actual: 68, offset: 4 },
+                          { label: "ADM1 Garissa North", target: 60, actual: 75, offset: -3 },
+                          { label: "ADM1 Wajir East", target: 90, actual: 88, offset: 2 },
+                          { label: "ADM1 Marsabit Basin", target: 45, actual: 52, offset: -5 },
+                        ].map((item, bIdx) => (
+                          <div key={bIdx}>
+                            <div className="flex justify-between text-[11px] mb-1 font-bold">
+                              <span className="text-[var(--text)]">{item.label}</span>
+                              <span className="text-[var(--text-muted)]">
+                                Tgt: {item.target}% &bull; Act: {item.actual}%
+                              </span>
+                            </div>
+                            <div className="h-8 bg-[var(--surface)] border border-[var(--border-gray)] relative overflow-hidden flex items-center">
+                              {/* Background Scale Marks */}
+                              <div className="absolute inset-0 flex justify-between pointer-events-none px-2">
+                                <div className="w-px h-full bg-[var(--border-gray)]/40" />
+                                <div className="w-px h-full bg-[var(--border-gray)]/40" />
+                                <div className="w-px h-full bg-[var(--border-gray)]/40" />
+                                <div className="w-px h-full bg-[var(--border-gray)]/40" />
+                              </div>
+
+                              {/* Plate 1: Target Allocation (Spot Yellow) */}
+                              <div
+                                className="absolute left-0 top-1 bottom-1 bg-[var(--spectrum-yellow)] border-r-2 border-[var(--spectrum-amber)]"
+                                style={{ width: `${item.target}%` }}
+                              />
+
+                              {/* Plate 2: Actual Realized (Itten Blue with Multiply & Hairline Misregister) */}
+                              <div
+                                className="absolute top-2 bottom-2 bg-[var(--primary-500)] border-r-2 border-[var(--primary-700)] shadow-none"
+                                style={{
+                                  left: globalMisregistration ? `${item.offset}px` : "0px",
+                                  width: `${item.actual}%`,
+                                  mixBlendMode: "multiply",
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-2 font-mono text-[11px]">
+                    <div className="flex items-center gap-3">
+                      <span className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 bg-[var(--spectrum-yellow)] inline-block" />
+                        Target Allocation
+                      </span>
+                      <span className="flex items-center gap-1">
+                        <span className="w-2.5 h-2.5 bg-[var(--primary-500)] inline-block" />
+                        Actual Realized
+                      </span>
+                      <span className="flex items-center gap-1 font-bold text-[var(--spectrum-green)]">
+                        <span className="w-2.5 h-2.5 bg-[var(--spectrum-green)] inline-block" />
+                        Overlap (Optical Green)
+                      </span>
+                    </div>
+                    <span className="text-[var(--text-muted)]">Plate Offset Hairlines</span>
+                  </div>
+                </div>
+
+                {/* ─── Specimen 5: Layered Cumulative Area Graph ─── */}
+                <div className="p-5 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between lg:col-span-2">
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                        <span className="w-2 h-2 bg-[var(--spectrum-violet)] inline-block" />
+                        5. Layered Cumulative Area Graph (Subtractive 3-Plate Stream)
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--spectrum-violet)] text-white px-2 py-0.5 font-bold">
+                        3-INK STREAM
+                      </span>
+                    </div>
+                    <p className="text-xs text-[var(--text-muted)] mb-4">
+                      Cumulative multi-band area chart featuring three spot inks (Aqua Seafoam, Amber Gold, Spot Violet) rendered with mechanical crosshatch, diagonal rule, and dot matrix pattern fills with physical multiply blending.
+                    </p>
+
+                    <div className="p-3 bg-[var(--white)] border border-[var(--border-gray)] relative">
+                      <svg className="w-full h-[240px]" viewBox="0 0 800 240">
+                        {/* Define Area Patterns */}
+                        <defs>
+                          <pattern id="area-hatch-aqua" width="8" height="8" patternUnits="userSpaceOnUse">
+                            <line x1="0" y1="0" x2="8" y2="8" stroke="var(--spectrum-aqua)" strokeWidth="1.25" />
+                          </pattern>
+                          <pattern id="area-dots-amber" width="6" height="6" patternUnits="userSpaceOnUse">
+                            <circle cx="3" cy="3" r="1.25" fill="var(--spectrum-amber)" />
+                          </pattern>
+                          <pattern id="area-cross-violet" width="8" height="8" patternUnits="userSpaceOnUse">
+                            <path d="M 0 0 L 8 8 M 8 0 L 0 8" stroke="var(--spectrum-violet)" strokeWidth="0.8" />
+                          </pattern>
+                        </defs>
+
+                        {/* Grid Lines */}
+                        {[40, 90, 140, 190].map((y, yIdx) => (
+                          <line key={yIdx} x1="40" y1={y} x2="780" y2={y} stroke="var(--gray-200)" strokeWidth="0.75" />
+                        ))}
+
+                        {/* Band 1: Aqua Base Layer */}
+                        <path
+                          d="M 40 200 L 40 150 Q 180 130 320 160 T 580 110 T 780 130 L 780 200 Z"
+                          fill="url(#area-hatch-aqua)"
+                          stroke="var(--spectrum-aqua)"
+                          strokeWidth="1.5"
+                        />
+
+                        {/* Band 2: Amber Middle Layer (Multiply) */}
+                        <path
+                          d="M 40 200 L 40 110 Q 200 80 360 120 T 600 70 T 780 90 L 780 200 Z"
+                          fill="url(#area-dots-amber)"
+                          stroke="var(--spectrum-amber)"
+                          strokeWidth="1.5"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Band 3: Violet Top Layer (Multiply) */}
+                        <path
+                          d="M 40 200 L 40 70 Q 220 50 400 80 T 620 40 T 780 55 L 780 200 Z"
+                          fill="url(#area-cross-violet)"
+                          stroke="var(--spectrum-violet)"
+                          strokeWidth="1.5"
+                          style={{ mixBlendMode: "multiply" }}
+                        />
+
+                        {/* Baseline Rule */}
+                        <line x1="40" y1="200" x2="780" y2="200" stroke="var(--gray-900)" strokeWidth="1.5" />
+
+                        {/* X-Axis Ticks */}
+                        {[40, 188, 336, 484, 632, 780].map((x, idx) => (
+                          <g key={idx}>
+                            <line x1={x} y1="200" x2={x} y2="206" stroke="var(--gray-900)" strokeWidth="1" />
+                            <text x={x} y="220" textAnchor="middle" className="text-[9px] font-mono fill-[var(--text-muted)]">
+                              Q{idx + 1} 2026
+                            </text>
+                          </g>
+                        ))}
+                      </svg>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-4 font-mono text-[11px]">
+                    <div className="flex items-center gap-4">
+                      <span className="flex items-center gap-1.5 font-bold text-[var(--spectrum-aqua)]">
+                        <span className="w-3 h-3 border border-[var(--spectrum-aqua)] inline-block" style={{ backgroundImage: "repeating-linear-gradient(45deg, var(--spectrum-aqua) 0, var(--spectrum-aqua) 1px, transparent 0, transparent 4px)" }} />
+                        Aqua Hydrology
+                      </span>
+                      <span className="flex items-center gap-1.5 font-bold text-[var(--spectrum-amber)]">
+                        <span className="w-3 h-3 border border-[var(--spectrum-amber)] inline-block bg-[var(--spectrum-amber)]/30" />
+                        Amber Agricultural
+                      </span>
+                      <span className="flex items-center gap-1.5 font-bold text-[var(--spectrum-violet)]">
+                        <span className="w-3 h-3 border border-[var(--spectrum-violet)] inline-block" style={{ backgroundImage: "repeating-linear-gradient(0deg, var(--spectrum-violet) 0, var(--spectrum-violet) 1px, transparent 0, transparent 4px)" }} />
+                        Violet Territorial
+                      </span>
+                    </div>
+                    <span className="text-[var(--text-muted)]">Subtractive Multi-Plate Screen Composite</span>
+                  </div>
+                </div>
+              </div>
+            </section>
           </div>
         )}
 
