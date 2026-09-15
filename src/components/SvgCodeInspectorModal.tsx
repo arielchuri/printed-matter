@@ -133,7 +133,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                     className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "paper"
                         ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -144,7 +144,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                     className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "dark"
                         ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -155,7 +155,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                     className={`px-2 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                       bgMode === "grid"
                         ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                        : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -174,7 +174,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
                       className={`px-1.5 py-1 flex-1 text-[10px] font-bold border transition-colors ${
                         previewScale === s
                           ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                          : "bg-[var(--white)] text-[var(--primary-500)] border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -250,7 +250,7 @@ export const SvgCodeInspectorModal: React.FC<SvgCodeInspectorModalProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   onClick={handleDownload}
-                  className="px-3 py-2 bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] font-mono text-xs font-bold hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] flex items-center gap-1.5 transition-colors"
+                  className="px-3 py-2 bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 font-mono text-xs font-bold hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] flex items-center gap-1.5 transition-colors"
                   style={{ borderRadius: 0 }}
                 >
                   <Download className="w-3.5 h-3.5" />

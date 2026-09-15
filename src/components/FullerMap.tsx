@@ -75,7 +75,7 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
               className={`flex items-center gap-1 px-2.5 py-1 text-[11px] font-bold transition-colors ${
                 activeLayer === mode.id
                   ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                  : "bg-[var(--surface)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                  : "bg-[var(--surface)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
               }`}
               style={{ borderRadius: 0 }}
             >
@@ -87,7 +87,7 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
           <div className="flex items-center gap-0.5 ml-2 border-l border-[var(--border-gray)]/30 pl-2">
             <button
               onClick={() => setZoomLevel((z) => Math.min(1.6, z + 0.15))}
-              className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)] text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
+              className="p-1.5 bg-[var(--surface)] border border-[var(--primary-500)]/40 text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
               title="Zoom In"
               style={{ borderRadius: 0 }}
             >
@@ -95,7 +95,7 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
             </button>
             <button
               onClick={() => setZoomLevel((z) => Math.max(0.75, +(z - 0.15).toFixed(2)))}
-              className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)] text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
+              className="p-1.5 bg-[var(--surface)] border border-[var(--primary-500)]/40 text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
               title="Zoom Out"
               style={{ borderRadius: 0 }}
             >
@@ -103,7 +103,7 @@ export const FullerMap: React.FC<FullerMapProps> = ({ className = "" }) => {
             </button>
             <button
               onClick={() => { setZoomLevel(1.35); setMisregScale(0.15); setSelectedFacet(null); }}
-              className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)] text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
+              className="p-1.5 bg-[var(--surface)] border border-[var(--primary-500)]/40 text-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] transition-colors"
               title="Reset Cropped View"
               style={{ borderRadius: 0 }}
             >

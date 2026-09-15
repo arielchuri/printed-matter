@@ -1342,7 +1342,7 @@ export default function App() {
                     className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors ${
                       selectedMeasure === m.id
                         ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                        : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                     }`}
                     style={{ borderRadius: 0 }}
                   >
@@ -1446,7 +1446,7 @@ export default function App() {
                       className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors ${
                         columnMaxWidth === col.id
                           ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -1470,7 +1470,7 @@ export default function App() {
                       className={`px-3 py-1.5 text-xs font-mono font-bold transition-colors flex items-center gap-1.5 ${
                         columnAlign === aln.id
                           ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                          : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                       }`}
                       style={{ borderRadius: 0 }}
                     >
@@ -1823,7 +1823,7 @@ export default function App() {
                           className={`px-3 py-1 text-xs font-mono font-bold transition-colors ${
                             selectedAdminLevel === lvl
                               ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                              : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                              : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                           }`}
                           style={{ borderRadius: 0, boxShadow: "none" }}
                         >
@@ -2102,7 +2102,7 @@ export default function App() {
                         className={`px-2.5 py-1 font-bold transition-colors ${
                           cabbageFilter === f.id
                             ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
-                            : "bg-[var(--surface-muted)] text-[var(--primary-500)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                            : "bg-[var(--surface-muted)] text-[var(--primary-500)] border border-[var(--primary-500)]/40 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                         }`}
                         style={{ borderRadius: 0 }}
                       >
