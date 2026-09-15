@@ -41,23 +41,23 @@ export const PRINTED_MATTER_TOKENS = {
     },
     "primary-200": {
       "value": "#6EA3BE",
-      "description": "Itten Blue"
+      "description": "Spot Blue"
     },
     "primary-300": {
       "value": "#6EA3BE",
-      "description": "Itten Blue"
+      "description": "Spot Blue"
     },
     "primary-400": {
       "value": "#6EA3BE",
-      "description": "Itten Blue"
+      "description": "Spot Blue"
     },
     "primary-500": {
       "value": "#6EA3BE",
-      "description": "Canonical Itten Blue (#6EA3BE)"
+      "description": "Canonical Blue (#6EA3BE)"
     },
     "primary-600": {
       "value": "#5A8BA4",
-      "description": "Deepened Itten blue hover"
+      "description": "Deepened blue hover"
     },
     "primary-700": {
       "value": "#3C6B84",
@@ -69,7 +69,7 @@ export const PRINTED_MATTER_TOKENS = {
     },
     "primary-900": {
       "value": "#162F3E",
-      "description": "Deep Itten navy mark"
+      "description": "Deep navy mark"
     },
     "primary-muted": {
       "value": "#78716C",
@@ -77,7 +77,7 @@ export const PRINTED_MATTER_TOKENS = {
     },
     "primary-color": {
       "value": "#6EA3BE",
-      "description": "Itten Blue"
+      "description": "Spot Blue"
     }
   },
   "spectrum": {
@@ -331,16 +331,16 @@ export const COLOR_SWATCHES: TokenItem[] = [
   { name: "surface-subtle", cssVar: "--surface-subtle", value: "#D6D3D1", category: "surface", description: "Secondary warm stone panel ground (Stone 300)" },
   { name: "primary-050", cssVar: "--primary-050", value: "#F5F5F4", category: "primary", description: "Paper ground alias (Stone 100)" },
   { name: "primary-100", cssVar: "--primary-100", value: "#F5F5F4", category: "primary", description: "Paper ground alias (Stone 100)" },
-  { name: "primary-200", cssVar: "--primary-200", value: "#6EA3BE", category: "primary", description: "Itten Blue" },
-  { name: "primary-300", cssVar: "--primary-300", value: "#6EA3BE", category: "primary", description: "Itten Blue" },
-  { name: "primary-400", cssVar: "--primary-400", value: "#6EA3BE", category: "primary", description: "Itten Blue" },
-  { name: "primary-500", cssVar: "--primary-500", value: "#6EA3BE", category: "primary", description: "Canonical Itten Blue (#6EA3BE)" },
-  { name: "primary-600", cssVar: "--primary-600", value: "#5A8BA4", category: "primary", description: "Deepened Itten blue hover" },
+  { name: "primary-200", cssVar: "--primary-200", value: "#6EA3BE", category: "primary", description: "Spot Blue" },
+  { name: "primary-300", cssVar: "--primary-300", value: "#6EA3BE", category: "primary", description: "Spot Blue" },
+  { name: "primary-400", cssVar: "--primary-400", value: "#6EA3BE", category: "primary", description: "Spot Blue" },
+  { name: "primary-500", cssVar: "--primary-500", value: "#6EA3BE", category: "primary", description: "Canonical Blue (#6EA3BE)" },
+  { name: "primary-600", cssVar: "--primary-600", value: "#5A8BA4", category: "primary", description: "Deepened blue hover" },
   { name: "primary-700", cssVar: "--primary-700", value: "#3C6B84", category: "primary", description: "Accessible link text" },
   { name: "primary-800", cssVar: "--primary-800", value: "#284D62", category: "primary", description: "High contrast header" },
-  { name: "primary-900", cssVar: "--primary-900", value: "#162F3E", category: "primary", description: "Deep Itten navy mark" },
+  { name: "primary-900", cssVar: "--primary-900", value: "#162F3E", category: "primary", description: "Deep navy mark" },
   { name: "primary-muted", cssVar: "--primary-muted", value: "#78716C", category: "primary", description: "Tonal warm multiply stone tone" },
-  { name: "primary-color", cssVar: "--primary-color", value: "#6EA3BE", category: "primary", description: "Itten Blue" },
+  { name: "primary-color", cssVar: "--primary-color", value: "#6EA3BE", category: "primary", description: "Spot Blue" },
   { name: "spectrum-red", cssVar: "--spectrum-red", value: "#E65E59", category: "spectrum", description: "Pos 0% • Red Swatch (#E65E59)" },
   { name: "spectrum-red-orange", cssVar: "--spectrum-red-orange", value: "#EA7B49", category: "spectrum", description: "Pos 10% • Spectrum Red-Orange (#EA7B49)" },
   { name: "spectrum-orange", cssVar: "--spectrum-orange", value: "#ED9235", category: "spectrum", description: "Pos 20% • Orange Swatch (#ED9235)" },

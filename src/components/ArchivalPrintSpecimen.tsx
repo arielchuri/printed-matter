@@ -214,7 +214,7 @@ export const ArchivalPrintSpecimen: React.FC<ArchivalPrintSpecimenProps> = ({
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-white font-mono text-xs font-bold text-center">
                 <div className="p-3 bg-[var(--primary-500)] flex flex-col justify-center items-center shadow-sm ink-squash">
-                  <span className="text-sm">ITTEN BLUE</span>
+                  <span className="text-sm">SPOT BLUE</span>
                   <span className="text-[10px] opacity-80">#6EA3BE</span>
                 </div>
                 <div className="p-3 bg-[var(--spectrum-red)] flex flex-col justify-center items-center shadow-sm ink-squash">

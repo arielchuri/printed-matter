@@ -19,11 +19,11 @@
   /* ─── 2. Brand Primary & Accent (Paper Multiply) ─────────── */
   --primary-050: #F5F5F4;            /* Paper ground (Stone 100) */
   --primary-100: #F5F5F4;            /* Subtle tint chip (Stone 100) */
-  --primary-200: #6EA3BE;            /* Itten Blue */
+  --primary-200: #6EA3BE;            /* Spot Blue */
   --primary-300: #6EA3BE;
   --primary-400: #6EA3BE;
-  --primary-500: #6EA3BE;            /* Canonical Itten Blue (#6EA3BE) */
-  --primary-600: #5A8BA4;            /* Deepened Itten blue hover */
+  --primary-500: #6EA3BE;            /* Canonical Blue (#6EA3BE) */
+  --primary-600: #5A8BA4;            /* Deepened blue hover */
   --primary-700: #3C6B84;            /* Accessible link/text */
   --primary-800: #284D62;
   --primary-900: #162F3E;
@@ -616,10 +616,10 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   /* ─── 2. Brand Primary & Accent ──────────────────────────── */
   --primary-050: #1C1917;
   --primary-100: #292524;
-  --primary-200: #6EA3BE;            /* Itten Blue */
+  --primary-200: #6EA3BE;            /* Spot Blue */
   --primary-300: #6EA3BE;
   --primary-400: #6EA3BE;
-  --primary-500: #6EA3BE;            /* Canonical Itten Blue (#6EA3BE) */
+  --primary-500: #6EA3BE;            /* Canonical Spot Blue (#6EA3BE) */
   --primary-600: #5594BE;
   --primary-700: #76ABD2;
   --primary-800: #A2C8E6;
@@ -699,7 +699,7 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   --primary-200: #6EA3BE;
   --primary-300: #6EA3BE;
   --primary-400: #6EA3BE;
-  --primary-500: #6EA3BE;            /* Canonical Itten Blue */
+  --primary-500: #6EA3BE;            /* Canonical Spot Blue */
   --primary-600: #5A8BA4;
   --primary-700: #3C6B84;
   --primary-800: #284D62;

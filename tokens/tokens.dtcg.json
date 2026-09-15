@@ -35,27 +35,27 @@
     "primary-200": {
       "$value": "#6EA3BE",
       "$type": "color",
-      "$description": "Itten Blue"
+      "$description": "Spot Blue"
     },
     "primary-300": {
       "$value": "#6EA3BE",
       "$type": "color",
-      "$description": "Itten Blue"
+      "$description": "Spot Blue"
     },
     "primary-400": {
       "$value": "#6EA3BE",
       "$type": "color",
-      "$description": "Itten Blue"
+      "$description": "Spot Blue"
     },
     "primary-500": {
       "$value": "#6EA3BE",
       "$type": "color",
-      "$description": "Canonical Itten Blue (#6EA3BE)"
+      "$description": "Canonical Blue (#6EA3BE)"
     },
     "primary-600": {
       "$value": "#5A8BA4",
       "$type": "color",
-      "$description": "Deepened Itten blue hover"
+      "$description": "Deepened blue hover"
     },
     "primary-700": {
       "$value": "#3C6B84",
@@ -70,7 +70,7 @@
     "primary-900": {
       "$value": "#162F3E",
       "$type": "color",
-      "$description": "Deep Itten navy mark"
+      "$description": "Deep navy mark"
     },
     "primary-muted": {
       "$value": "#78716C",
@@ -80,7 +80,7 @@
     "primary-color": {
       "$value": "#6EA3BE",
       "$type": "color",
-      "$description": "Itten Blue"
+      "$description": "Spot Blue"
     },
     "spectrum-red": {
       "$value": "#E65E59",

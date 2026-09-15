@@ -16,8 +16,24 @@ import {
 import { COLOR_SWATCHES, getContrastRatio, getWCAGGrade } from "../tokens/tokens";
 import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw } from "lucide-react";
 
+export const PRIMARY_PALETTE = [
+  { name: "BLUE", hex: "#6EA3BE", hoverHex: "#5A8BA4", darkHex: "#3C6B84", lightHex: "#EEF5F8", antiColor: "#FFFFFF" },
+  { name: "RED", hex: "#E65E59", hoverHex: "#C94D48", darkHex: "#8F2A26", lightHex: "#FDE8E7", antiColor: "#FFFFFF" },
+  { name: "RED-ORANGE", hex: "#EA7B49", hoverHex: "#CC6333", darkHex: "#8F3915", lightHex: "#FDEEE7", antiColor: "#FFFFFF" },
+  { name: "ORANGE", hex: "#ED9235", hoverHex: "#D1771D", darkHex: "#8A4707", lightHex: "#FEF2E6", antiColor: "#1C1917" },
+  { name: "AMBER", hex: "#EDBC2F", hoverHex: "#CE9F17", darkHex: "#856306", lightHex: "#FEF9E7", antiColor: "#1C1917" },
+  { name: "YELLOW", hex: "#EDD528", hoverHex: "#D1BA15", darkHex: "#7A6C05", lightHex: "#FEFBE6", antiColor: "#1C1917" },
+  { name: "LIME", hex: "#BBCA49", hoverHex: "#9EAE2F", darkHex: "#5C6613", lightHex: "#F7F9E9", antiColor: "#1C1917" },
+  { name: "GREEN", hex: "#74BE60", hoverHex: "#5CA449", darkHex: "#316422", lightHex: "#EEF8EB", antiColor: "#1C1917" },
+  { name: "AQUA", hex: "#71B197", hoverHex: "#57967D", darkHex: "#2C5847", lightHex: "#EEF6F3", antiColor: "#1C1917" },
+  { name: "INDIGO", hex: "#8E92C6", hoverHex: "#7579B0", darkHex: "#444980", lightHex: "#F2F3FA", antiColor: "#FFFFFF" },
+  { name: "VIOLET", hex: "#A773C4", hoverHex: "#8E58AE", darkHex: "#5E2F79", lightHex: "#F6EEF9", antiColor: "#FFFFFF" },
+  { name: "INK BLACK", hex: "#1C1917", hoverHex: "#292524", darkHex: "#000000", lightHex: "#E7E5E4", antiColor: "#FFFFFF" },
+];
+
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("tokens");
+  const [activePrimaryColor, setActivePrimaryColor] = useState<string>("BLUE");
   const [copiedToken, setCopiedToken] = useState<string | null>(null);
   const [sampleText, setSampleText] = useState<string>("The quick brown fox jumps over the lazy dog");
   const [selectedAdminLevel, setSelectedAdminLevel] = useState<string>("ADM1");
@@ -165,6 +181,22 @@ export default function App() {
       document.documentElement.classList.add("no-black-ink-squash");
     }
   }, [blackInkSquashEnabled]);
+
+  useEffect(() => {
+    const selected = PRIMARY_PALETTE.find((p) => p.name === activePrimaryColor) || PRIMARY_PALETTE[0];
+    const root = document.documentElement;
+    root.style.setProperty("--primary-500", selected.hex);
+    root.style.setProperty("--primary-color", selected.hex);
+    root.style.setProperty("--primary-600", selected.hoverHex);
+    root.style.setProperty("--primary-700", selected.darkHex);
+    root.style.setProperty("--primary-800", selected.darkHex);
+    root.style.setProperty("--primary-900", selected.darkHex);
+    root.style.setProperty("--primary-100", selected.lightHex);
+    root.style.setProperty("--primary-200", selected.hex);
+    root.style.setProperty("--primary-300", selected.hex);
+    root.style.setProperty("--primary-400", selected.hex);
+    root.style.setProperty("--anti-primary-color", selected.antiColor);
+  }, [activePrimaryColor]);
 
   useEffect(() => {
     const root = document.documentElement;
@@ -426,15 +458,15 @@ export default function App() {
             <section>
               <div className="flex items-baseline justify-between border-b border-[var(--border-gray)] pb-2 mb-4">
                 <div>
-                  <h2 className="text-2xl font-bold tracking-tight m-0">Surfaces &amp; Primary Blue</h2>
+                  <h2 className="text-2xl font-bold tracking-tight m-0">Surfaces &amp; Primary Brand Ink</h2>
                   <p className="text-sm text-[var(--text-muted)] mt-0.5">
-                    Stone 100 paper ground (#F5F5F4), recessed stone gutters, and Itten Blue (#6EA3BE). In dark mode, inverts to Stone 800 (#292524).
+                    Stone 100 paper ground (#F5F5F4), recessed stone gutters, Ink Black (Stone 900), and dynamic Primary Brand Ink.
                   </p>
                 </div>
-                <span className="text-xs font-mono text-[var(--text-muted)]">CORE FOUNDATIONS</span>
+                <span className="text-xs font-mono text-[var(--text-muted)]">CORE FOUNDATIONS &amp; PRIMARY SWITCHER</span>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 3xl:grid-cols-3 4xl:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 3xl:grid-cols-4 4xl:grid-cols-4 gap-4">
                 <ColorChip
                   token="--white"
                   name="STONE 100 STOCK (PAPER GROUND)"
@@ -448,11 +480,59 @@ export default function App() {
                   description="Gutter and subtle panel substrate. Built with Tailwind Stone neutrals."
                 />
                 <ColorChip
-                  token="--primary-500"
-                  name="ITTEN BLUE (#6EA3BE)"
-                  value="#6EA3BE"
-                  description="The single authoritative brand blue. Itten Blue (#6EA3BE)."
+                  token="--gray-900"
+                  name="INK BLACK (STONE 900 CARBON)"
+                  value="#1C1917"
+                  description="Deep carbon black ink (#1C1917) providing foundational press contrast."
                 />
+                
+                {/* Primary Brand Ink with Dynamic Color Swatch Selector */}
+                <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-2 border-b border-[var(--border-gray)]/20">
+                      <span className="font-mono text-xs font-bold text-[var(--primary-500)] uppercase">
+                        PRIMARY BRAND INK
+                      </span>
+                      <span className="font-mono text-[10px] bg-[var(--primary-500)] text-[var(--anti-primary-color)] px-1.5 py-0.5 font-bold">
+                        ACTIVE: {activePrimaryColor}
+                      </span>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 my-2">
+                      <div
+                        className="w-12 h-12 border border-black/20 shrink-0"
+                        style={{ backgroundColor: "var(--primary-500)" }}
+                      />
+                      <div className="font-mono text-xs">
+                        <div className="font-bold text-[var(--text)]">var(--primary-500)</div>
+                        <div className="text-[var(--text-muted)] text-[11px]">{PRIMARY_PALETTE.find(p => p.name === activePrimaryColor)?.hex}</div>
+                      </div>
+                    </div>
+                    
+                    <p className="text-xs text-[var(--text-muted)] mb-3 leading-snug">
+                      Click any swatch below to set the primary brand ink across the entire design system and site chrome:
+                    </p>
+                  </div>
+
+                  {/* Interactive Swatches for all 12 Colors */}
+                  <div className="pt-2 border-t border-[var(--border-gray)]/20">
+                    <div className="flex flex-wrap gap-1.5 items-center">
+                      {PRIMARY_PALETTE.map((pal) => (
+                        <button
+                          key={pal.name}
+                          onClick={() => setActivePrimaryColor(pal.name)}
+                          className={`w-6 h-6 border transition-all ${
+                            activePrimaryColor === pal.name
+                              ? "ring-2 ring-[var(--gray-900)] scale-110 border-white z-10"
+                              : "border-black/30 hover:scale-105"
+                          }`}
+                          style={{ backgroundColor: pal.hex, borderRadius: 0 }}
+                          title={`Set primary brand ink to ${pal.name} (${pal.hex})`}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </div>
             </section>
 
@@ -791,18 +871,18 @@ export default function App() {
                       B. Knockout Paper White Typography on Deep Spot Color Grounds:
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {/* On Itten Blue */}
+                      {/* On Spot Blue */}
                       <div className="p-3.5 bg-[var(--primary-500)] text-white border border-[var(--primary-600)] flex flex-col justify-between">
                         <div>
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
-                            <span>ON ITTEN BLUE</span>
+                            <span>ON SPOT BLUE</span>
                             <span className="bg-white text-[var(--primary-900)] px-1.5 py-0.2">3.0:1 AA Lrg</span>
                           </div>
                           <h5 className="font-bold text-sm leading-tight mb-1">Brand Banner Action</h5>
                           <p className="text-[11px] text-white/90 leading-snug">Primary geographic command heading plate.</p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/80">
-                          #6EA3BE Itten Blue
+                          #6EA3BE Spot Blue
                         </div>
                       </div>
 
@@ -859,9 +939,9 @@ export default function App() {
                       C. Color on Color Knockout (Substrate &amp; Plate Reverse Cutouts):
                     </span>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                      {/* C1: Yellow Knockout on Itten Blue Ground */}
-                      <div className="p-3.5 bg-[var(--primary-500)] text-[var(--spectrum-yellow)] border border-[var(--primary-600)] flex flex-col justify-between relative">
-                        <div>
+                      {/* C1: Yellow Knockout on Spot Blue Ground */}
+                      <div className="p-3.5 bg-[var(--primary-500)] text-[var(--spectrum-yellow)] border border-[var(--primary-600)] flex flex-col justify-between relative overflow-hidden">
+                        <div data-plate="yellow">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white">YELLOW ON BLUE</span>
                             <span className="bg-[var(--spectrum-yellow)] text-[var(--primary-900)] px-1.5 py-0.2">KNOCKOUT</span>
@@ -870,7 +950,7 @@ export default function App() {
                             Boundary Override
                           </h5>
                           <p className="text-[11px] text-white/90 leading-snug">
-                            Yellow plate mask cut directly from solid Itten Blue ground.
+                            Yellow plate mask cut directly from solid Blue ground.
                           </p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-white/20 font-mono text-[10px] text-white/70">
@@ -879,8 +959,8 @@ export default function App() {
                       </div>
 
                       {/* C2: Aqua Seafoam Knockout on Spot Violet Ground */}
-                      <div className="p-3.5 bg-[var(--spectrum-violet)] text-[var(--spectrum-aqua)] border border-[var(--spectrum-violet)] flex flex-col justify-between relative">
-                        <div>
+                      <div className="p-3.5 bg-[var(--spectrum-violet)] text-[var(--spectrum-aqua)] border border-[var(--spectrum-violet)] flex flex-col justify-between relative overflow-hidden">
+                        <div data-plate="aqua">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white">AQUA ON VIOLET</span>
                             <span className="bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-1.5 py-0.2">KNOCKOUT</span>
@@ -898,8 +978,8 @@ export default function App() {
                       </div>
 
                       {/* C3: Red & Paper Knockout on Slate Blue Plate */}
-                      <div className="p-3.5 bg-[var(--spectrum-blue)] text-white border border-[var(--spectrum-blue)] flex flex-col justify-between relative">
-                        <div>
+                      <div className="p-3.5 bg-[var(--spectrum-blue)] text-white border border-[var(--spectrum-blue)] flex flex-col justify-between relative overflow-hidden">
+                        <div data-plate="red">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-[var(--spectrum-red)] bg-white px-1 font-bold">RED + PAPER</span>
                             <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2">2-PLATE</span>
@@ -917,8 +997,8 @@ export default function App() {
                       </div>
 
                       {/* C4: Amber Gold Knockout on Ink Black Ground */}
-                      <div className="p-3.5 bg-[var(--gray-900)] text-[var(--spectrum-amber)] border border-[var(--gray-900)] flex flex-col justify-between relative">
-                        <div>
+                      <div className="p-3.5 bg-[var(--gray-900)] text-[var(--spectrum-amber)] border border-[var(--gray-900)] flex flex-col justify-between relative overflow-hidden">
+                        <div data-plate="amber">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white">AMBER ON BLACK</span>
                             <span className="bg-[var(--spectrum-amber)] text-[var(--gray-900)] px-1.5 py-0.2">KNOCKOUT</span>
@@ -945,7 +1025,7 @@ export default function App() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
                       {/* D1: Spot Red Type overprinted on Spot Yellow Ground -> Optical Cadmium Orange */}
                       <div className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-amber)] flex flex-col justify-between relative overflow-hidden">
-                        <div className="relative z-10">
+                        <div className="relative z-10" data-plate="red">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-[var(--gray-900)]">RED ON YELLOW</span>
                             <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2">MULTIPLY</span>
@@ -968,9 +1048,9 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* D2: Itten Blue Type overprinted on Spot Yellow Ground -> Optical Forest Green */}
+                      {/* D2: Spot Blue Type overprinted on Spot Yellow Ground -> Optical Forest Green */}
                       <div className="p-3.5 bg-[var(--spectrum-yellow)] border border-[var(--spectrum-green)] flex flex-col justify-between relative overflow-hidden">
-                        <div className="relative z-10">
+                        <div className="relative z-10" data-plate="blue">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-[var(--gray-900)]">BLUE ON YELLOW</span>
                             <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.2">MULTIPLY</span>
@@ -985,7 +1065,7 @@ export default function App() {
                             className="text-[11px] text-[var(--gray-900)] leading-snug font-medium"
                             style={{ mixBlendMode: "multiply" }}
                           >
-                            Itten blue over yellow ground synthesizes rich organic green without third plate.
+                            Spot blue over yellow ground synthesizes rich organic green without third plate.
                           </p>
                         </div>
                         <div className="mt-2 pt-1.5 border-t border-[var(--gray-900)]/20 font-mono text-[10px] text-[var(--gray-800)] relative z-10">
@@ -995,7 +1075,7 @@ export default function App() {
 
                       {/* D3: Spot Violet Type overprinted on Aqua Seafoam Ground -> Optical Navy */}
                       <div className="p-3.5 bg-[var(--spectrum-aqua)] border border-[var(--spectrum-blue)] flex flex-col justify-between relative overflow-hidden">
-                        <div className="relative z-10">
+                        <div className="relative z-10" data-plate="violet">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-[var(--gray-900)]">VIOLET ON AQUA</span>
                             <span className="bg-[var(--spectrum-violet)] text-white px-1.5 py-0.2">MULTIPLY</span>
@@ -1018,9 +1098,9 @@ export default function App() {
                         </div>
                       </div>
 
-                      {/* D4: Spot Orange Type overprinted on Itten Blue Ground -> Rich Earth Umber */}
+                      {/* D4: Spot Orange Type overprinted on Spot Blue Ground -> Rich Earth Umber */}
                       <div className="p-3.5 bg-[var(--primary-500)] border border-[var(--primary-700)] flex flex-col justify-between relative overflow-hidden">
-                        <div className="relative z-10">
+                        <div className="relative z-10" data-plate="orange">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white">ORANGE ON BLUE</span>
                             <span className="bg-[var(--spectrum-orange)] text-[var(--gray-900)] px-1.5 py-0.2">MULTIPLY</span>
@@ -1071,7 +1151,7 @@ export default function App() {
                       <div className="space-y-3 font-mono text-xs">
                         <div className="p-2.5 bg-[var(--surface)] border border-[var(--border-gray)]/30">
                           <span className="font-bold text-sm block text-[var(--primary-700)] font-sans">
-                            Itten Blue Link &amp; Header (var(--primary-700))
+                            Primary Blue Link &amp; Header (var(--primary-700))
                           </span>
                           <span className="text-[11px] text-[var(--text-muted)] block mt-0.5 font-mono">
                             4.52:1 WCAG AA &bull; Primary navigation markers and data URLs
@@ -1849,7 +1929,7 @@ export default function App() {
 
                 <div className="flex flex-wrap gap-2">
                   {[
-                    { name: "ITTEN BLUE", val: "var(--primary-500)", hex: "#6EA3BE" },
+                    { name: "SPOT BLUE", val: "var(--primary-500)", hex: "#6EA3BE" },
                     { name: "RED SWATCH", val: "var(--spectrum-red)", hex: "#E65E59" },
                     { name: "ORANGE SWATCH", val: "var(--spectrum-orange)", hex: "#ED9235" },
                     { name: "AMBER GOLD", val: "var(--spectrum-amber)", hex: "#EDBC2F" },
@@ -1898,7 +1978,7 @@ export default function App() {
                   Multi-Spot Ink Showcase:
                 </span>
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-                  <PatternSwatch type="crosshatch" density={3} angle={15} color="var(--primary-500)" label="Itten Blue" description="15° Screen • Cross 50%" />
+                  <PatternSwatch type="crosshatch" density={3} angle={15} color="var(--primary-500)" label="Spot Blue" description="15° Screen • Cross 50%" />
                   <PatternSwatch type="crosshatch" density={3} angle={75} color="var(--spectrum-red)" label="Red Swatch" description="75° Screen • Cross 50%" />
                   <PatternSwatch type="dots" density={3} angle={30} color="var(--spectrum-green)" label="Green Swatch" description="30° Screen • Dots 50%" />
                   <PatternSwatch type="dots" density={3} angle={60} color="var(--spectrum-amber)" label="Amber Gold" description="60° Screen • Dots 50%" />
@@ -2456,7 +2536,7 @@ export default function App() {
                       </span>
                     </div>
                     <p className="text-xs text-[var(--text-muted)] mb-4">
-                      Overlapping spot-ink polygonal plates (Itten Blue, Spot Red, Amber Gold). Intersecting polygons synthesize optical secondary colors physically via <code>mix-blend-mode: multiply</code>.
+                      Overlapping spot-ink polygonal plates (Spot Blue, Spot Red, Amber Gold). Intersecting polygons synthesize optical secondary colors physically via <code>mix-blend-mode: multiply</code>.
                     </p>
 
                     <div className="flex items-center justify-center p-2 bg-[var(--white)] border border-[var(--border-gray)] relative">
@@ -2514,7 +2594,7 @@ export default function App() {
                           { text: "VELOCITY", x: 55, y: 90, anchor: "end" },
                         ].map((lbl, lIdx) => (
                           <text
-                            key={lIdx}
+                            key={lbl}
                             x={lbl.x}
                             y={lbl.y}
                             textAnchor={lbl.anchor}
@@ -2524,7 +2604,7 @@ export default function App() {
                           </text>
                         ))}
 
-                        {/* Plate A: Itten Blue Polygon (Hatch pattern) */}
+                        {/* Plate A: Spot Blue Polygon (Hatch pattern) */}
                         <polygon
                           points="170,55 255,105 240,195 170,225 95,190 100,105"
                           fill="var(--primary-500)"
@@ -2645,7 +2725,7 @@ export default function App() {
                           style={{ mixBlendMode: "multiply" }}
                         />
 
-                        {/* Series 1 Stroke (Itten Blue) */}
+                        {/* Series 1 Stroke (Spot Blue) */}
                         <path
                           d="M 45 160 Q 104 120 163 150 T 281 70 T 340 100 T 400 45"
                           fill="none"
@@ -2779,7 +2859,7 @@ export default function App() {
                       </span>
                     </div>
                     <p className="text-xs text-[var(--text-muted)] mb-4">
-                      Budget Target (Spot Yellow) and Actual Realized (Itten Blue) overlap physically. The subtractive intersection forms vivid <strong>Optical Green</strong> via press multiplying.
+                      Budget Target (Spot Yellow) and Actual Realized (Spot Blue) overlap physically. The subtractive intersection forms vivid <strong>Optical Green</strong> via press multiplying.
                     </p>
 
                     <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)]">
@@ -2812,7 +2892,7 @@ export default function App() {
                                 style={{ width: `${item.target}%` }}
                               />
 
-                              {/* Plate 2: Actual Realized (Itten Blue with Multiply & Hairline Misregister) */}
+                              {/* Plate 2: Actual Realized (Spot Blue with Multiply & Hairline Misregister) */}
                               <div
                                 className="absolute top-2 bottom-2 bg-[var(--primary-500)] border-r-2 border-[var(--primary-700)] shadow-none"
                                 style={{
@@ -3177,7 +3257,7 @@ export default function App() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[
                     {
-                      name: "ITTEN BLUE",
+                      name: "SPOT BLUE",
                       hex: "#6EA3BE",
                       rimHex: "#356A85",
                       token: "var(--primary-500)",
@@ -3377,7 +3457,7 @@ export default function App() {
                   {/* Pair 1: Blue + Yellow = Emerald Green */}
                   <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between" style={{ borderRadius: 0 }}>
                     <div className="relative h-52 w-full flex items-center justify-center bg-[var(--white)] border border-[var(--border-gray)]/40 overflow-hidden">
-                      {/* Square 1: Itten Blue */}
+                      {/* Square 1: Spot Blue */}
                       <div
                         className="w-32 h-32 bg-[var(--primary-500)] absolute -translate-x-6 -translate-y-4 mix-blend-multiply flex items-start justify-start p-2"
                         style={{ borderRadius: 0 }}
@@ -3402,7 +3482,7 @@ export default function App() {
                     </div>
                     <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/20 font-mono">
                       <div className="flex items-center justify-between text-xs font-bold text-[var(--text)] uppercase">
-                        <span>Itten Blue &times; Spot Yellow</span>
+                        <span>Spot Blue &times; Spot Yellow</span>
                         <span className="w-3 h-3 bg-[#2B6833] border border-black/30 inline-block" />
                       </div>
                       <div className="text-[11px] text-[var(--text-muted)] mt-1 leading-snug">
@@ -3423,7 +3503,7 @@ export default function App() {
                           RED PLATE
                         </span>
                       </div>
-                      {/* Square 2: Itten Blue */}
+                      {/* Square 2: Spot Blue */}
                       <div
                         className="w-32 h-32 bg-[var(--primary-500)] absolute translate-x-6 translate-y-4 mix-blend-multiply flex items-end justify-end p-2"
                         style={{ borderRadius: 0 }}
@@ -3438,7 +3518,7 @@ export default function App() {
                     </div>
                     <div className="mt-4 pt-3 border-t border-[var(--border-gray)]/20 font-mono">
                       <div className="flex items-center justify-between text-xs font-bold text-[var(--text)] uppercase">
-                        <span>Spot Red &times; Itten Blue</span>
+                        <span>Spot Red &times; Spot Blue</span>
                         <span className="w-3 h-3 bg-[#3D2B60] border border-black/30 inline-block" />
                       </div>
                       <div className="text-[11px] text-[var(--text-muted)] mt-1 leading-snug">
@@ -3996,7 +4076,7 @@ export default function App() {
                   {[
                     {
                       id: "red-blue",
-                      name: "SPOT RED × ITTEN BLUE",
+                      name: "SPOT RED × SPOT BLUE",
                       plate1: "var(--spectrum-red)",
                       plate2: "var(--primary-500)",
                       p1Hex: "#E65E59",
@@ -4005,7 +4085,7 @@ export default function App() {
                     },
                     {
                       id: "blue-yellow",
-                      name: "ITTEN BLUE × SPOT YELLOW",
+                      name: "SPOT BLUE × SPOT YELLOW",
                       plate1: "var(--primary-500)",
                       plate2: "var(--spectrum-yellow)",
                       p1Hex: "#6EA3BE",
@@ -4070,9 +4150,9 @@ export default function App() {
                   {(() => {
                     const currentPair =
                       knockoutPair === "red-blue"
-                        ? { p1: "var(--spectrum-red)", p2: "var(--primary-500)", p1Name: "Spot Red", p2Name: "Itten Blue", p1Hex: "#E65E59", p2Hex: "#6EA3BE" }
+                        ? { p1: "var(--spectrum-red)", p2: "var(--primary-500)", p1Name: "Spot Red", p2Name: "Spot Blue", p1Hex: "#E65E59", p2Hex: "#6EA3BE" }
                         : knockoutPair === "blue-yellow"
-                        ? { p1: "var(--primary-500)", p2: "var(--spectrum-yellow)", p1Name: "Itten Blue", p2Name: "Spot Yellow", p1Hex: "#6EA3BE", p2Hex: "#EDD528" }
+                        ? { p1: "var(--primary-500)", p2: "var(--spectrum-yellow)", p1Name: "Spot Blue", p2Name: "Spot Yellow", p1Hex: "#6EA3BE", p2Hex: "#EDD528" }
                         : knockoutPair === "red-yellow"
                         ? { p1: "var(--spectrum-red)", p2: "var(--spectrum-yellow)", p1Name: "Spot Red", p2Name: "Spot Yellow", p1Hex: "#E65E59", p2Hex: "#EDD528" }
                         : { p1: "var(--spectrum-aqua)", p2: "var(--gray-900)", p1Name: "Spot Aqua", p2Name: "Ink Black", p1Hex: "#71B197", p2Hex: "#1C1917" };
@@ -4356,7 +4436,7 @@ export default function App() {
                       Specimen 5: Press Registration Targets &amp; Vernier Scale
                     </span>
                     <span className="text-[var(--text-muted)]">
-                      PLATE 1: SPOT RED RETICLE &nbsp;|&nbsp; PLATE 2: ITTEN BLUE CROSSHAIR (SHIFT: {misregisterX}px, {misregisterY}px)
+                      PLATE 1: SPOT RED RETICLE &nbsp;|&nbsp; PLATE 2: SPOT BLUE CROSSHAIR (SHIFT: {misregisterX}px, {misregisterY}px)
                     </span>
                   </div>
 
