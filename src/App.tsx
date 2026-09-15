@@ -34,7 +34,7 @@ export default function App() {
   
   // Paper Texture Laboratory State (All 4 Options)
   const [selectedPaperOption, setSelectedPaperOption] = useState<"all" | "option1" | "option2" | "option3" | "option4">("all");
-  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "multiply" | "overlay">("lighten");
+  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "darken" | "multiply" | "overlay">("lighten");
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
   
   // Option 1: SVG feTurbulence (High-frequency & Directional controls)
@@ -62,11 +62,12 @@ export default function App() {
   const [deckleEdge, setDeckleEdge] = useState<boolean>(true);
   const [laidOpacity, setLaidOpacity] = useState<number>(0.30);
 
-  // Option 4: HTML5 Canvas Procedural Cotton Fibers (Dense micro-threads)
+  // Option 4: HTML5 Canvas Procedural Cotton Fibers (Dense micro-threads & frequency)
   const [canvasFiberCount, setCanvasFiberCount] = useState<number>(2500);
   const [canvasFiberLength, setCanvasFiberLength] = useState<number>(4);
   const [canvasFiberThickness, setCanvasFiberThickness] = useState<number>(0.6);
   const [canvasFiberCurvature, setCanvasFiberCurvature] = useState<number>(4);
+  const [canvasFiberFrequency, setCanvasFiberFrequency] = useState<number>(3.0);
   const [canvasSpeckCount, setCanvasSpeckCount] = useState<number>(1800);
   const [canvasSpeckSize, setCanvasSpeckSize] = useState<number>(0.7);
   const [canvasColorTone, setCanvasColorTone] = useState<"white" | "cream" | "charcoal" | "brown">("white");
@@ -3094,10 +3095,11 @@ export default function App() {
                     <span className="font-bold text-[var(--text)] uppercase">Global Blend Transfer:</span>
                     <div className="flex gap-1">
                       {[
-                        { id: "lighten", label: "Lighten Only", desc: "Pure white fiber highlights; never darkens ground or ink" },
-                        { id: "screen", label: "Screen", desc: "Soft luminous fiber diffusion" },
-                        { id: "multiply", label: "Multiply", desc: "Subtractive dark ink/pulp tooth" },
-                        { id: "overlay", label: "Overlay", desc: "Dual crest/trough relief" },
+                        { id: "lighten", label: "Lighten (Ink Only)", desc: "Pure white highlights; lightens dark ink without touching light paper" },
+                        { id: "screen", label: "Screen", desc: "Soft luminous diffusion on dark ink" },
+                        { id: "darken", label: "Darken (Paper Only)", desc: "Darkens light paper ground; creates shadow in paper tooth without touching dark ink" },
+                        { id: "multiply", label: "Multiply", desc: "Subtractive dark tooth on light paper" },
+                        { id: "overlay", label: "Dual-Tone (Darken Light + Lighten Dark)", desc: "Dual-action: shadows light paper AND highlights dark ink" },
                       ].map((m) => (
                         <button
                           key={m.id}
@@ -3159,7 +3161,8 @@ export default function App() {
                       }`}
                       style={{ borderRadius: 0 }}
                     >
-                      <span>GLOBAL TOOTH OVERLAY: {globalPaperTexture ? "ACTIVE ON PAGE" : "OFF"}</span>
+                      <Droplet size={12} />
+                      <span>{globalPaperTexture ? "Paper Texture: ON" : "Paper Texture: OFF"}</span>
                     </button>
                   </div>
                 </div>
@@ -3169,9 +3172,9 @@ export default function App() {
                   {/* Option 1 Controls (SVG feTurbulence) */}
                   <div className={`p-3 border space-y-2 ${selectedPaperOption === "option1" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
                     <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 1: SVG Turbulence</span>
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 1: SVG feTurbulence</span>
                       <span className="text-[10px] bg-[var(--primary-500)] text-white px-1 font-bold">
-                        {paperBaseFrequency >= 0.2 ? "ULTRA-HIGH FREQ" : `${paperBaseFrequency.toFixed(3)} fx`}
+                        {paperBaseFrequency >= 0.2 ? "HIGH FREQ" : "STANDARD"}
                       </span>
                     </div>
 
@@ -3187,9 +3190,9 @@ export default function App() {
                         step="0.005"
                         value={paperBaseFrequency}
                         onChange={(e) => {
-                          const v = parseFloat(e.target.value);
-                          setPaperBaseFrequency(v);
-                          if (paperFreqLocked) setPaperFreqY(v);
+                          const val = parseFloat(e.target.value);
+                          setPaperBaseFrequency(val);
+                          if (paperFreqLocked) setPaperFreqY(val);
                           setPaperPreset("custom" as any);
                         }}
                         className="w-full accent-[var(--primary-500)] cursor-pointer"
@@ -3276,7 +3279,7 @@ export default function App() {
                   {/* Option 2 Controls (CSS Micro-Grain Stipple Tile) */}
                   <div className={`p-3 border space-y-2 ${selectedPaperOption === "option2" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
                     <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 2: CSS Stipple Tile</span>
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 2: CSS Stipple</span>
                       <span className="text-[10px] bg-[var(--spectrum-green)] text-white px-1 font-bold">
                         {cssStippleDensity <= 3 ? "ULTRA-FINE 1-3px" : `${cssStippleDensity}px`}
                       </span>
@@ -3284,7 +3287,7 @@ export default function App() {
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Pitch Grid (1px–24px):</span>
+                        <span className="font-bold">Base Scale (1px–24px):</span>
                         <span className="text-[var(--primary-600)] font-bold">{cssStippleDensity}px</span>
                       </div>
                       <input
@@ -3335,7 +3338,7 @@ export default function App() {
                           onChange={(e) => setCssSecondaryHarmonic(e.target.checked)}
                           className="accent-[var(--primary-500)]"
                         />
-                        <span>Dual Harmonic Matrix (1.7×)</span>
+                        <span>Coprime Aperiodic Layers</span>
                       </label>
                     </div>
                   </div>
@@ -3343,7 +3346,7 @@ export default function App() {
                   {/* Option 3 Controls (Archival Mould-Made Laid Paper) */}
                   <div className={`p-3 border space-y-2 ${selectedPaperOption === "option3" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
                     <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 3: Laid Wire Paper</span>
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 3: Laid Paper</span>
                       <span className="text-[10px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1 font-bold">
                         {laidPitch <= 1.2 ? "FINE WIRE 0.8px" : `${laidPitch.toFixed(1)}px`}
                       </span>
@@ -3351,7 +3354,7 @@ export default function App() {
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Laid Wire Pitch (0.8–8px):</span>
+                        <span className="font-bold">Wire Rib Pitch (0.8–8px):</span>
                         <span className="text-[var(--primary-600)] font-bold">{laidPitch.toFixed(1)}px</span>
                       </div>
                       <input
@@ -3444,7 +3447,7 @@ export default function App() {
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
                         <span className="font-bold">Fibers (100–10,000):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{canvasFiberCount} threads</span>
+                        <span className="text-[var(--primary-600)] font-bold">{canvasFiberCount}</span>
                       </div>
                       <input
                         type="range"
@@ -3459,6 +3462,18 @@ export default function App() {
 
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
                       <div>
+                        <span className="font-bold block mb-0.5">Frequency: {canvasFiberFrequency.toFixed(1)} waves</span>
+                        <input
+                          type="range"
+                          min="0.5"
+                          max="8.0"
+                          step="0.5"
+                          value={canvasFiberFrequency}
+                          onChange={(e) => setCanvasFiberFrequency(parseFloat(e.target.value))}
+                          className="w-full accent-[var(--primary-500)] cursor-pointer"
+                        />
+                      </div>
+                      <div>
                         <span className="font-bold block mb-0.5">Length: {canvasFiberLength.toFixed(1)}px</span>
                         <input
                           type="range"
@@ -3467,6 +3482,21 @@ export default function App() {
                           step="0.5"
                           value={canvasFiberLength}
                           onChange={(e) => setCanvasFiberLength(parseFloat(e.target.value))}
+                          className="w-full accent-[var(--primary-500)] cursor-pointer"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-2 text-[10px]">
+                      <div>
+                        <span className="font-bold block mb-0.5">Curvature: {canvasFiberCurvature}</span>
+                        <input
+                          type="range"
+                          min="0"
+                          max="10"
+                          step="1"
+                          value={canvasFiberCurvature}
+                          onChange={(e) => setCanvasFiberCurvature(parseInt(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
                         />
                       </div>
@@ -3631,9 +3661,9 @@ export default function App() {
                   <ArchivalPrintSpecimen
                     title="OPT 4: Canvas Cotton Filaments"
                     badgeText="ORGANIC LINT & FLECK"
-                    subtitle={`Procedural curved cotton threads (${canvasFiberCount} fibers, ${canvasSpeckCount} flecks, #${canvasSeed}).`}
+                    subtitle={`Procedural curved cotton threads (${canvasFiberCount} fibers, ${canvasSpeckCount} flecks, ${canvasFiberFrequency.toFixed(1)} waves, #${canvasSeed}).`}
                     mode="compact"
-                    footerLeft={`FIBERS: ${canvasFiberCount} | SPECKS: ${canvasSpeckCount}`}
+                    footerLeft={`FIBERS: ${canvasFiberCount} | FREQ: ${canvasFiberFrequency.toFixed(1)}w`}
                     footerRight={`TONE: ${canvasColorTone.toUpperCase()}`}
                   >
                     {/* HTML5 Canvas Cotton Filaments Layer */}
@@ -3642,6 +3672,7 @@ export default function App() {
                       fiberLength={canvasFiberLength}
                       fiberThickness={canvasFiberThickness}
                       fiberCurvature={canvasFiberCurvature}
+                      fiberFrequency={canvasFiberFrequency}
                       speckCount={canvasSpeckCount}
                       speckSize={canvasSpeckSize}
                       colorTone={canvasColorTone}
@@ -3695,7 +3726,7 @@ export default function App() {
                                 ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
                                 : paperBlendMode === "overlay"
                                 ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                                : "0.33 0 0 0 0.25   0.33 0 0 0.25   0.33 0 0 0.33 0 0 0.25   0 0 0 1 0"
+                                : "0.33 0 0 0 0.18   0 0.33 0 0 0.18   0 0 0.33 0 0.18   0 0 0 1 0"
                             }
                           />
                         </filter>
@@ -3763,6 +3794,7 @@ export default function App() {
                         fiberLength={canvasFiberLength}
                         fiberThickness={canvasFiberThickness}
                         fiberCurvature={canvasFiberCurvature}
+                        fiberFrequency={canvasFiberFrequency}
                         speckCount={canvasSpeckCount}
                         speckSize={canvasSpeckSize}
                         colorTone={canvasColorTone}
@@ -3790,7 +3822,7 @@ export default function App() {
                       } else if (selectedPaperOption === "option3") {
                         code = `/* Option 3: Archival Mould-Made Laid Paper & Shadowed Chain Lines */\n.paper-laid-wire {\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${laidOpacity};\n  background-image:\n    repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${(laidPitch * 0.5).toFixed(1)}px, rgba(255,255,255,0) ${laidPitch.toFixed(1)}px),\n    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);\n}`;
                       } else if (selectedPaperOption === "option4") {
-                        code = `<CanvasPaperTexture fiberCount={${canvasFiberCount}} fiberLength={${canvasFiberLength}} fiberThickness={${canvasFiberThickness}} fiberCurvature={${canvasFiberCurvature}} speckCount={${canvasSpeckCount}} colorTone="${canvasColorTone}" opacity={${canvasFiberOpacity}} blendMode="${paperBlendMode}" seed={${canvasSeed}} />`;
+                        code = `<CanvasPaperTexture fiberCount={${canvasFiberCount}} fiberLength={${canvasFiberLength}} fiberThickness={${canvasFiberThickness}} fiberCurvature={${canvasFiberCurvature}} fiberFrequency={${canvasFiberFrequency}} speckCount={${canvasSpeckCount}} colorTone="${canvasColorTone}" opacity={${canvasFiberOpacity}} blendMode="${paperBlendMode}" seed={${canvasSeed}} />`;
                       } else {
                         code = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode} opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
                       }
@@ -3829,12 +3861,13 @@ export default function App() {
     repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215, 210, 205, 0.25) ${chainPitch - 2}px, rgba(255, 255, 255, 0.70) ${chainPitch}px, rgba(215, 210, 205, 0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);
 }`
                     : selectedPaperOption === "option4"
-                    ? `/* Option 4: HTML5 Canvas Cotton Threads (Threads: ${canvasFiberCount}, Specks: ${canvasSpeckCount}) */
+                    ? `/* Option 4: HTML5 Canvas Cotton Threads (Threads: ${canvasFiberCount}, Frequency: ${canvasFiberFrequency.toFixed(1)} waves) */
 <CanvasPaperTexture
   fiberCount={${canvasFiberCount}}
   fiberLength={${canvasFiberLength}}
   fiberThickness={${canvasFiberThickness}}
   fiberCurvature={${canvasFiberCurvature}}
+  fiberFrequency={${canvasFiberFrequency}}
   speckCount={${canvasSpeckCount}}
   colorTone="${canvasColorTone}"
   opacity={${canvasFiberOpacity}}
@@ -3880,7 +3913,7 @@ export default function App() {
                     ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
                     : paperBlendMode === "overlay"
                     ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                    : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
+                    : "0.33 0 0 0 0.18   0 0.33 0 0 0.18   0 0 0.33 0 0.18   0 0 0 1 0"
                 }
                 result="coloredNoise"
               />

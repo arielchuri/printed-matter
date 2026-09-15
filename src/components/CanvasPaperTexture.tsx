@@ -5,12 +5,13 @@ export interface CanvasPaperTextureProps {
   fiberLength?: number;
   fiberThickness?: number;
   fiberCurvature?: number;
+  fiberFrequency?: number;
   speckCount?: number;
   speckSize?: number;
   colorTone?: "white" | "cream" | "charcoal" | "brown";
   opacity?: number;
   seed?: number;
-  blendMode?: "lighten" | "screen" | "multiply" | "overlay";
+  blendMode?: "lighten" | "screen" | "multiply" | "darken" | "overlay";
   className?: string;
   style?: React.CSSProperties;
 }
@@ -29,6 +30,7 @@ export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
   fiberLength = 4,
   fiberThickness = 0.6,
   fiberCurvature = 4,
+  fiberFrequency = 3,
   speckCount = 1500,
   speckSize = 0.8,
   colorTone = "white",
@@ -51,22 +53,19 @@ export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
     ctx.clearRect(0, 0, width, height);
 
     const rand = createPRNG(seed);
-    const isLighten = blendMode === "lighten" || blendMode === "screen";
+    const isDarken = blendMode === "darken" || blendMode === "multiply";
+    const isDualTone = blendMode === "overlay";
 
-    const getBaseRGB = (alpha: number) => {
-      if (colorTone === "white") {
-        return `rgba(255, 255, 255, ${alpha})`;
-      }
-      if (colorTone === "cream") {
-        return isLighten
-          ? `rgba(255, 250, 240, ${alpha})`
-          : `rgba(215, 200, 180, ${alpha})`;
-      }
-      if (colorTone === "charcoal") {
-        return `rgba(40, 35, 30, ${alpha * 0.7})`;
-      }
-      // brown / raw kraft
-      return `rgba(130, 95, 60, ${alpha * 0.8})`;
+    const getLightRGB = (alpha: number) => {
+      if (colorTone === "cream") return `rgba(255, 250, 238, ${alpha})`;
+      return `rgba(255, 255, 255, ${alpha})`;
+    };
+
+    const getDarkRGB = (alpha: number) => {
+      if (colorTone === "charcoal") return `rgba(35, 30, 25, ${alpha * 0.8})`;
+      if (colorTone === "brown") return `rgba(120, 85, 50, ${alpha * 0.85})`;
+      if (colorTone === "cream") return `rgba(165, 140, 115, ${alpha * 0.65})`;
+      return `rgba(45, 40, 35, ${alpha * 0.65})`;
     };
 
     // 1. Draw microscopic pulp stipple flecks
@@ -74,44 +73,86 @@ export const CanvasPaperTexture: React.FC<CanvasPaperTextureProps> = ({
       const x = rand() * width;
       const y = rand() * height;
       const r = rand() * speckSize + 0.2;
-      const a = rand() * 0.6 + 0.1;
+      const a = rand() * 0.65 + 0.15;
 
       ctx.beginPath();
       ctx.arc(x, y, r, 0, Math.PI * 2);
-      ctx.fillStyle = getBaseRGB(a);
+      if (isDarken) {
+        ctx.fillStyle = getDarkRGB(a);
+      } else if (isDualTone) {
+        // In overlay/dual-tone, mix dark specks (to darken light paper) and light specks (to lighten dark ink)
+        ctx.fillStyle = rand() > 0.4 ? getDarkRGB(a) : getLightRGB(a);
+      } else {
+        ctx.fillStyle = getLightRGB(a);
+      }
       ctx.fill();
     }
 
-    // 2. Draw organic cotton micro-fibers (curved bezier filaments)
+    // 2. Draw organic cotton micro-fibers with wave frequency & curvature
     ctx.lineWidth = fiberThickness;
     ctx.lineCap = "round";
+
+    // Number of micro-wave oscillations along the fiber path
+    const waveSegments = Math.max(1, Math.min(8, Math.round(fiberFrequency)));
 
     for (let i = 0; i < fiberCount; i++) {
       const x0 = rand() * width;
       const y0 = rand() * height;
-      const angle = rand() * Math.PI * 2;
-      const len = (rand() * 0.7 + 0.3) * fiberLength * 2.5;
+      const baseAngle = rand() * Math.PI * 2;
+      const totalLen = (rand() * 0.7 + 0.3) * fiberLength * 2.8;
 
-      // Random control point deviation for natural curled filament
-      const curl = fiberCurvature * (rand() - 0.5);
-      const cx = x0 + Math.cos(angle) * (len * 0.5) + Math.sin(angle) * curl;
-      const cy = y0 + Math.sin(angle) * (len * 0.5) - Math.cos(angle) * curl;
-      const x1 = x0 + Math.cos(angle) * len;
-      const y1 = y0 + Math.sin(angle) * len;
+      const alpha = rand() * 0.55 + 0.2;
+      const segmentLen = totalLen / waveSegments;
+      const phase = rand() * Math.PI * 2;
 
-      const a = rand() * 0.55 + 0.15;
-      ctx.strokeStyle = getBaseRGB(a);
+      // Draw filament path with frequency undulations
+      const drawFiberPath = (offsetX = 0, offsetY = 0) => {
+        ctx.beginPath();
+        let currentX = x0 + offsetX;
+        let currentY = y0 + offsetY;
+        ctx.moveTo(currentX, currentY);
 
-      ctx.beginPath();
-      ctx.moveTo(x0, y0);
-      ctx.quadraticCurveTo(cx, cy, x1, y1);
-      ctx.stroke();
+        for (let seg = 1; seg <= waveSegments; seg++) {
+          const t = seg / waveSegments;
+          // Sinusoidal wave displacement based on fiberFrequency
+          const lateralWiggle = Math.sin(t * Math.PI * fiberFrequency + phase) * (fiberCurvature * 0.6);
+          const nextTargetX = x0 + Math.cos(baseAngle) * (totalLen * t) - Math.sin(baseAngle) * lateralWiggle + offsetX;
+          const nextTargetY = y0 + Math.sin(baseAngle) * (totalLen * t) + Math.cos(baseAngle) * lateralWiggle + offsetY;
+
+          const ctrlX = (currentX + nextTargetX) * 0.5 + Math.sin(baseAngle) * (fiberCurvature * 0.3 * (rand() - 0.5));
+          const ctrlY = (currentY + nextTargetY) * 0.5 - Math.cos(baseAngle) * (fiberCurvature * 0.3 * (rand() - 0.5));
+
+          ctx.quadraticCurveTo(ctrlX, ctrlY, nextTargetX, nextTargetY);
+          currentX = nextTargetX;
+          currentY = nextTargetY;
+        }
+      };
+
+      if (isDualTone) {
+        // Dual-tone: subtle dark cast shadow offset (darkens light paper) + light filament crest (lightens dark ink)
+        drawFiberPath(0.4, 0.4);
+        ctx.strokeStyle = getDarkRGB(alpha * 0.5);
+        ctx.stroke();
+
+        drawFiberPath(0, 0);
+        ctx.strokeStyle = getLightRGB(alpha * 0.85);
+        ctx.stroke();
+      } else if (isDarken) {
+        drawFiberPath(0, 0);
+        ctx.strokeStyle = getDarkRGB(alpha);
+        ctx.stroke();
+      } else {
+        drawFiberPath(0, 0);
+        ctx.strokeStyle = getLightRGB(alpha);
+        ctx.stroke();
+      }
     }
   }, [
     fiberCount,
     fiberLength,
     fiberThickness,
     fiberCurvature,
+    fiberFrequency,
     speckCount,
     speckSize,
     colorTone,
