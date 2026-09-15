@@ -135,25 +135,31 @@ In addition to standard responsive breakpoints (`sm: 640px`, `md: 768px`, `lg: 1
 
 ## Component Invariants & Rules
 
-### 1. Buttons
-- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary ink fill (`var(--primary-500)`) with paper-white text, or 1px hairline rule with ink text.
-- **Pressed**: When the mouse is down, buttons flash **solid green (`#74BE60` / `var(--success-color)`)** with white text.
+### 1. Buttons & Controls
+- **Resting**: No drop shadow, no inset bevels, zero border radius. Solid primary ink fill (`var(--primary-500)`) with contrasting text, or 1px hairline rule with ink text.
+- **Rollover / Hover**: Changes color by **shifting 1 position right** on the 12-color spot palette wheel (`var(--primary-rollover)`). If the button resting state is background color / outline / transparent, it fills with the rollover color.
+- **Pressed / Active**: When the mouse is down, buttons flash the color **shifted 2 positions right** on the palette wheel (`var(--primary-active)`).
 - **Disabled**: Neutral warm grey fill (`#CAC8C2`) with muted text (`#797773`).
 
-### 2. Tabs
-- Square corners.
-- Only the **active** tab carries solid primary ink fill with paper-white text.
-- Inactive tabs are transparent with no bottom underline bars.
+### 2. Text Links
+- **Resting**: Rendered in the current primary brand ink (`var(--primary-500)`) with 1px hairline underline.
+- **Hover**: Shifts 1 position right on the palette wheel (`var(--primary-rollover)`).
+- **Active**: Shifts 2 positions right on the palette wheel (`var(--primary-active)`).
 
-### 3. Administrative Level Badges (C, A1, A2, A3)
+### 3. Tabs
+- Square corners.
+- Only the **active** tab carries solid primary ink fill with contrasting text.
+- Inactive tabs are transparent and fill with the rollover color on hover (`var(--primary-rollover)`).
+
+### 4. Administrative Level Badges (C, A1, A2, A3)
 - Monospace compact chips (`0.68rem`) with hairline border and subtle neutral ground.
 
-### 4. Technical Readout Bar
+### 5. Technical Readout Bar
 - Docked split bar: **Location** (lat, lon, elevation, place name) and **Camera** (altitude, facing, pitch, zoom, solar clock).
 - Set in JetBrains Mono with tabular figures.
 
-### 5. Map & Surface Controls
-- **On Map Imagery**: Borderless ink-on-white square controls. Active state is solid green fill.
+### 6. Map & Surface Controls
+- **On Map Imagery**: Borderless ink-on-white square controls. Hover fills with 1-step right rollover color, active state fills with 2-step right active color.
 - **On Paper Canvas**: Hairline 1px border.
 
 ---

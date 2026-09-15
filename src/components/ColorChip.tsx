@@ -59,7 +59,7 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
   return (
     <div
       onClick={handleCopy}
-      className="flex flex-col bg-[var(--white)] cursor-pointer border border-transparent hover:border-[var(--primary-500)] hover:bg-[var(--surface-muted)] transition-colors active:ring-2 active:ring-[var(--success-color)] group relative"
+      className="flex flex-col bg-[var(--white)] cursor-pointer border border-transparent hover:border-[var(--primary-rollover)] hover:bg-[var(--surface-muted)] transition-colors active:ring-2 active:ring-[var(--primary-active)] group relative"
       style={{ borderRadius: 0 }}
     >
       <div

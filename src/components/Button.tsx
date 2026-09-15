@@ -20,13 +20,13 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     };
 
     const variantStyles = {
-      primary: "bg-[var(--primary-500)] text-[var(--white)] border-none hover:bg-[var(--primary-600)] active:!bg-[var(--success-color)] active:!text-[var(--white)] active:!border-[var(--success-color)]",
-      secondary: "bg-transparent text-[var(--primary-500)] border border-[var(--primary-500)] hover:bg-[var(--primary-500)]/10 active:!bg-[var(--success-color)] active:!text-[var(--white)] active:!border-[var(--success-color)]",
-      danger: "bg-[var(--danger-color)] text-[var(--white)] border-none hover:opacity-90 active:!bg-[var(--success-color)] active:!text-[var(--white)]",
-      ghost: "bg-transparent text-[var(--gray-900)] hover:bg-[var(--gray-200)]/50 border-none",
+      primary: "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-transparent hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-transparent active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] active:!border-[var(--primary-active)]",
+      secondary: "bg-transparent text-[var(--primary-500)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] active:!border-[var(--primary-active)]",
+      danger: "bg-[var(--danger-color)] text-[var(--white)] border border-transparent hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-transparent active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] active:!border-[var(--primary-active)]",
+      ghost: "bg-transparent text-[var(--primary-500)] border border-transparent hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] active:!border-[var(--primary-active)]",
       "map-control": clsx(
-        "w-[32px] h-[32px] p-0 border-none transition-colors active:!bg-[var(--success-color)] active:!text-[var(--white)]",
-        isActive ? "bg-[var(--success-color)] text-[var(--white)]" : "bg-[var(--white)] text-[var(--gray-900)] hover:bg-[var(--gray-100)]"
+        "w-[32px] h-[32px] p-0 border border-[var(--border-gray)] transition-colors hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)] active:!border-[var(--primary-active)]",
+        isActive ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)]" : "bg-[var(--white)] text-[var(--primary-500)]"
       ),
     };
 

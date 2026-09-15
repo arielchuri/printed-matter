@@ -27,8 +27,8 @@ export const Tabs: React.FC<TabsProps> = ({ tabs, activeId, onChange, className 
             className={clsx(
               "px-4 py-2 text-xs font-bold uppercase tracking-wider flex items-center gap-2 border-none transition-colors",
               isActive
-                ? "bg-[var(--primary-500)] text-[var(--white)]"
-                : "bg-transparent text-[var(--text-muted)] hover:text-[var(--text)] hover:bg-[var(--gray-200)]/40"
+                ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                : "bg-transparent text-[var(--text-muted)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:bg-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
             )}
             style={{ borderRadius: 0, boxShadow: "none" }}
           >

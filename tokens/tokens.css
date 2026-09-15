@@ -29,7 +29,11 @@
   --primary-900: #162F3E;
   --primary-muted: #78716C;          /* Stone 500: Tonal warm stone tone */
   --primary-color: #6EA3BE;
-  --anti-primary-color: #F5F5F4;
+  --anti-primary-color: #FFFFFF;
+  --primary-rollover: #E65E59;        /* 1-Step Palette Right Rollover/Hover (Default: Red) */
+  --primary-rollover-anti: #FFFFFF;
+  --primary-active: #EA7B49;          /* 2-Step Palette Right Active/Pressed (Default: Red-Orange) */
+  --primary-active-anti: #FFFFFF;
 
   /* Secondary & Spot Colour (Paper Multiply) */
   --secondary-color: #DB4E46;        /* Printed Matter red — warm spot ink */
@@ -459,9 +463,29 @@ h6, .ds-h6 {
   transition: box-shadow 0.15s ease-out;
 }
 
+/* ─── Links & Text Actions ─────────────────────────────────── */
+a, .ds-link, .text-link {
+  color: var(--primary-500);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+  cursor: pointer;
+  transition: color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+a:hover, .ds-link:hover, .text-link:hover {
+  color: var(--primary-rollover);
+  text-decoration-color: var(--primary-rollover);
+}
+
+a:active, .ds-link:active, .text-link:active {
+  color: var(--primary-active);
+  text-decoration-color: var(--primary-active);
+}
+
 /* ─── Component Baseline Rules ─────────────────────────────── */
 
-/* 1. Buttons: No bevel, no shadow, sharp corners. Pressed flashes green */
+/* 1. Buttons: No bevel, no shadow, sharp corners. Rollover shifts 1 right, Active shifts 2 right */
 button, input[type="button"], input[type="submit"], .ds-btn {
   border-radius: 0;
   box-shadow: none !important;
@@ -471,9 +495,9 @@ button, input[type="button"], input[type="submit"], .ds-btn {
 }
 
 button:active, .ds-btn:active {
-  background-color: var(--success-color) !important;
-  color: var(--white) !important;
-  border-color: var(--success-color) !important;
+  background-color: var(--primary-active) !important;
+  color: var(--primary-active-anti, #FFFFFF) !important;
+  border-color: var(--primary-active) !important;
 }
 
 button:disabled, .ds-btn:disabled {
@@ -535,7 +559,7 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   padding: 2px;
 }
 
-/* 4. Tabs: Sharp, active is white on blue, inactive transparent */
+/* 4. Tabs: Sharp, active is white on primary, inactive transparent */
 .ds-tab-bar {
   display: flex;
   gap: 0px;
@@ -552,11 +576,22 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   border: none;
   border-radius: 0;
   cursor: pointer;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.ds-tab-item:hover {
+  background-color: var(--primary-rollover);
+  color: var(--primary-rollover-anti, #FFFFFF);
 }
 
 .ds-tab-item.active {
   background-color: var(--primary-color);
-  color: var(--white);
+  color: var(--anti-primary-color, #FFFFFF);
+}
+
+.ds-tab-item:active {
+  background-color: var(--primary-active) !important;
+  color: var(--primary-active-anti, #FFFFFF) !important;
 }
 
 /* 5. Chevrons: Square 20x20 hairline rule box */
@@ -567,7 +602,7 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
   width: 20px;
   height: 20px;
   flex-shrink: 0;
-  color: var(--text);
+  color: var(--primary-500);
   border: 1px solid var(--border-gray);
   border-radius: 0;
   background: transparent;
@@ -576,14 +611,16 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
 }
 
 .ds-chevron:hover {
-  background-color: var(--surface-muted);
+  background-color: var(--primary-rollover);
+  color: var(--primary-rollover-anti, #FFFFFF);
+  border-color: var(--primary-rollover);
 }
 
 .ds-chevron.active,
 .ds-chevron:active {
-  background-color: var(--success-color) !important;
-  border-color: var(--success-color) !important;
-  color: var(--white) !important;
+  background-color: var(--primary-active) !important;
+  border-color: var(--primary-active) !important;
+  color: var(--primary-active-anti, #FFFFFF) !important;
 }
 
 /* 6. Chips & Status Pills */
@@ -603,15 +640,16 @@ input[type="text"]:focus, input[type="search"]:focus, select:focus, textarea:foc
 }
 
 .ds-chip:hover {
-  background-color: var(--surface-muted);
-  border-color: var(--border-gray);
+  background-color: var(--primary-rollover);
+  color: var(--primary-rollover-anti, #FFFFFF);
+  border-color: var(--primary-rollover);
 }
 
 .ds-chip.active,
 .ds-chip:active {
-  border-color: var(--success-color) !important;
-  background-color: var(--success-color) !important;
-  color: var(--white) !important;
+  border-color: var(--primary-active) !important;
+  background-color: var(--primary-active) !important;
+  color: var(--primary-active-anti, #FFFFFF) !important;
 }
 
 /* 7. Level Badge (C, A1, A2, A3) */

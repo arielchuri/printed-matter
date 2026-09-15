@@ -185,7 +185,18 @@ export default function App() {
   }, [blackInkSquashEnabled]);
 
   useEffect(() => {
-    const selected = PRIMARY_PALETTE.find((p) => p.name === activePrimaryColor) || PRIMARY_PALETTE[0];
+    const currentIndex = PRIMARY_PALETTE.findIndex((p) => p.name === activePrimaryColor);
+    const safeIndex = currentIndex !== -1 ? currentIndex : 0;
+    const selected = PRIMARY_PALETTE[safeIndex];
+
+    // Shift 1 position right in palette circle for rollover / hover
+    const rolloverIndex = (safeIndex + 1) % PRIMARY_PALETTE.length;
+    const rolloverColor = PRIMARY_PALETTE[rolloverIndex];
+
+    // Shift 2 positions right in palette circle for active / pressed
+    const activeIndex = (safeIndex + 2) % PRIMARY_PALETTE.length;
+    const activeColor = PRIMARY_PALETTE[activeIndex];
+
     const root = document.documentElement;
     root.style.setProperty("--primary-500", selected.hex);
     root.style.setProperty("--primary-color", selected.hex);
@@ -198,6 +209,13 @@ export default function App() {
     root.style.setProperty("--primary-300", selected.hex);
     root.style.setProperty("--primary-400", selected.hex);
     root.style.setProperty("--anti-primary-color", selected.antiColor);
+
+    // Dynamic Rollover (1 step right) & Active (2 steps right)
+    root.style.setProperty("--primary-rollover", rolloverColor.hex);
+    root.style.setProperty("--primary-rollover-anti", rolloverColor.antiColor);
+    root.style.setProperty("--primary-active", activeColor.hex);
+    root.style.setProperty("--primary-active-anti", activeColor.antiColor);
+    root.style.setProperty("--active-interaction-color", activeColor.hex);
   }, [activePrimaryColor]);
 
   useEffect(() => {
@@ -285,8 +303,8 @@ export default function App() {
             onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
             className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
               globalPaperTexture
-                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
-                : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+                ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                : "bg-black/30 text-white/80 border-white/20 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
             }`}
             style={{ borderRadius: 0 }}
             title="Toggle Global Dual-Relief Paper Texture (feTurbulence)"
@@ -300,8 +318,8 @@ export default function App() {
             onClick={() => setInkSquashEnabled(!inkSquashEnabled)}
             className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
               inkSquashEnabled
-                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
-                : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+                ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                : "bg-black/30 text-white/80 border-white/20 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
             }`}
             style={{ borderRadius: 0 }}
             title="Toggle Global Ink Squash (Meniscus & Pigment Perimeter Squeeze on Colors)"
@@ -315,8 +333,8 @@ export default function App() {
             onClick={() => setBlackInkSquashEnabled(!blackInkSquashEnabled)}
             className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
               blackInkSquashEnabled
-                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
-                : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+                ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                : "bg-black/30 text-white/80 border-white/20 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
             }`}
             style={{ borderRadius: 0 }}
             title="Toggle Deep Meniscus Letterpress Ink Squash on Black Ink (Headings & Slabs)"
@@ -331,8 +349,8 @@ export default function App() {
               onClick={() => setGlobalMisregistration(!globalMisregistration)}
               className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
                 globalMisregistration
-                  ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
-                  : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+                  ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                  : "bg-black/30 text-white/80 border-white/20 hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
               }`}
               style={{ borderRadius: 0 }}
               title="Toggle Global Multi-Plate Chromatic Misregistration (Hairline Plate Shifts)"
@@ -343,7 +361,7 @@ export default function App() {
             {globalMisregistration && (
               <button
                 onClick={randomizePlates}
-                className="bg-black/40 text-white hover:bg-black/60 px-1.5 py-1 border border-l-0 border-white/20 transition-colors"
+                className="bg-black/40 text-white hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] px-1.5 py-1 border border-l-0 border-white/20 transition-colors"
                 style={{ borderRadius: 0 }}
                 title="Randomize Plate Shift Angles (Hairline Jitter)"
               >
@@ -511,19 +529,27 @@ export default function App() {
                       </span>
                     </div>
                     
-                    <div className="flex items-center gap-3 my-2">
-                      <div
-                        className="w-12 h-12 border border-black/20 shrink-0"
-                        style={{ backgroundColor: "var(--primary-500)" }}
-                      />
-                      <div className="font-mono text-xs">
-                        <div className="font-bold text-[var(--text)]">var(--primary-500)</div>
-                        <div className="text-[var(--text-muted)] text-[11px]">{PRIMARY_PALETTE.find(p => p.name === activePrimaryColor)?.hex}</div>
+                    {/* 3-State Interaction Telemetry */}
+                    <div className="grid grid-cols-3 gap-2 my-2 font-mono text-[10px]">
+                      <div className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)]/40 flex flex-col items-center text-center">
+                        <div className="w-6 h-6 mb-1 border border-black/20" style={{ backgroundColor: "var(--primary-500)" }} />
+                        <span className="font-bold text-[var(--text)] uppercase">Rest</span>
+                        <span className="text-[var(--text-muted)] text-[9px]">{PRIMARY_PALETTE.find(p => p.name === activePrimaryColor)?.hex}</span>
+                      </div>
+                      <div className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)]/40 flex flex-col items-center text-center">
+                        <div className="w-6 h-6 mb-1 border border-black/20" style={{ backgroundColor: "var(--primary-rollover)" }} />
+                        <span className="font-bold text-[var(--text)] uppercase">Hover (+1)</span>
+                        <span className="text-[var(--text-muted)] text-[9px]">Shift 1 Right</span>
+                      </div>
+                      <div className="p-1.5 bg-[var(--surface)] border border-[var(--border-gray)]/40 flex flex-col items-center text-center">
+                        <div className="w-6 h-6 mb-1 border border-black/20" style={{ backgroundColor: "var(--primary-active)" }} />
+                        <span className="font-bold text-[var(--text)] uppercase">Press (+2)</span>
+                        <span className="text-[var(--text-muted)] text-[9px]">Shift 2 Right</span>
                       </div>
                     </div>
                     
-                    <p className="text-xs text-[var(--text-muted)] mb-3 leading-snug">
-                      Click any swatch below to set the primary brand ink across the entire design system and site chrome:
+                    <p className="text-xs text-[var(--text-muted)] mb-2 leading-snug">
+                      Click any swatch to rotate the dynamic primary ink and automatic +1/+2 interaction wheel:
                     </p>
                   </div>
 
@@ -1195,11 +1221,11 @@ export default function App() {
 
                       <div className="space-y-3 font-mono text-xs">
                         <div className="p-2.5 bg-[var(--surface)] border border-[var(--border-gray)]/30">
-                          <span className="font-bold text-sm block text-[var(--primary-700)] font-sans">
-                            Primary Link &amp; Header (var(--primary-700))
-                          </span>
+                          <a href="#specimen-link" onClick={(e) => e.preventDefault()} className="ds-link font-bold text-sm block font-sans">
+                            Primary Link &amp; Text Action (var(--primary-500))
+                          </a>
                           <span className="text-[11px] text-[var(--text-muted)] block mt-0.5 font-mono">
-                            4.52:1 WCAG AA &bull; Primary navigation markers and data URLs
+                            Rest: var(--primary-500) &bull; Hover (+1): var(--primary-rollover) &bull; Press (+2): var(--primary-active)
                           </span>
                         </div>
 
@@ -1741,22 +1767,36 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 4xl:grid-cols-4 gap-6">
-              {/* Card 1: Buttons */}
-              <Card title="Buttons & Pressed State" badge={<Badge color="green">TACTILE PRESS</Badge>}>
-                <p className="text-xs text-[var(--text-muted)] mb-4">
-                  Zero bevels, zero elevation. When clicked, buttons flash <strong>solid green (var(--spectrum-green))</strong> while held.
+              {/* Card 1: Buttons & Interactive Transitions */}
+              <Card title="Buttons & Text Links" badge={<Badge color="orange">DYNAMIC ROTATION</Badge>}>
+                <p className="text-xs text-[var(--text-muted)] mb-3 leading-snug">
+                  Hover/rollover shifts <strong>+1 right</strong> on palette (<code className="text-[11px] bg-[var(--surface-muted)] px-1">var(--primary-rollover)</code>). Pressed/active shifts <strong>+2 right</strong> (<code className="text-[11px] bg-[var(--surface-muted)] px-1">var(--primary-active)</code>). Background-resting controls fill on hover/active.
                 </p>
                 <div className="flex flex-wrap gap-2 items-center">
-                  <Button variant="primary">Primary</Button>
-                  <Button variant="secondary">Rule Button</Button>
-                  <Button variant="danger">Danger Red</Button>
+                  <Button variant="primary">Primary Solid</Button>
+                  <Button variant="secondary">Rule Outline</Button>
+                  <Button variant="ghost">Ghost Button</Button>
                   <Button disabled>Disabled</Button>
                 </div>
 
-                <div className="mt-4 pt-4 border-t border-[var(--border-gray)] flex flex-wrap gap-2 items-center">
+                <div className="mt-3 pt-3 border-t border-[var(--border-gray)] flex flex-wrap gap-2 items-center">
                   <Button size="sm" variant="primary">Small</Button>
                   <Button size="md" variant="primary">Medium</Button>
                   <Button size="lg" variant="primary">Large Action</Button>
+                </div>
+
+                <div className="mt-3 pt-3 border-t border-[var(--border-gray)]">
+                  <div className="p-2 bg-[var(--surface)] border border-[var(--border-gray)]/30 flex flex-col gap-1 text-xs">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] text-[var(--text-muted)] uppercase font-bold">LINK:</span>
+                      <a href="#link-demo" onClick={(e) => e.preventDefault()} className="ds-link font-bold text-xs">
+                        Interactive Text Link (var(--primary-500))
+                      </a>
+                    </div>
+                    <span className="text-[10px] font-mono text-[var(--text-muted)]">
+                      Hover: shift +1 right &bull; Active: shift +2 right
+                    </span>
+                  </div>
                 </div>
               </Card>
 
@@ -1782,8 +1822,8 @@ export default function App() {
                           onClick={() => setSelectedAdminLevel(lvl)}
                           className={`px-3 py-1 text-xs font-mono font-bold transition-colors ${
                             selectedAdminLevel === lvl
-                              ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
-                              : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface)]"
+                              ? "bg-[var(--primary-500)] text-[var(--anti-primary-color,#FFFFFF)] border border-[var(--primary-500)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
+                              : "bg-[var(--white)] text-[var(--primary-500)] border border-[var(--border-gray)] hover:bg-[var(--primary-rollover)] hover:text-[var(--primary-rollover-anti,#FFFFFF)] hover:border-[var(--primary-rollover)] active:!bg-[var(--primary-active)] active:!text-[var(--primary-active-anti,#FFFFFF)]"
                           }`}
                           style={{ borderRadius: 0, boxShadow: "none" }}
                         >
