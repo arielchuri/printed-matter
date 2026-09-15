@@ -33,8 +33,8 @@ export default function App() {
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
   
   // SVG feTurbulence Dual-Relief Ground State (Identical Base Noise with Separate Light/Dark Controls)
-  const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.45); // Freq X: .45
-  const [paperFreqY, setPaperFreqY] = useState<number>(0.20); // Freq Y: .20
+  const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.45); // Freq X: .450
+  const [paperFreqY, setPaperFreqY] = useState<number>(0.20); // Freq Y: .200
   const [paperFreqLocked, setPaperFreqLocked] = useState<boolean>(false);
   const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
   const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
@@ -51,8 +51,8 @@ export default function App() {
   // Dark Channel (Shadows on Light Paper Ground - Deep Warm Shade of Paper Color)
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply (from user screenshot)
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0998); // 9.98%
-  const [paperDarkGain, setPaperDarkGain] = useState<number>(0.74); // 0.74x
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0185); // 1.85% (from user screenshot)
+  const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x (from user screenshot)
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
   const [paperDarkBlur, setPaperDarkBlur] = useState<number>(0.0); // 0.00px
@@ -61,9 +61,10 @@ export default function App() {
   const [paperDarkB, setPaperDarkB] = useState<number>(0.24); // Deep warm paper blue component
   const [paperDarkWarmth, setPaperDarkWarmth] = useState<number>(1.42); // 1.42x Warmth multiplier (#81522E)
 
-  // Offset Symmetry & Global Overlay
+  // Offset Symmetry, Global Overlay & Global Ink Squash
   const [paperSymmetricOffset, setPaperSymmetricOffset] = useState<boolean>(true);
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(true);
+  const [inkSquashEnabled, setInkSquashEnabled] = useState<boolean>(true);
   const [paperPreset, setPaperPreset] = useState<"user" | "rag" | "micro" | "laid" | "washi">("user");
 
   // Option 2: CSS Micro-Grain Stipple (Ultra-fine down to 1px)
@@ -116,6 +117,16 @@ export default function App() {
       document.documentElement.setAttribute("data-theme", "light");
     }
   }, [themeMode]);
+
+  useEffect(() => {
+    if (inkSquashEnabled) {
+      document.documentElement.setAttribute("data-ink-squash", "on");
+      document.documentElement.classList.remove("no-ink-squash");
+    } else {
+      document.documentElement.setAttribute("data-ink-squash", "off");
+      document.documentElement.classList.add("no-ink-squash");
+    }
+  }, [inkSquashEnabled]);
 
   const sampleTree = {
     id: "root",
@@ -184,6 +195,21 @@ export default function App() {
           >
             <Sparkles size={12} className={globalPaperTexture ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
             <span>PAPER TEXTURE: {globalPaperTexture ? "ON" : "OFF"}</span>
+          </button>
+
+          {/* Ink Squash Global Toggle */}
+          <button
+            onClick={() => setInkSquashEnabled(!inkSquashEnabled)}
+            className={`flex items-center gap-1.5 text-[11px] font-mono font-bold px-2.5 py-1 transition-colors border ${
+              inkSquashEnabled
+                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                : "bg-black/30 text-white/80 border-white/20 hover:text-white"
+            }`}
+            style={{ borderRadius: 0 }}
+            title="Toggle Global Ink Squash (Meniscus & Pigment Perimeter Squeeze)"
+          >
+            <Droplet size={12} className={inkSquashEnabled ? "text-[var(--spectrum-yellow)]" : "text-white/70"} />
+            <span>INK SQUASH: {inkSquashEnabled ? "ON" : "OFF"}</span>
           </button>
 
           {/* Ground / Theme 3-way Switch */}
@@ -1844,11 +1870,22 @@ export default function App() {
 
               {/* Saturated Meniscus Calibration HUD */}
               <div className="flex flex-wrap items-center justify-between gap-3 mb-6 bg-[var(--surface-muted)] p-4 border border-[var(--border-gray)]/30">
-                <div className="flex items-center gap-2 font-mono text-xs">
+                <div className="flex items-center gap-3 font-mono text-xs">
                   <span className="font-bold text-[var(--text)] uppercase">Platen Squeeze Depth:</span>
                   <span className="text-[var(--primary-500)] font-bold bg-[var(--white)] px-2 py-0.5 border border-[var(--border-gray)]">
                     5px–10px Subtle Saturated Meniscus (Kiss Impression)
                   </span>
+                  <button
+                    onClick={() => setInkSquashEnabled(!inkSquashEnabled)}
+                    className={`flex items-center gap-1.5 px-2.5 py-1 text-xs font-mono font-bold border transition-colors ${
+                      inkSquashEnabled
+                        ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
+                        : "bg-[var(--surface)] text-[var(--text-muted)] border-[var(--border-gray)] hover:text-[var(--text)]"
+                    }`}
+                  >
+                    <Droplet size={12} />
+                    <span>Global Ink Squash: {inkSquashEnabled ? "ON" : "OFF"}</span>
+                  </button>
                 </div>
                 <div className="text-[11px] font-mono text-[var(--text-muted)]">
                   PHYSICAL PRESS PROFILE: FEATHERED SATURATED EDGE &bull; ZERO HARSH VECTOR STROKES
@@ -3814,12 +3851,19 @@ export default function App() {
         )}
         </main>
 
-        {/* ─── Global Option 1 Paper Texture Overlay (Alpha-Safe Composited) ─── */}
+        {/* ─── Global Option 1 Paper Texture Overlay (Dual-Relief Multiply + Screen) ─── */}
         {globalPaperTexture && (
           <div className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150">
-            {/* Global Dark Layer (Subtractive Alpha) */}
+            {/* Global Dark Layer (Multiply - Deep warm shadow valleys on paper, 0% lightening on black) */}
             {paperDarkEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                  mixBlendMode: "multiply",
+                  opacity: Math.min(1.0, paperDarkOpacity * paperDarkGain * 3.0),
+                }}
+                aria-hidden="true"
+              >
                 <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3833,29 +3877,47 @@ export default function App() {
                     const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                     const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                     const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                    const kA = (paperDarkOpacity * paperDarkGain * 1.5).toFixed(4);
+                    const sR = 1 - darkR;
+                    const sG = 1 - darkG;
+                    const sB = 1 - darkB;
                     return (
                       <feColorMatrix
                         in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                         type="matrix"
-                        values={`
-                          0 0 0 0 ${darkR.toFixed(4)}
-                          0 0 0 0 ${darkG.toFixed(4)}
-                          0 0 0 0 ${darkB.toFixed(4)}
-                          -${kA} -${kA} -${kA} 0 ${kA}
-                        `}
-                        result="darkAlphaMap"
+                        values={
+                          paperDarkInvert
+                            ? `
+                              ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
+                              ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
+                              ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
+                              0 0 0 0 1
+                            `
+                            : `
+                              ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1
+                              ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1
+                              ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1
+                              0 0 0 0 1
+                            `
+                        }
+                        result="darkMultiplyMap"
                       />
                     );
                   })()}
                 </filter>
-                <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="transparent" />
+                <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="white" />
               </svg>
             )}
 
-            {/* Global Light Layer (Additive Alpha) */}
+            {/* Global Light Layer (Screen - Pure monochromatic bleached fiber highlights on dark ink, 0% darkening on paper) */}
             {paperLightEnabled && (
-              <svg className="absolute inset-0 w-full h-full pointer-events-none" aria-hidden="true">
+              <svg
+                className="absolute inset-0 w-full h-full pointer-events-none"
+                style={{
+                  mixBlendMode: "screen",
+                  opacity: Math.min(1.0, paperLightOpacity * paperLightGain * 10.0),
+                }}
+                aria-hidden="true"
+              >
                 <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
                   <feTurbulence
                     type={paperNoiseType}
@@ -3866,7 +3928,7 @@ export default function App() {
                   <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
                   {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
                   {(() => {
-                    const effScale = (paperLightOpacity * paperLightGain * 2.0) / Math.max(0.01, 1.0 - paperLightFloor);
+                    const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
                     const kL = (effScale / 3).toFixed(5);
                     const bL = (-(paperLightFloor * effScale)).toFixed(5);
                     return (
@@ -3874,17 +3936,17 @@ export default function App() {
                         in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
                         type="matrix"
                         values={`
-                          0 0 0 0 1
-                          0 0 0 0 1
-                          0 0 0 0 1
                           ${kL} ${kL} ${kL} 0 ${bL}
+                          ${kL} ${kL} ${kL} 0 ${bL}
+                          ${kL} ${kL} ${kL} 0 ${bL}
+                          0 0 0 0 1
                         `}
-                        result="lightAlphaMap"
+                        result="lightScreenMap"
                       />
                     );
                   })()}
                 </filter>
-                <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="transparent" />
+                <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="black" />
               </svg>
             )}
           </div>

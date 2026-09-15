@@ -331,6 +331,27 @@ h6, .ds-h6 {
   text-shadow: 0 0 1px rgba(0, 0, 0, 0.25), 0 0 2.5px rgba(0, 0, 0, 0.1);
 }
 
+/* Global Ink Squash Disable Override */
+[data-ink-squash="off"] .ink-squash,
+[data-ink-squash="off"] .ink-squash-deep,
+[data-ink-squash="off"] .ink-squash-heavy,
+[data-ink-squash="off"] .ink-squash-subtle,
+[data-ink-squash="off"] .ink-squash-color,
+.no-ink-squash .ink-squash,
+.no-ink-squash .ink-squash-deep,
+.no-ink-squash .ink-squash-heavy,
+.no-ink-squash .ink-squash-subtle,
+.no-ink-squash .ink-squash-color {
+  box-shadow: none !important;
+}
+
+[data-ink-squash="off"] .ink-squash-text,
+[data-ink-squash="off"] .ink-squash-text-subtle,
+.no-ink-squash .ink-squash-text,
+.no-ink-squash .ink-squash-text-subtle {
+  text-shadow: none !important;
+}
+
 .ink-misregister-base {
   position: relative;
   isolation: isolate;
