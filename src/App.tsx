@@ -32,19 +32,19 @@ export default function App() {
   const [misregisterY, setMisregisterY] = useState<number>(1.0);
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
   
-  // Paper Texture Laboratory State (All 4 Options)
-  const [selectedPaperOption, setSelectedPaperOption] = useState<"all" | "option1" | "option2" | "option3" | "option4">("all");
-  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "darken" | "multiply" | "overlay">("lighten");
+  // SVG feTurbulence Dual-Relief Ground State (Identical Light & Dark Textures with X/Y Offset)
+  const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.45); // Freq X: .45
+  const [paperFreqY, setPaperFreqY] = useState<number>(0.20); // Freq Y: .20
+  const [paperFreqLocked, setPaperFreqLocked] = useState<boolean>(false);
+  const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
+  const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
+  const [paperOpacity, setPaperOpacity] = useState<number>(0.08); // Opacity: 8%
+  const [paperOffsetX, setPaperOffsetX] = useState<number>(1.0); // Offset X between light & dark
+  const [paperOffsetY, setPaperOffsetY] = useState<number>(1.0); // Offset Y between light & dark
+  const [paperHighlightGain, setPaperHighlightGain] = useState<number>(1.0); // Highlight gain (on dark ink)
+  const [paperShadowGain, setPaperShadowGain] = useState<number>(1.0); // Shadow gain (on light paper)
   const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
-  
-  // Option 1: SVG feTurbulence (High-frequency & Directional controls)
-  const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.038);
-  const [paperFreqY, setPaperFreqY] = useState<number>(0.038);
-  const [paperFreqLocked, setPaperFreqLocked] = useState<boolean>(true);
-  const [paperOctaves, setPaperOctaves] = useState<number>(4);
-  const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("fractalNoise");
-  const [paperOpacity, setPaperOpacity] = useState<number>(0.28);
-  const [paperPreset, setPaperPreset] = useState<"rag" | "micro" | "laid" | "wood" | "washi" | "kraft">("rag");
+  const [paperPreset, setPaperPreset] = useState<"user" | "rag" | "micro" | "laid" | "washi">("user");
 
   // Option 2: CSS Micro-Grain Stipple (Ultra-fine down to 1px)
   const [cssStippleDensity, setCssStippleDensity] = useState<number>(4);
@@ -3046,98 +3046,64 @@ export default function App() {
               </div>
             </section>
 
-            {/* ─── SECTION 4: PAPER TEXTURE LABORATORY (ALL 4 ARCHITECTURAL OPTIONS) ─── */}
+            {/* ─── SECTION 4: SVG feTurbulence DUAL-RELIEF PAPER GROUND ─── */}
             <section className="bg-[var(--surface)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
               <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[var(--border-gray)] pb-4 mb-6 gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-xs font-bold px-1.5 py-0.5 bg-[var(--primary-500)] text-white uppercase">
-                      PAPER TEXTURE LABORATORY
+                      OPTION 1: SVG feTurbulence
                     </span>
                     <h2 className="text-xl font-extrabold tracking-tight text-[var(--text)] uppercase font-mono m-0">
-                      Physical Paper Tooth &amp; Material Ground (4 Options)
+                      Dual-Relief Paper Ground (Identical Light &amp; Dark with X/Y Offset)
                     </h2>
                   </div>
                   <p className="text-xs text-[var(--text-muted)] font-mono m-0">
-                    Compare the 4 design system architectures for tactile paper tooth with ultra-high frequency microscopic synthesis, vector grain, CSS stipple, laid wire, and canvas fibers.
+                    Procedural vector paper tooth generating identical light highlight and dark shadow channels from a single noise source, offset in $(x, y)$ to model physical 3D fiber relief across solid blacks, colors, and white paper.
                   </p>
                 </div>
 
-                {/* Option Navigation Tabs */}
-                <div className="flex flex-wrap items-center gap-1 font-mono text-xs">
-                  {[
-                    { id: "all", label: "All 4 Options (Matrix)" },
-                    { id: "option1", label: "Option 1: SVG Noise" },
-                    { id: "option2", label: "Option 2: CSS Stipple" },
-                    { id: "option3", label: "Option 3: Laid Paper" },
-                    { id: "option4", label: "Option 4: Canvas Fibers" },
-                  ].map((opt) => (
-                    <button
-                      key={opt.id}
-                      onClick={() => setSelectedPaperOption(opt.id as any)}
-                      className={`px-2.5 py-1 text-xs font-bold transition-colors ${
-                        selectedPaperOption === opt.id
-                          ? "bg-[var(--primary-500)] text-white border border-[var(--primary-700)]"
-                          : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
-                      }`}
-                      style={{ borderRadius: 0 }}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
+                    className={`py-1.5 px-3 font-mono text-xs font-bold uppercase transition-colors border flex items-center gap-1.5 ${
+                      globalPaperTexture
+                        ? "bg-[var(--spectrum-green)] text-white border-[var(--spectrum-green)]"
+                        : "bg-[var(--surface-muted)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/30"
+                    }`}
+                    style={{ borderRadius: 0 }}
+                  >
+                    <Droplet size={13} />
+                    <span>{globalPaperTexture ? "Global Page Overlay: ON" : "Global Page Overlay: OFF"}</span>
+                  </button>
                 </div>
               </div>
 
-              {/* ─── Universal Blend Mode & Controls Panel ─── */}
+              {/* ─── Granular Parameter Controls Panel ─── */}
               <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs space-y-4">
+                {/* Fast Presets */}
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-gray)]/30 pb-3">
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <span className="font-bold text-[var(--text)] uppercase">Global Blend Transfer:</span>
-                    <div className="flex gap-1">
-                      {[
-                        { id: "lighten", label: "Lighten (Ink Only)", desc: "Pure white highlights; lightens dark ink without touching light paper" },
-                        { id: "screen", label: "Screen", desc: "Soft luminous diffusion on dark ink" },
-                        { id: "darken", label: "Darken (Paper Only)", desc: "Darkens light paper ground; creates shadow in paper tooth without touching dark ink" },
-                        { id: "multiply", label: "Multiply", desc: "Subtractive dark tooth on light paper" },
-                        { id: "overlay", label: "Dual-Tone (Darken Light + Lighten Dark)", desc: "Dual-action: shadows light paper AND highlights dark ink" },
-                      ].map((m) => (
-                        <button
-                          key={m.id}
-                          onClick={() => setPaperBlendMode(m.id as any)}
-                          className={`py-1 px-2 text-xs font-bold border transition-colors ${
-                            paperBlendMode === m.id
-                              ? "bg-[var(--primary-500)] text-white border-[var(--primary-700)]"
-                              : "bg-[var(--surface)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
-                          }`}
-                          style={{ borderRadius: 0 }}
-                          title={m.desc}
-                        >
-                          {m.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Fast Presets for Option 1 */}
-                  <div className="flex items-center gap-1 flex-wrap">
-                    <span className="text-[var(--text-muted)] text-[11px] font-bold mr-1">OPT 1 PRESETS:</span>
+                  <div className="flex items-center gap-1.5 flex-wrap">
+                    <span className="text-[var(--text-muted)] text-[11px] font-bold mr-1">PRESETS:</span>
                     {[
-                      { id: "rag", label: "Cotton Rag", freq: 0.038, octaves: 4, type: "fractalNoise", op: 0.30 },
-                      { id: "micro", label: "Ultra Micro-Pore", freq: 0.320, octaves: 6, type: "fractalNoise", op: 0.25 },
-                      { id: "laid", label: "Mould Stipple", freq: 0.075, octaves: 3, type: "fractalNoise", op: 0.22 },
-                      { id: "wood", label: "Wood Grain", freq: 0.220, freqY: 0.025, octaves: 4, type: "turbulence", op: 0.35 },
-                      { id: "washi", label: "Washi Pulp", freq: 0.015, octaves: 5, type: "turbulence", op: 0.40 },
+                      { id: "user", label: "Requested (.45 × .20, 2 oct, 8% turb)", freqX: 0.45, freqY: 0.20, oct: 2, type: "turbulence", op: 0.08, offX: 1.0, offY: 1.0 },
+                      { id: "rag", label: "Cotton Rag (.12 × .12, 4 oct, 10%)", freqX: 0.12, freqY: 0.12, oct: 4, type: "fractalNoise", op: 0.10, offX: 0.8, offY: 0.8 },
+                      { id: "micro", label: "Ultra Micro-Tooth (.40 × .40, 5 oct, 7%)", freqX: 0.40, freqY: 0.40, oct: 5, type: "fractalNoise", op: 0.07, offX: 0.5, offY: 0.5 },
+                      { id: "laid", label: "Directional Laid Grain (.48 × .08, 3 oct, 12%)", freqX: 0.48, freqY: 0.08, oct: 3, type: "turbulence", op: 0.12, offX: 1.5, offY: 0.3 },
+                      { id: "washi", label: "Coarse Washi (.04 × .04, 4 oct, 15%)", freqX: 0.04, freqY: 0.04, oct: 4, type: "turbulence", op: 0.15, offX: 1.2, offY: 1.2 },
                     ].map((p) => (
                       <button
                         key={p.id}
                         onClick={() => {
                           setPaperPreset(p.id as any);
-                          setPaperBaseFrequency(p.freq);
-                          setPaperFreqY(p.freqY || p.freq);
-                          setPaperFreqLocked(!p.freqY);
-                          setPaperOctaves(p.octaves);
+                          setPaperBaseFrequency(p.freqX);
+                          setPaperFreqY(p.freqY);
+                          setPaperFreqLocked(p.freqX === p.freqY);
+                          setPaperOctaves(p.oct);
                           setPaperNoiseType(p.type as any);
                           setPaperOpacity(p.op);
+                          setPaperOffsetX(p.offX);
+                          setPaperOffsetY(p.offY);
                         }}
                         className={`px-2 py-0.5 text-[10px] font-bold border transition-colors ${
                           paperPreset === p.id
@@ -3151,42 +3117,31 @@ export default function App() {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
-                      className={`py-1 px-3 font-mono text-xs font-bold uppercase transition-colors border flex items-center gap-1.5 ${
-                        globalPaperTexture
-                          ? "bg-[var(--spectrum-green)] text-white border-[var(--spectrum-green)]"
-                          : "bg-[var(--surface-muted)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/30"
-                      }`}
-                      style={{ borderRadius: 0 }}
-                    >
-                      <Droplet size={12} />
-                      <span>{globalPaperTexture ? "Paper Texture: ON" : "Paper Texture: OFF"}</span>
-                    </button>
+                  <div className="flex items-center gap-2 text-[11px] text-[var(--primary-700)] font-bold">
+                    <span>CURRENT: {paperBaseFrequency.toFixed(3)} fx × {paperFreqY.toFixed(3)} fy | {paperOctaves} oct | {Math.round(paperOpacity * 100)}% op | {paperNoiseType}</span>
                   </div>
                 </div>
 
-                {/* Specific Parameter Sliders (Comprehensive & High-Frequency) */}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 pt-1">
-                  {/* Option 1 Controls (SVG feTurbulence) */}
-                  <div className={`p-3 border space-y-2 ${selectedPaperOption === "option1" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
-                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 1: SVG feTurbulence</span>
+                {/* 3-Column Granular Slider Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-1">
+                  {/* Column 1: Core feTurbulence Generator */}
+                  <div className="p-3 bg-[var(--surface)] border border-[var(--border-gray)] space-y-3">
+                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/30">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">1. Noise Spatial Frequency</span>
                       <span className="text-[10px] bg-[var(--primary-500)] text-white px-1 font-bold">
-                        {paperBaseFrequency >= 0.2 ? "HIGH FREQ" : "STANDARD"}
+                        {paperNoiseType.toUpperCase()}
                       </span>
                     </div>
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Freq X (0.005–0.450):</span>
+                        <span className="font-bold">Freq X (0.005–0.500):</span>
                         <span className="text-[var(--primary-600)] font-bold">{paperBaseFrequency.toFixed(3)}</span>
                       </div>
                       <input
                         type="range"
                         min="0.005"
-                        max="0.450"
+                        max="0.500"
                         step="0.005"
                         value={paperBaseFrequency}
                         onChange={(e) => {
@@ -3201,13 +3156,13 @@ export default function App() {
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Freq Y (Directional):</span>
+                        <span className="font-bold">Freq Y (0.005–0.500):</span>
                         <span className="text-[var(--primary-600)] font-bold">{paperFreqY.toFixed(3)}</span>
                       </div>
                       <input
                         type="range"
                         min="0.005"
-                        max="0.450"
+                        max="0.500"
                         step="0.005"
                         value={paperFreqY}
                         onChange={(e) => {
@@ -3215,6 +3170,108 @@ export default function App() {
                           setPaperFreqLocked(false);
                           setPaperPreset("custom" as any);
                         }}
+                        className="w-full accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20">
+                      <div className="flex gap-1">
+                        <button
+                          onClick={() => setPaperNoiseType("turbulence")}
+                          className={`px-1.5 py-0.5 font-bold ${paperNoiseType === "turbulence" ? "bg-[var(--primary-500)] text-white" : "bg-[var(--white)] text-[var(--text)] border"}`}
+                        >
+                          Turbulence
+                        </button>
+                        <button
+                          onClick={() => setPaperNoiseType("fractalNoise")}
+                          className={`px-1.5 py-0.5 font-bold ${paperNoiseType === "fractalNoise" ? "bg-[var(--primary-500)] text-white" : "bg-[var(--white)] text-[var(--text)] border"}`}
+                        >
+                          Fractal
+                        </button>
+                      </div>
+                      <label className="flex items-center gap-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={paperFreqLocked}
+                          onChange={(e) => {
+                            setPaperFreqLocked(e.target.checked);
+                            if (e.target.checked) setPaperFreqY(paperBaseFrequency);
+                          }}
+                          className="accent-[var(--primary-500)]"
+                        />
+                        <span>Lock X/Y</span>
+                      </label>
+                    </div>
+                  </div>
+
+                  {/* Column 2: Identical Light / Dark X & Y Offset */}
+                  <div className="p-3 bg-[var(--surface)] border border-[var(--border-gray)] space-y-3">
+                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/30">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">2. Light / Dark X/Y Offset</span>
+                      <span className="text-[10px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1 font-bold">
+                        IDENTICAL NOISE
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-bold">Offset X (-5.0px to +5.0px):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{paperOffsetX > 0 ? `+${paperOffsetX.toFixed(1)}px` : `${paperOffsetX.toFixed(1)}px`}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="-5.0"
+                        max="5.0"
+                        step="0.1"
+                        value={paperOffsetX}
+                        onChange={(e) => setPaperOffsetX(parseFloat(e.target.value))}
+                        className="w-full accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-bold">Offset Y (-5.0px to +5.0px):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{paperOffsetY > 0 ? `+${paperOffsetY.toFixed(1)}px` : `${paperOffsetY.toFixed(1)}px`}</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="-5.0"
+                        max="5.0"
+                        step="0.1"
+                        value={paperOffsetY}
+                        onChange={(e) => setPaperOffsetY(parseFloat(e.target.value))}
+                        className="w-full accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20 text-[var(--text-muted)]">
+                      <span>Light Channel: {(-paperOffsetX * 0.5).toFixed(1)}px, {(-paperOffsetY * 0.5).toFixed(1)}px</span>
+                      <span>Dark Channel: {(paperOffsetX * 0.5).toFixed(1)}px, {(paperOffsetY * 0.5).toFixed(1)}px</span>
+                    </div>
+                  </div>
+
+                  {/* Column 3: Opacity, Octaves & Gain */}
+                  <div className="p-3 bg-[var(--surface)] border border-[var(--border-gray)] space-y-3">
+                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/30">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">3. Opacity &amp; Gain</span>
+                      <span className="text-[10px] bg-[var(--spectrum-green)] text-white px-1 font-bold">
+                        {Math.round(paperOpacity * 100)}% MASTER
+                      </span>
+                    </div>
+
+                    <div>
+                      <div className="flex justify-between text-[10px] mb-0.5">
+                        <span className="font-bold">Master Opacity (1%–50%):</span>
+                        <span className="text-[var(--primary-600)] font-bold">{Math.round(paperOpacity * 100)}%</span>
+                      </div>
+                      <input
+                        type="range"
+                        min="0.01"
+                        max="0.50"
+                        step="0.01"
+                        value={paperOpacity}
+                        onChange={(e) => setPaperOpacity(parseFloat(e.target.value))}
                         className="w-full accent-[var(--primary-500)] cursor-pointer"
                       />
                     </div>
@@ -3233,623 +3290,138 @@ export default function App() {
                         />
                       </div>
                       <div>
-                        <span className="font-bold block mb-0.5">Opacity: {Math.round(paperOpacity * 100)}%</span>
+                        <span className="font-bold block mb-0.5">Highlight Gain: {paperHighlightGain.toFixed(1)}×</span>
                         <input
                           type="range"
-                          min="0.05"
-                          max="1.0"
-                          step="0.01"
-                          value={paperOpacity}
-                          onChange={(e) => setPaperOpacity(parseFloat(e.target.value))}
+                          min="0.2"
+                          max="2.0"
+                          step="0.1"
+                          value={paperHighlightGain}
+                          onChange={(e) => setPaperHighlightGain(parseFloat(e.target.value))}
                           className="w-full accent-[var(--primary-500)] cursor-pointer"
                         />
                       </div>
                     </div>
 
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20">
-                      <div className="flex gap-1">
-                        <button
-                          onClick={() => setPaperNoiseType("fractalNoise")}
-                          className={`px-1.5 py-0.5 font-bold ${paperNoiseType === "fractalNoise" ? "bg-[var(--primary-500)] text-white" : "bg-[var(--white)] text-[var(--text)] border"}`}
-                        >
-                          Fractal
-                        </button>
-                        <button
-                          onClick={() => setPaperNoiseType("turbulence")}
-                          className={`px-1.5 py-0.5 font-bold ${paperNoiseType === "turbulence" ? "bg-[var(--primary-500)] text-white" : "bg-[var(--white)] text-[var(--text)] border"}`}
-                        >
-                          Turbulence
-                        </button>
-                      </div>
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={paperFreqLocked}
-                          onChange={(e) => {
-                            setPaperFreqLocked(e.target.checked);
-                            if (e.target.checked) setPaperFreqY(paperBaseFrequency);
-                          }}
-                          className="accent-[var(--primary-500)]"
-                        />
-                        <span>Lock X/Y</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Option 2 Controls (CSS Micro-Grain Stipple Tile) */}
-                  <div className={`p-3 border space-y-2 ${selectedPaperOption === "option2" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
-                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 2: CSS Stipple</span>
-                      <span className="text-[10px] bg-[var(--spectrum-green)] text-white px-1 font-bold">
-                        {cssStippleDensity <= 3 ? "ULTRA-FINE 1-3px" : `${cssStippleDensity}px`}
-                      </span>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Base Scale (1px–24px):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{cssStippleDensity}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="1"
-                        max="24"
-                        step="1"
-                        value={cssStippleDensity}
-                        onChange={(e) => setCssStippleDensity(parseInt(e.target.value))}
-                        className="w-full accent-[var(--primary-500)] cursor-pointer"
-                      />
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Dot Radius (0.2px–2.0px):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{cssDotRadius.toFixed(1)}px</span>
-                      </div>
+                    <div className="flex justify-between text-[10px] items-center pt-1 border-t border-[var(--border-gray)]/20">
+                      <span className="font-bold">Shadow Gain on Paper:</span>
+                      <span className="text-[var(--primary-600)] font-bold">{paperShadowGain.toFixed(1)}×</span>
                       <input
                         type="range"
                         min="0.2"
                         max="2.0"
                         step="0.1"
-                        value={cssDotRadius}
-                        onChange={(e) => setCssDotRadius(parseFloat(e.target.value))}
-                        className="w-full accent-[var(--primary-500)] cursor-pointer"
-                      />
-                    </div>
-
-                    <div className="flex justify-between text-[10px] items-center">
-                      <span className="font-bold">Opacity: {Math.round(cssStippleOpacity * 100)}%</span>
-                      <input
-                        type="range"
-                        min="0.05"
-                        max="1.0"
-                        step="0.01"
-                        value={cssStippleOpacity}
-                        onChange={(e) => setCssStippleOpacity(parseFloat(e.target.value))}
+                        value={paperShadowGain}
+                        onChange={(e) => setPaperShadowGain(parseFloat(e.target.value))}
                         className="w-24 accent-[var(--primary-500)] cursor-pointer"
                       />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20">
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={cssSecondaryHarmonic}
-                          onChange={(e) => setCssSecondaryHarmonic(e.target.checked)}
-                          className="accent-[var(--primary-500)]"
-                        />
-                        <span>Coprime Aperiodic Layers</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Option 3 Controls (Archival Mould-Made Laid Paper) */}
-                  <div className={`p-3 border space-y-2 ${selectedPaperOption === "option3" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
-                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 3: Laid Paper</span>
-                      <span className="text-[10px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1 font-bold">
-                        {laidPitch <= 1.2 ? "FINE WIRE 0.8px" : `${laidPitch.toFixed(1)}px`}
-                      </span>
-                    </div>
-
-                    <div>
-                      <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Wire Rib Pitch (0.8–8px):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{laidPitch.toFixed(1)}px</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="0.8"
-                        max="8.0"
-                        step="0.2"
-                        value={laidPitch}
-                        onChange={(e) => setLaidPitch(parseFloat(e.target.value))}
-                        className="w-full accent-[var(--primary-500)] cursor-pointer"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-2 text-[10px]">
-                      <div>
-                        <span className="font-bold block mb-0.5">Wire Width: {laidThickness.toFixed(1)}px</span>
-                        <input
-                          type="range"
-                          min="0.2"
-                          max="1.5"
-                          step="0.1"
-                          value={laidThickness}
-                          onChange={(e) => setLaidThickness(parseFloat(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                      <div>
-                        <span className="font-bold block mb-0.5">Chain Spacing: {chainPitch}px</span>
-                        <input
-                          type="range"
-                          min="12"
-                          max="64"
-                          step="2"
-                          value={chainPitch}
-                          onChange={(e) => setChainPitch(parseInt(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between text-[10px] items-center">
-                      <span className="font-bold">Opacity: {Math.round(laidOpacity * 100)}%</span>
-                      <input
-                        type="range"
-                        min="0.05"
-                        max="1.0"
-                        step="0.01"
-                        value={laidOpacity}
-                        onChange={(e) => setLaidOpacity(parseFloat(e.target.value))}
-                        className="w-24 accent-[var(--primary-500)] cursor-pointer"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20">
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={showWatermark}
-                          onChange={(e) => setShowWatermark(e.target.checked)}
-                          className="accent-[var(--primary-500)]"
-                        />
-                        <span>Watermark</span>
-                      </label>
-                      <label className="flex items-center gap-1 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={deckleEdge}
-                          onChange={(e) => setDeckleEdge(e.target.checked)}
-                          className="accent-[var(--primary-500)]"
-                        />
-                        <span>Deckle Edge</span>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Option 4 Controls (HTML5 Canvas Procedural Cotton Fibers) */}
-                  <div className={`p-3 border space-y-2 ${selectedPaperOption === "option4" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
-                    <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/20">
-                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 4: Canvas Fibers</span>
-                      <button
-                        onClick={() => setCanvasSeed((s) => s + 1)}
-                        className="text-[10px] bg-[var(--white)] border border-[var(--border-gray)] px-1.5 py-0.5 hover:bg-[var(--primary-500)] hover:text-white flex items-center gap-0.5 font-bold"
-                        title="Re-roll pulp fiber distribution"
-                      >
-                        <RefreshCw size={9} />
-                        <span>RE-ROLL #{canvasSeed}</span>
-                      </button>
-                    </div>
-
-                    {/* Fiber Density Control */}
-                    <div>
-                      <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Fiber Density (100–15,000):</span>
-                        <span className="text-[var(--primary-600)] font-bold">{canvasFiberCount.toLocaleString()} threads</span>
-                      </div>
-                      <input
-                        type="range"
-                        min="100"
-                        max="15000"
-                        step="250"
-                        value={canvasFiberCount}
-                        onChange={(e) => setCanvasFiberCount(parseInt(e.target.value))}
-                        className="w-full accent-[var(--primary-500)] cursor-pointer"
-                      />
-                      {/* Fast Density Presets */}
-                      <div className="flex gap-1 mt-1">
-                        {[
-                          { label: "1k Sparse", val: 1000 },
-                          { label: "3k Rag", val: 3000 },
-                          { label: "7k Dense", val: 7000 },
-                          { label: "15k Ultra", val: 15000 },
-                        ].map((dp) => (
-                          <button
-                            key={dp.val}
-                            onClick={() => setCanvasFiberCount(dp.val)}
-                            className={`flex-1 py-0.5 text-[8px] font-bold border transition-colors ${
-                              canvasFiberCount === dp.val
-                                ? "bg-[var(--primary-500)] text-white border-[var(--primary-600)]"
-                                : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
-                            }`}
-                          >
-                            {dp.label}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Frequency & Length Controls */}
-                    <div className="grid grid-cols-2 gap-2 text-[10px]">
-                      <div>
-                        <span className="font-bold block mb-0.5">Wave Freq: {canvasFiberFrequency.toFixed(1)} waves</span>
-                        <input
-                          type="range"
-                          min="0.5"
-                          max="12.0"
-                          step="0.2"
-                          value={canvasFiberFrequency}
-                          onChange={(e) => setCanvasFiberFrequency(parseFloat(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                      <div>
-                        <span className="font-bold block mb-0.5">Length: {canvasFiberLength.toFixed(1)}px</span>
-                        <input
-                          type="range"
-                          min="0.5"
-                          max="20.0"
-                          step="0.5"
-                          value={canvasFiberLength}
-                          onChange={(e) => setCanvasFiberLength(parseFloat(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
-                    {/* Curvature & Specks Controls */}
-                    <div className="grid grid-cols-2 gap-2 text-[10px]">
-                      <div>
-                        <span className="font-bold block mb-0.5">Curvature: {canvasFiberCurvature}</span>
-                        <input
-                          type="range"
-                          min="0"
-                          max="10"
-                          step="1"
-                          value={canvasFiberCurvature}
-                          onChange={(e) => setCanvasFiberCurvature(parseInt(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                      <div>
-                        <span className="font-bold block mb-0.5">Speck Density: {canvasSpeckCount}</span>
-                        <input
-                          type="range"
-                          min="0"
-                          max="8000"
-                          step="250"
-                          value={canvasSpeckCount}
-                          onChange={(e) => setCanvasSpeckCount(parseInt(e.target.value))}
-                          className="w-full accent-[var(--primary-500)] cursor-pointer"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex justify-between text-[10px] items-center">
-                      <span className="font-bold">Opacity: {Math.round(canvasFiberOpacity * 100)}%</span>
-                      <input
-                        type="range"
-                        min="0.05"
-                        max="1.0"
-                        step="0.01"
-                        value={canvasFiberOpacity}
-                        onChange={(e) => setCanvasFiberOpacity(parseFloat(e.target.value))}
-                        className="w-24 accent-[var(--primary-500)] cursor-pointer"
-                      />
-                    </div>
-
-                    <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20">
-                      <span className="font-bold">Tone:</span>
-                      <div className="flex gap-1">
-                        {(["white", "cream", "charcoal", "brown"] as const).map((t) => (
-                          <button
-                            key={t}
-                            onClick={() => setCanvasColorTone(t)}
-                            className={`px-1 py-0.2 text-[9px] font-bold uppercase ${canvasColorTone === t ? "bg-[var(--primary-500)] text-white" : "bg-[var(--white)] border"}`}
-                          >
-                            {t}
-                          </button>
-                        ))}
-                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* ─── 4-OPTION COMPARATIVE MATRIX (When "All" is selected) ─── */}
-              {selectedPaperOption === "all" && (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {/* CARD 1: Option 1 SVG feTurbulence */}
-                  <ArchivalPrintSpecimen
-                    title="OPT 1: SVG feTurbulence"
-                    badgeText={paperBaseFrequency >= 0.2 ? "ULTRA-HIGH FREQ" : "VECTOR NOISE"}
-                    subtitle={`Procedural fractal noise (${paperBaseFrequency.toFixed(3)} fx, ${paperOctaves} oct). Infinite DPI.`}
-                    mode="compact"
-                    footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}`}
-                    footerRight="0 KB PAYLOAD (SVG INLINE)"
+              {/* ─── GRAND SPECIMEN PROOF (DUAL-RELIEF SVG feTurbulence) ─── */}
+              <div className="mb-6">
+                <ArchivalPrintSpecimen
+                  title="SVG feTurbulence Dual-Relief Ground"
+                  badgeText="IDENTICAL LIGHT & DARK NOISE"
+                  subtitle={`Procedural vector paper ground (Freq: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}, ${paperOctaves} oct, ${Math.round(paperOpacity * 100)}% op, Offset: ${paperOffsetX > 0 ? `+${paperOffsetX.toFixed(1)}` : paperOffsetX.toFixed(1)}px / ${paperOffsetY > 0 ? `+${paperOffsetY.toFixed(1)}` : paperOffsetY.toFixed(1)}px)`}
+                  mode="full"
+                  footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)} | OFFSET: ${paperOffsetX.toFixed(1)}px, ${paperOffsetY.toFixed(1)}px`}
+                  footerRight="PRINTED MATTER DUAL-RELIEF SUITE"
+                >
+                  {/* SVG Dual-Relief Paper Filter Layer */}
+                  <svg
+                    className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                    style={{ opacity: paperOpacity }}
+                    aria-hidden="true"
                   >
-                    {/* SVG feTurbulence Texture Layer */}
-                    <svg
-                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{ opacity: paperOpacity, mixBlendMode: paperBlendMode as any }}
-                      aria-hidden="true"
-                    >
-                      <filter id="pm-matrix-opt1" x="0%" y="0%" width="100%" height="100%">
-                        <feTurbulence
-                          type={paperNoiseType}
-                          baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                          numOctaves={paperOctaves}
-                          result="noise"
-                        />
-                        <feColorMatrix
-                          type="matrix"
-                          values={
-                            paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-                              : paperBlendMode === "overlay"
-                              ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                              : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.33 0 0 0.25   0 0 0 1 0"
-                          }
-                        />
-                      </filter>
-                      <rect width="100%" height="100%" filter="url(#pm-matrix-opt1)" fill="transparent" />
-                    </svg>
-                  </ArchivalPrintSpecimen>
-
-                  {/* CARD 2: Option 2 CSS Stochastic Sand-Grain */}
-                  <ArchivalPrintSpecimen
-                    title="OPT 2: CSS Stochastic Grain"
-                    badgeText="APERIODIC COPRIME"
-                    subtitle={`Pure CSS multi-harmonic sand grain (${cssStippleDensity}px base scale). Zero paint cost.`}
-                    mode="compact"
-                    footerLeft={`SCALE: ${cssStippleDensity}px | RADIUS: ${cssDotRadius.toFixed(1)}px`}
-                    footerRight="0 KB PAYLOAD (PURE CSS)"
-                  >
-                    {/* CSS Stipple Pattern Layer */}
-                    <div
-                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{
-                        opacity: cssStippleOpacity,
-                        mixBlendMode: paperBlendMode as any,
-                        backgroundImage:
-                          paperBlendMode === "lighten" || paperBlendMode === "screen"
-                            ? `radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
-                               radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
-                               radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
-                               radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`
-                            : `radial-gradient(circle at 22% 28%, rgba(41,37,36,0.40) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
-                               radial-gradient(circle at 74% 68%, rgba(78,70,68,0.28) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
-                               radial-gradient(circle at 42% 82%, rgba(120,113,108,0.22) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
-                               radial-gradient(circle at 86% 18%, rgba(168,162,158,0.16) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`,
-                        backgroundSize: `${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px`,
-                      }}
-                    />
-                  </ArchivalPrintSpecimen>
-
-                  {/* CARD 3: Option 3 Archival Mould-Made Laid Paper */}
-                  <ArchivalPrintSpecimen
-                    title="OPT 3: Mould-Made Laid Paper"
-                    badgeText="ANTIQUE WIRE MOULD"
-                    subtitle={`Soft sinusoidal wire ribs (${laidPitch.toFixed(1)}px) with shadowed vertical chain lines (${chainPitch}px).`}
-                    mode="compact"
-                    footerLeft={`WIRE: ${laidPitch.toFixed(1)}px | CHAIN: ${chainPitch}px`}
-                    footerRight="AUTHENTIC WATERMARK"
-                  >
-                    {/* Laid Paper Wire Grid Layer */}
-                    <div
-                      className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"
-                      style={{ opacity: laidOpacity, mixBlendMode: paperBlendMode as any }}
-                    >
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          backgroundImage:
-                            paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? `repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${laidPitch * 0.5}px, rgba(255,255,255,0) ${laidPitch}px),
-                                 repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`
-                              : `repeating-linear-gradient(0deg, rgba(41,37,36,0) 0px, rgba(41,37,36,0.18) ${laidPitch * 0.5}px, rgba(41,37,36,0) ${laidPitch}px),
-                                 repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(30,25,20,0.12) ${chainPitch - 2}px, rgba(41,37,36,0.28) ${chainPitch}px, rgba(30,25,20,0.12) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`,
-                        }}
+                    <filter id="pm-svg-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                      {/* 1. Base Identical Turbulence Noise Generator */}
+                      <feTurbulence
+                        type={paperNoiseType}
+                        baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                        numOctaves={paperOctaves}
+                        result="baseNoise"
                       />
-                      {deckleEdge && (
-                        <div className="absolute inset-0 border-8 border-transparent pointer-events-none" style={{ boxShadow: "inset 0 0 14px rgba(255,255,255,0.6)" }} />
-                      )}
-                      {showWatermark && (
-                        <div
-                          className="absolute bottom-2 right-2 border font-mono font-bold text-[8px] px-1 py-0.5 uppercase tracking-widest pointer-events-none select-none"
-                          style={{
-                            borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
-                            color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
-                          }}
-                        >
-                          {watermarkText}
-                        </div>
-                      )}
-                    </div>
-                  </ArchivalPrintSpecimen>
 
-                  {/* CARD 4: Option 4 HTML5 Canvas Cotton Filaments */}
-                  <ArchivalPrintSpecimen
-                    title="OPT 4: Canvas Cotton Filaments"
-                    badgeText="ORGANIC LINT & FLECK"
-                    subtitle={`Procedural curved cotton threads (${canvasFiberCount} fibers, ${canvasSpeckCount} flecks, ${canvasFiberFrequency.toFixed(1)} waves, #${canvasSeed}).`}
-                    mode="compact"
-                    footerLeft={`FIBERS: ${canvasFiberCount} | FREQ: ${canvasFiberFrequency.toFixed(1)}w`}
-                    footerRight={`TONE: ${canvasColorTone.toUpperCase()}`}
-                  >
-                    {/* HTML5 Canvas Cotton Filaments Layer */}
-                    <CanvasPaperTexture
-                      fiberCount={canvasFiberCount}
-                      fiberLength={canvasFiberLength}
-                      fiberThickness={canvasFiberThickness}
-                      fiberCurvature={canvasFiberCurvature}
-                      fiberFrequency={canvasFiberFrequency}
-                      speckCount={canvasSpeckCount}
-                      speckSize={canvasSpeckSize}
-                      colorTone={canvasColorTone}
-                      opacity={canvasFiberOpacity}
-                      seed={canvasSeed}
-                      blendMode={paperBlendMode}
-                      className="z-10"
-                    />
-                  </ArchivalPrintSpecimen>
-                </div>
-              )}
-
-              {/* ─── SINGLE OPTION VIEW (When specific Option is selected) ─── */}
-              {selectedPaperOption !== "all" && (
-                <div className="space-y-6 mb-6">
-                  {/* Comprehensive Large Specimen Sheet */}
-                  <ArchivalPrintSpecimen
-                    title={
-                      selectedPaperOption === "option1"
-                        ? "OPTION 1: SVG feTurbulence Ground"
-                        : selectedPaperOption === "option2"
-                        ? "OPTION 2: CSS Stochastic Sand-Grain"
-                        : selectedPaperOption === "option3"
-                        ? "OPTION 3: Archival Mould-Made Laid Paper"
-                        : "OPTION 4: Procedural Cotton Filaments"
-                    }
-                    badgeText={`${paperBlendMode.toUpperCase()} TRANSFER ACTIVE`}
-                    subtitle="Grand Typographic Proof — Fields of Solid Black, Color Overprints, Geometric Artwork & Editorial Prose"
-                    mode="full"
-                    footerLeft={`MODE: ${selectedPaperOption.toUpperCase()} (${paperBlendMode.toUpperCase()})`}
-                    footerRight="PRINTED MATTER MATERIALITY SUITE"
-                  >
-                    {/* Active Injected Texture Layer */}
-                    {selectedPaperOption === "option1" && (
-                      <svg
-                        className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                        style={{ opacity: paperOpacity, mixBlendMode: paperBlendMode as any }}
-                        aria-hidden="true"
-                      >
-                        <filter id="pm-single-opt1" x="0%" y="0%" width="100%" height="100%">
-                          <feTurbulence
-                            type={paperNoiseType}
-                            baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                            numOctaves={paperOctaves}
-                            result="noise"
-                          />
-                          <feColorMatrix
-                            type="matrix"
-                            values={
-                              paperBlendMode === "lighten" || paperBlendMode === "screen"
-                                ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-                                : paperBlendMode === "overlay"
-                                ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                                : "0.33 0 0 0 0.18   0 0.33 0 0 0.18   0 0 0.33 0 0.18   0 0 0 1 0"
-                            }
-                          />
-                        </filter>
-                        <rect width="100%" height="100%" filter="url(#pm-single-opt1)" fill="transparent" />
-                      </svg>
-                    )}
-
-                    {selectedPaperOption === "option2" && (
-                      <div
-                        className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                        style={{
-                          opacity: cssStippleOpacity,
-                          mixBlendMode: paperBlendMode as any,
-                          backgroundImage:
-                            paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? `radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
-                                 radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
-                                 radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
-                                 radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`
-                              : `radial-gradient(circle at 22% 28%, rgba(41,37,36,0.40) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
-                                 radial-gradient(circle at 74% 68%, rgba(78,70,68,0.28) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
-                                 radial-gradient(circle at 42% 82%, rgba(120,113,108,0.22) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
-                                 radial-gradient(circle at 86% 18%, rgba(168,162,158,0.16) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`,
-                          backgroundSize: `${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px`,
-                        }}
+                      {/* 2. Dark Shadow Texture (Offset +dx/2, +dy/2 - shadows light paper) */}
+                      <feOffset in="baseNoise" dx={paperOffsetX * 0.5} dy={paperOffsetY * 0.5} result="offsetDark" />
+                      <feColorMatrix
+                        in="offsetDark"
+                        type="matrix"
+                        values={`0 0 0 0 0.12
+                                0 0 0 0 0.10
+                                0 0 0 0 0.08
+                                0.33 0.33 0.33 0 ${paperShadowGain * 0.6}`}
+                        result="darkShadow"
                       />
-                    )}
 
-                    {selectedPaperOption === "option3" && (
-                      <div
-                        className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"
-                        style={{ opacity: laidOpacity, mixBlendMode: paperBlendMode as any }}
-                      >
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            backgroundImage:
-                              paperBlendMode === "lighten" || paperBlendMode === "screen"
-                                ? `repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${laidPitch * 0.5}px, rgba(255,255,255,0) ${laidPitch}px),
-                                   repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`
-                                : `repeating-linear-gradient(0deg, rgba(41,37,36,0) 0px, rgba(41,37,36,0.18) ${laidPitch * 0.5}px, rgba(41,37,36,0) ${laidPitch}px),
-                                   repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(30,25,20,0.12) ${chainPitch - 2}px, rgba(41,37,36,0.28) ${chainPitch}px, rgba(30,25,20,0.12) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`,
-                          }}
-                        />
-                        {deckleEdge && (
-                          <div className="absolute inset-0 border-8 border-transparent pointer-events-none" style={{ boxShadow: "inset 0 0 16px rgba(255,255,255,0.6)" }} />
-                        )}
-                        {showWatermark && (
-                          <div
-                            className="absolute bottom-3 right-3 border font-mono font-bold text-[9px] px-1.5 py-0.5 uppercase tracking-widest pointer-events-none select-none"
-                            style={{
-                              borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
-                              color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
-                            }}
-                          >
-                            {watermarkText}
-                          </div>
-                        )}
-                      </div>
-                    )}
-
-                    {selectedPaperOption === "option4" && (
-                      <CanvasPaperTexture
-                        fiberCount={canvasFiberCount}
-                        fiberLength={canvasFiberLength}
-                        fiberThickness={canvasFiberThickness}
-                        fiberCurvature={canvasFiberCurvature}
-                        fiberFrequency={canvasFiberFrequency}
-                        speckCount={canvasSpeckCount}
-                        speckSize={canvasSpeckSize}
-                        colorTone={canvasColorTone}
-                        opacity={canvasFiberOpacity}
-                        seed={canvasSeed}
-                        blendMode={paperBlendMode}
-                        className="z-10"
+                      {/* 3. Light Highlight Texture (Offset -dx/2, -dy/2 - highlights dark ink) */}
+                      <feOffset in="baseNoise" dx={-paperOffsetX * 0.5} dy={-paperOffsetY * 0.5} result="offsetLight" />
+                      <feColorMatrix
+                        in="offsetLight"
+                        type="matrix"
+                        values={`0 0 0 0 1
+                                0 0 0 0 1
+                                0 0 0 0 1
+                                0.33 0.33 0.33 0 ${paperHighlightGain * 0.6}`}
+                        result="lightHighlight"
                       />
-                    )}
-                  </ArchivalPrintSpecimen>
-                </div>
-              )}
+
+                      {/* 4. Physical Direct Alpha Merge */}
+                      <feMerge>
+                        <feMergeNode in="darkShadow" />
+                        <feMergeNode in="lightHighlight" />
+                      </feMerge>
+                    </filter>
+                    <rect width="100%" height="100%" filter="url(#pm-svg-dual-tooth)" fill="transparent" />
+                  </svg>
+                </ArchivalPrintSpecimen>
+              </div>
 
               {/* ─── PRODUCTION CODE EXPORT CARD ─── */}
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Production Implementation Code ({selectedPaperOption.toUpperCase()})
+                    Production Implementation Code (SVG feTurbulence Dual-Relief)
                   </span>
                   <button
                     onClick={() => {
-                      let code = "";
-                      if (selectedPaperOption === "option2") {
-                        code = `/* Option 2: CSS Aperiodic Stochastic Paper Grain */\n.paper-stipple-grain {\n  background-color: var(--paper);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${cssStippleOpacity};\n  background-image:\n    radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),\n    radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),\n    radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),\n    radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px);\n  background-size: ${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px;\n}`;
-                      } else if (selectedPaperOption === "option3") {
-                        code = `/* Option 3: Archival Mould-Made Laid Paper & Shadowed Chain Lines */\n.paper-laid-wire {\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${laidOpacity};\n  background-image:\n    repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${(laidPitch * 0.5).toFixed(1)}px, rgba(255,255,255,0) ${laidPitch.toFixed(1)}px),\n    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);\n}`;
-                      } else if (selectedPaperOption === "option4") {
-                        code = `<CanvasPaperTexture fiberCount={${canvasFiberCount}} fiberLength={${canvasFiberLength}} fiberThickness={${canvasFiberThickness}} fiberCurvature={${canvasFiberCurvature}} fiberFrequency={${canvasFiberFrequency}} speckCount={${canvasSpeckCount}} colorTone="${canvasColorTone}" opacity={${canvasFiberOpacity}} blendMode="${paperBlendMode}" seed={${canvasSeed}} />`;
-                      } else {
-                        code = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode} opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
-                      }
+                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Identical Light & Dark with Offset) */
+<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity} }}>
+  <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
+    <!-- 1. Single Base Noise Generator -->
+    <feTurbulence
+      type="${paperNoiseType}"
+      baseFrequency="${paperBaseFrequency} ${paperFreqY}"
+      numOctaves="${paperOctaves}"
+      result="baseNoise"
+    />
+    <!-- 2. Dark Shadow Component (Shadows Light Paper) -->
+    <feOffset in="baseNoise" dx="${(paperOffsetX * 0.5).toFixed(1)}" dy="${(paperOffsetY * 0.5).toFixed(1)}" result="offsetDark" />
+    <feColorMatrix
+      in="offsetDark"
+      type="matrix"
+      values="0 0 0 0 0.12   0 0 0 0 0.10   0 0 0 0 0.08   0.33 0.33 0.33 0 ${(paperShadowGain * 0.6).toFixed(2)}"
+      result="darkShadow"
+    />
+    <!-- 3. Light Highlight Component (Highlights Dark Ink) -->
+    <feOffset in="baseNoise" dx="${(-paperOffsetX * 0.5).toFixed(1)}" dy="${(-paperOffsetY * 0.5).toFixed(1)}" result="offsetLight" />
+    <feColorMatrix
+      in="offsetLight"
+      type="matrix"
+      values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0.33 0.33 0.33 0 ${(paperHighlightGain * 0.6).toFixed(2)}"
+      result="lightHighlight"
+    />
+    <!-- 4. Physical Direct Alpha Merge -->
+    <feMerge>
+      <feMergeNode in="darkShadow" />
+      <feMergeNode in="lightHighlight" />
+    </feMerge>
+  </filter>
+  <rect width="100%" height="100%" filter="url(#paper-dual-tooth)" fill="transparent" />
+</svg>`;
                       copyToClipboard(code);
                     }}
                     className="px-2 py-1 bg-[var(--gray-800)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] text-white flex items-center gap-1 text-[11px]"
@@ -3859,52 +3431,20 @@ export default function App() {
                   </button>
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
-                  {selectedPaperOption === "option2"
-                    ? `/* Option 2: Pure CSS Aperiodic Stochastic Paper Grain (Scale: ${cssStippleDensity}px, Radius: ${cssDotRadius}px) */
-.paper-stipple-grain {
-  background-color: var(--paper); /* Stone-100 #F5F5F4 */
-  mix-blend-mode: ${paperBlendMode};
-  opacity: ${cssStippleOpacity};
-  background-image: 
-    radial-gradient(circle at 22% 28%, rgba(255, 255, 255, 0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
-    radial-gradient(circle at 74% 68%, rgba(255, 255, 255, 0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
-    radial-gradient(circle at 42% 82%, rgba(255, 255, 255, 0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
-    radial-gradient(circle at 86% 18%, rgba(255, 255, 255, 0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px);
-  background-size: ${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px,
-                   ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px,
-                   ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px,
-                   ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px;
-}`
-                    : selectedPaperOption === "option3"
-                    ? `/* Option 3: Archival Mould-Made Laid Paper & Shadowed Chain Lines (Wire: ${laidPitch.toFixed(1)}px, Chain: ${chainPitch}px) */
-.paper-laid-wire {
-  mix-blend-mode: ${paperBlendMode};
-  opacity: ${laidOpacity};
-  background-image:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0) 0px, rgba(255, 255, 255, 0.42) ${(laidPitch * 0.5).toFixed(1)}px, rgba(255, 255, 255, 0) ${laidPitch.toFixed(1)}px),
-    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215, 210, 205, 0.25) ${chainPitch - 2}px, rgba(255, 255, 255, 0.70) ${chainPitch}px, rgba(215, 210, 205, 0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);
-}`
-                    : selectedPaperOption === "option4"
-                    ? `/* Option 4: HTML5 Canvas Cotton Threads (Threads: ${canvasFiberCount}, Frequency: ${canvasFiberFrequency.toFixed(1)} waves) */
-<CanvasPaperTexture
-  fiberCount={${canvasFiberCount}}
-  fiberLength={${canvasFiberLength}}
-  fiberThickness={${canvasFiberThickness}}
-  fiberCurvature={${canvasFiberCurvature}}
-  fiberFrequency={${canvasFiberFrequency}}
-  speckCount={${canvasSpeckCount}}
-  colorTone="${canvasColorTone}"
-  opacity={${canvasFiberOpacity}}
-  blendMode="${paperBlendMode}"
-  seed={${canvasSeed}}
-/>`
-                    : `/* Option 1: Procedural SVG feTurbulence Noise (Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, Octaves: ${paperOctaves}) */
-<svg className="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode}" style={{ opacity: ${paperOpacity} }}>
-  <filter id="paper-tooth">
-    <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="noise" />
-    <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />
+                  {`/* Option 1: SVG feTurbulence Dual-Relief Ground (Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, Octaves: ${paperOctaves}, Offset: ${paperOffsetX > 0 ? `+${paperOffsetX.toFixed(1)}` : paperOffsetX.toFixed(1)}px / ${paperOffsetY > 0 ? `+${paperOffsetY.toFixed(1)}` : paperOffsetY.toFixed(1)}px) */
+<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity} }}>
+  <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
+    <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
+    <feOffset in="baseNoise" dx="${(paperOffsetX * 0.5).toFixed(1)}" dy="${(paperOffsetY * 0.5).toFixed(1)}" result="offsetDark" />
+    <feColorMatrix in="offsetDark" type="matrix" values="0 0 0 0 0.12   0 0 0 0 0.10   0 0 0 0 0.08   0.33 0.33 0.33 0 ${(paperShadowGain * 0.6).toFixed(2)}" result="darkShadow" />
+    <feOffset in="baseNoise" dx="${(-paperOffsetX * 0.5).toFixed(1)}" dy="${(-paperOffsetY * 0.5).toFixed(1)}" result="offsetLight" />
+    <feColorMatrix in="offsetLight" type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0.33 0.33 0.33 0 ${(paperHighlightGain * 0.6).toFixed(2)}" result="lightHighlight" />
+    <feMerge>
+      <feMergeNode in="darkShadow" />
+      <feMergeNode in="lightHighlight" />
+    </feMerge>
   </filter>
-  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />
+  <rect width="100%" height="100%" filter="url(#paper-dual-tooth)" fill="transparent" />
 </svg>`}
                 </pre>
               </div>
@@ -3917,30 +3457,40 @@ export default function App() {
         {globalPaperTexture && (
           <svg
             className="fixed inset-0 w-full h-full pointer-events-none z-30 transition-opacity duration-150"
-            style={{
-              opacity: paperOpacity,
-              mixBlendMode: paperBlendMode as any,
-            }}
+            style={{ opacity: paperOpacity }}
             aria-hidden="true"
           >
-            <filter id="pm-global-paper-tooth" x="0%" y="0%" width="100%" height="100%">
+            <filter id="pm-global-paper-tooth" x="-20%" y="-20%" width="140%" height="140%">
               <feTurbulence
                 type={paperNoiseType}
                 baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
                 numOctaves={paperOctaves}
-                result="noise"
+                result="baseNoise"
               />
+              <feOffset in="baseNoise" dx={paperOffsetX * 0.5} dy={paperOffsetY * 0.5} result="offsetDark" />
               <feColorMatrix
+                in="offsetDark"
                 type="matrix"
-                values={
-                  paperBlendMode === "lighten" || paperBlendMode === "screen"
-                    ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-                    : paperBlendMode === "overlay"
-                    ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                    : "0.33 0 0 0 0.18   0 0.33 0 0 0.18   0 0 0.33 0 0.18   0 0 0 1 0"
-                }
-                result="coloredNoise"
+                values={`0 0 0 0 0.12
+                        0 0 0 0 0.10
+                        0 0 0 0 0.08
+                        0.33 0.33 0.33 0 ${paperShadowGain * 0.6}`}
+                result="darkShadow"
               />
+              <feOffset in="baseNoise" dx={-paperOffsetX * 0.5} dy={-paperOffsetY * 0.5} result="offsetLight" />
+              <feColorMatrix
+                in="offsetLight"
+                type="matrix"
+                values={`0 0 0 0 1
+                        0 0 0 0 1
+                        0 0 0 0 1
+                        0.33 0.33 0.33 0 ${paperHighlightGain * 0.6}`}
+                result="lightHighlight"
+              />
+              <feMerge>
+                <feMergeNode in="darkShadow" />
+                <feMergeNode in="lightHighlight" />
+              </feMerge>
             </filter>
             <rect width="100%" height="100%" filter="url(#pm-global-paper-tooth)" fill="transparent" />
           </svg>
