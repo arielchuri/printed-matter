@@ -9,3 +9,4 @@ export * from "./TreeNode";
 export * from "./PatternSwatch";
 export * from "./ColorChip";
 export * from "./FullerMap";
+export * from "./CanvasPaperTexture";

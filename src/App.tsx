@@ -10,9 +10,10 @@ import {
   PatternSwatch,
   ColorChip,
   FullerMap,
+  CanvasPaperTexture,
 } from "./components";
 import { COLOR_SWATCHES, getContrastRatio, getWCAGGrade } from "../tokens/tokens";
-import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet } from "lucide-react";
+import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw } from "lucide-react";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("tokens");
@@ -29,13 +30,33 @@ export default function App() {
   const [misregisterX, setMisregisterX] = useState<number>(1.5);
   const [misregisterY, setMisregisterY] = useState<number>(1.0);
   const [knockoutPair, setKnockoutPair] = useState<"red-blue" | "blue-yellow" | "red-yellow" | "aqua-black">("red-blue");
-  const [paperTextureActive, setPaperTextureActive] = useState<boolean>(true);
+  
+  // Paper Texture Laboratory State (All 4 Options)
+  const [selectedPaperOption, setSelectedPaperOption] = useState<"all" | "option1" | "option2" | "option3" | "option4">("all");
+  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "multiply" | "overlay">("lighten");
+  const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
+  
+  // Option 1: SVG feTurbulence
   const [paperBaseFrequency, setPaperBaseFrequency] = useState<number>(0.038);
   const [paperOctaves, setPaperOctaves] = useState<number>(4);
   const [paperOpacity, setPaperOpacity] = useState<number>(0.28);
-  const [paperBlendMode, setPaperBlendMode] = useState<"lighten" | "screen" | "multiply" | "overlay">("lighten");
   const [paperPreset, setPaperPreset] = useState<"rag" | "laid" | "kraft" | "bristol">("rag");
-  const [globalPaperTexture, setGlobalPaperTexture] = useState<boolean>(false);
+
+  // Option 2: CSS Micro-Grain Stipple
+  const [cssStippleDensity, setCssStippleDensity] = useState<number>(6);
+  const [cssStippleOpacity, setCssStippleOpacity] = useState<number>(0.35);
+
+  // Option 3: Archival Laid Paper & Watermark
+  const [laidPitch, setLaidPitch] = useState<number>(2.5);
+  const [chainPitch, setChainPitch] = useState<number>(32);
+  const [laidOpacity, setLaidOpacity] = useState<number>(0.30);
+  const [showWatermark, setShowWatermark] = useState<boolean>(true);
+
+  // Option 4: HTML5 Canvas Procedural Cotton Fibers
+  const [canvasFiberCount, setCanvasFiberCount] = useState<number>(2000);
+  const [canvasFiberLength, setCanvasFiberLength] = useState<number>(5);
+  const [canvasFiberOpacity, setCanvasFiberOpacity] = useState<number>(0.35);
+  const [canvasSeed, setCanvasSeed] = useState<number>(1);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
@@ -3009,356 +3030,641 @@ export default function App() {
               </div>
             </section>
 
-            {/* ─── SECTION 4: PAPER TOOTH & MATERIAL GROUND (OPTION 1: PROCEDURAL SVG feTurbulence) ─── */}
+            {/* ─── SECTION 4: PAPER TEXTURE LABORATORY (ALL 4 ARCHITECTURAL OPTIONS) ─── */}
             <section className="bg-[var(--surface)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
               <div className="flex flex-col lg:flex-row lg:items-center justify-between border-b border-[var(--border-gray)] pb-4 mb-6 gap-4">
                 <div>
                   <div className="flex items-center gap-2 mb-1">
                     <span className="font-mono text-xs font-bold px-1.5 py-0.5 bg-[var(--primary-500)] text-white uppercase">
-                      OPTION 1 SPECIMEN
+                      PAPER TEXTURE LABORATORY
                     </span>
                     <h2 className="text-xl font-extrabold tracking-tight text-[var(--text)] uppercase font-mono m-0">
-                      Physical Paper Tooth &amp; Rag Ground
+                      Physical Paper Tooth &amp; Material Ground (4 Options)
                     </h2>
                   </div>
                   <p className="text-xs text-[var(--text-muted)] font-mono m-0">
-                    Vector-native procedural micro-grain synthesized via SVG <code className="text-[var(--primary-600)] font-bold">&lt;feTurbulence&gt;</code> fractal noise &amp; subtractive multiply blending. 0KB network payload.
+                    Compare the 4 design system architectures for tactile paper tooth: Vector SVG, CSS Micro-Stipple, Archival Laid Wire, and Procedural Canvas Fibers.
                   </p>
                 </div>
 
-                {/* Preset Fast Switchers */}
-                <div className="flex flex-wrap items-center gap-1.5 font-mono text-xs">
-                  <span className="text-[var(--text-muted)] text-[11px] font-bold mr-1">PRESETS:</span>
+                {/* Option Navigation Tabs */}
+                <div className="flex flex-wrap items-center gap-1 font-mono text-xs">
                   {[
-                    { id: "rag", label: "Handmade Rag", freq: 0.038, octaves: 4, opacity: 0.28, desc: "Coarse organic cotton tooth" },
-                    { id: "laid", label: "Mould-Made Laid", freq: 0.065, octaves: 3, opacity: 0.20, desc: "Fine stipple fiber tooth" },
-                    { id: "kraft", label: "Unbleached Kraft", freq: 0.026, octaves: 5, opacity: 0.36, desc: "Dense raw cellulose grain" },
-                    { id: "bristol", label: "Smooth Bristol", freq: 0.095, octaves: 2, opacity: 0.12, desc: "Ultra-subtle plate micro-pore" },
-                  ].map((p) => (
+                    { id: "all", label: "All 4 Options (Matrix)" },
+                    { id: "option1", label: "Option 1: SVG Noise" },
+                    { id: "option2", label: "Option 2: CSS Stipple" },
+                    { id: "option3", label: "Option 3: Laid Paper" },
+                    { id: "option4", label: "Option 4: Canvas Fibers" },
+                  ].map((opt) => (
                     <button
-                      key={p.id}
-                      onClick={() => {
-                        setPaperPreset(p.id as any);
-                        setPaperBaseFrequency(p.freq);
-                        setPaperOctaves(p.octaves);
-                        setPaperOpacity(p.opacity);
-                      }}
+                      key={opt.id}
+                      onClick={() => setSelectedPaperOption(opt.id as any)}
                       className={`px-2.5 py-1 text-xs font-bold transition-colors ${
-                        paperPreset === p.id
+                        selectedPaperOption === opt.id
                           ? "bg-[var(--primary-500)] text-white border border-[var(--primary-700)]"
                           : "bg-[var(--white)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
                       }`}
                       style={{ borderRadius: 0 }}
-                      title={p.desc}
                     >
-                      {p.label}
+                      {opt.label}
                     </button>
                   ))}
                 </div>
               </div>
 
-              {/* ─── Interactive Physics & Synthesis Controls ─── */}
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4 p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs">
-                {/* Param 1: Blend Mode (Lighten vs Multiply vs Screen vs Overlay) */}
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-[var(--text)] uppercase">Blend Transfer</span>
-                    <span className="text-[var(--primary-600)] font-bold uppercase">{paperBlendMode}</span>
+              {/* ─── Universal Blend Mode & Controls Panel ─── */}
+              <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] mb-6 font-mono text-xs space-y-4">
+                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border-gray)]/30 pb-3">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <span className="font-bold text-[var(--text)] uppercase">Global Blend Transfer:</span>
+                    <div className="flex gap-1">
+                      {[
+                        { id: "lighten", label: "Lighten Only", desc: "Pure white fiber highlights; never darkens ground or ink" },
+                        { id: "screen", label: "Screen", desc: "Soft luminous fiber diffusion" },
+                        { id: "multiply", label: "Multiply", desc: "Subtractive dark ink/pulp tooth" },
+                        { id: "overlay", label: "Overlay", desc: "Dual crest/trough relief" },
+                      ].map((m) => (
+                        <button
+                          key={m.id}
+                          onClick={() => setPaperBlendMode(m.id as any)}
+                          className={`py-1 px-2 text-xs font-bold border transition-colors ${
+                            paperBlendMode === m.id
+                              ? "bg-[var(--primary-500)] text-white border-[var(--primary-700)]"
+                              : "bg-[var(--surface)] text-[var(--text)] border border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
+                          }`}
+                          style={{ borderRadius: 0 }}
+                          title={m.desc}
+                        >
+                          {m.label}
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                  <div className="grid grid-cols-2 gap-1 mt-1">
-                    {[
-                      { id: "lighten", label: "Lighten Only", desc: "Pure white fiber highlights; never darkens ground or ink" },
-                      { id: "screen", label: "Screen", desc: "Soft luminous fiber diffusion" },
-                      { id: "multiply", label: "Multiply", desc: "Subtractive dark ink/pulp tooth" },
-                      { id: "overlay", label: "Overlay", desc: "Dual crest/trough relief" },
-                    ].map((m) => (
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
+                      className={`py-1 px-3 font-mono text-xs font-bold uppercase transition-colors border flex items-center gap-1.5 ${
+                        globalPaperTexture
+                          ? "bg-[var(--spectrum-green)] text-white border-[var(--spectrum-green)]"
+                          : "bg-[var(--surface-muted)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/30"
+                      }`}
+                      style={{ borderRadius: 0 }}
+                    >
+                      <span>GLOBAL TOOTH OVERLAY: {globalPaperTexture ? "ACTIVE ON PAGE" : "OFF"}</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Specific Parameter Sliders */}
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-1">
+                  {/* Option 1 Controls */}
+                  <div className={`p-3 border ${selectedPaperOption === "option1" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 1: SVG Turbulence</span>
+                      <span className="text-[11px] text-[var(--text-muted)] font-bold">{paperBaseFrequency.toFixed(3)} / {paperOctaves} oct</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="0.010"
+                      max="0.100"
+                      step="0.002"
+                      value={paperBaseFrequency}
+                      onChange={(e) => setPaperBaseFrequency(parseFloat(e.target.value))}
+                      className="w-full accent-[var(--primary-500)] cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-1">
+                      <span>Density: {Math.round(paperOpacity * 100)}%</span>
+                      <input
+                        type="range"
+                        min="0.05"
+                        max="0.80"
+                        step="0.01"
+                        value={paperOpacity}
+                        onChange={(e) => setPaperOpacity(parseFloat(e.target.value))}
+                        className="w-20 accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Option 2 Controls */}
+                  <div className={`p-3 border ${selectedPaperOption === "option2" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 2: CSS Stipple Tile</span>
+                      <span className="text-[11px] text-[var(--text-muted)] font-bold">{cssStippleDensity}px pitch</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="3"
+                      max="16"
+                      step="1"
+                      value={cssStippleDensity}
+                      onChange={(e) => setCssStippleDensity(parseInt(e.target.value))}
+                      className="w-full accent-[var(--primary-500)] cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-1">
+                      <span>Density: {Math.round(cssStippleOpacity * 100)}%</span>
+                      <input
+                        type="range"
+                        min="0.05"
+                        max="0.80"
+                        step="0.01"
+                        value={cssStippleOpacity}
+                        onChange={(e) => setCssStippleOpacity(parseFloat(e.target.value))}
+                        className="w-20 accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Option 3 Controls */}
+                  <div className={`p-3 border ${selectedPaperOption === "option3" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 3: Laid Wire Paper</span>
+                      <span className="text-[11px] text-[var(--text-muted)] font-bold">{laidPitch.toFixed(1)}px / {chainPitch}px</span>
+                    </div>
+                    <input
+                      type="range"
+                      min="1.5"
+                      max="6.0"
+                      step="0.5"
+                      value={laidPitch}
+                      onChange={(e) => setLaidPitch(parseFloat(e.target.value))}
+                      className="w-full accent-[var(--primary-500)] cursor-pointer"
+                    />
+                    <div className="flex justify-between items-center text-[10px] text-[var(--text-muted)] mt-1">
+                      <label className="flex items-center gap-1 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={showWatermark}
+                          onChange={(e) => setShowWatermark(e.target.checked)}
+                          className="accent-[var(--primary-500)]"
+                        />
+                        <span>Watermark Chop</span>
+                      </label>
+                      <input
+                        type="range"
+                        min="0.05"
+                        max="0.80"
+                        step="0.01"
+                        value={laidOpacity}
+                        onChange={(e) => setLaidOpacity(parseFloat(e.target.value))}
+                        className="w-16 accent-[var(--primary-500)] cursor-pointer"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Option 4 Controls */}
+                  <div className={`p-3 border ${selectedPaperOption === "option4" || selectedPaperOption === "all" ? "bg-[var(--surface)] border-[var(--primary-500)]/40" : "opacity-50 border-[var(--border-gray)]"}`}>
+                    <div className="flex justify-between items-center mb-1">
+                      <span className="font-bold text-[var(--primary-600)] uppercase">Opt 4: Canvas Filaments</span>
                       <button
-                        key={m.id}
-                        onClick={() => setPaperBlendMode(m.id as any)}
-                        className={`py-1 px-1.5 text-[10px] font-bold border transition-colors ${
-                          paperBlendMode === m.id
-                            ? "bg-[var(--primary-500)] text-white border-[var(--primary-700)]"
-                            : "bg-[var(--surface)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--surface-muted)]"
-                        }`}
-                        style={{ borderRadius: 0 }}
-                        title={m.desc}
+                        onClick={() => setCanvasSeed((s) => s + 1)}
+                        className="text-[10px] bg-[var(--white)] border border-[var(--border-gray)] px-1 py-0.5 hover:bg-[var(--primary-500)] hover:text-white flex items-center gap-0.5"
+                        title="Re-roll pulp fiber distribution"
                       >
-                        {m.label}
+                        <RefreshCw size={9} />
+                        <span>RE-ROLL</span>
                       </button>
-                    ))}
+                    </div>
+                    <input
+                      type="range"
+                      min="500"
+                      max="4000"
+                      step="250"
+                      value={canvasFiberCount}
+                      onChange={(e) => setCanvasFiberCount(parseInt(e.target.value))}
+                      className="w-full accent-[var(--primary-500)] cursor-pointer"
+                    />
+                    <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-1">
+                      <span>{canvasFiberCount} fibers</span>
+                      <span>Length: {canvasFiberLength}px</span>
+                    </div>
                   </div>
-                  <span className="text-[10px] text-[var(--text-muted)] block mt-1">
-                    {paperBlendMode === "lighten"
-                      ? "Lighten: Only lifts highlights; zero darkening"
-                      : paperBlendMode === "multiply"
-                      ? "Multiply: Subtractive pulp darkening"
-                      : `${paperBlendMode.toUpperCase()} transfer active`}
-                  </span>
-                </div>
-
-                {/* Param 2: Base Frequency */}
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-[var(--text)] uppercase">Granularity (Freq)</span>
-                    <span className="text-[var(--primary-600)] font-bold">{paperBaseFrequency.toFixed(3)}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.010"
-                    max="0.120"
-                    step="0.002"
-                    value={paperBaseFrequency}
-                    onChange={(e) => {
-                      setPaperBaseFrequency(parseFloat(e.target.value));
-                      setPaperPreset("custom" as any);
-                    }}
-                    className="w-full accent-[var(--primary-500)] cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
-                    <span>Coarse Pulp</span>
-                    <span>Micro Tooth</span>
-                  </div>
-                </div>
-
-                {/* Param 3: Num Octaves */}
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-[var(--text)] uppercase">Depth (Octaves)</span>
-                    <span className="text-[var(--primary-600)] font-bold">{paperOctaves}</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="1"
-                    max="6"
-                    step="1"
-                    value={paperOctaves}
-                    onChange={(e) => {
-                      setPaperOctaves(parseInt(e.target.value));
-                      setPaperPreset("custom" as any);
-                    }}
-                    className="w-full accent-[var(--primary-500)] cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
-                    <span>1 (Flat)</span>
-                    <span>6 (Deep Fiber)</span>
-                  </div>
-                </div>
-
-                {/* Param 4: Opacity */}
-                <div>
-                  <div className="flex justify-between items-center mb-1">
-                    <span className="font-bold text-[var(--text)] uppercase">Tooth Density (Alpha)</span>
-                    <span className="text-[var(--primary-600)] font-bold">{Math.round(paperOpacity * 100)}%</span>
-                  </div>
-                  <input
-                    type="range"
-                    min="0.05"
-                    max="0.80"
-                    step="0.01"
-                    value={paperOpacity}
-                    onChange={(e) => {
-                      setPaperOpacity(parseFloat(e.target.value));
-                      setPaperPreset("custom" as any);
-                    }}
-                    className="w-full accent-[var(--primary-500)] cursor-pointer"
-                  />
-                  <div className="flex justify-between text-[10px] text-[var(--text-muted)] mt-0.5">
-                    <span>5% Whispered</span>
-                    <span>80% Heavy</span>
-                  </div>
-                </div>
-
-                {/* Global Toggle Button */}
-                <div className="flex flex-col justify-end">
-                  <button
-                    onClick={() => setGlobalPaperTexture(!globalPaperTexture)}
-                    className={`w-full py-2 px-3 font-mono text-xs font-bold uppercase transition-colors border flex items-center justify-center gap-1.5 ${
-                      globalPaperTexture
-                        ? "bg-[var(--spectrum-green)] text-white border-[var(--spectrum-green)]"
-                        : "bg-[var(--surface-muted)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/30"
-                    }`}
-                    style={{ borderRadius: 0 }}
-                  >
-                    <span>GLOBAL TOOTH: {globalPaperTexture ? "ACTIVE" : "OFF"}</span>
-                  </button>
-                  <span className="text-[10px] text-[var(--text-muted)] mt-1 text-center font-mono">
-                    Mode: {paperBlendMode.toUpperCase()} ({Math.round(paperOpacity * 100)}%)
-                  </span>
                 </div>
               </div>
 
-              {/* ─── SIDE-BY-SIDE COMPARISON SPECIMEN ─── */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                {/* SPECIMEN A: Raw Digital Screen Ground */}
-                <div className="p-6 bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none">
-                  <div>
-                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                      <span className="font-bold text-[var(--text-muted)] uppercase tracking-wider">
-                        Canvas A: Raw Flat Digital Screen
-                      </span>
-                      <span className="bg-[var(--surface)] text-[var(--text-muted)] px-1.5 py-0.5 border border-[var(--border-gray)] text-[10px]">
-                        NO TEXTURE
-                      </span>
-                    </div>
+              {/* ─── 4-OPTION COMPARATIVE MATRIX (When "All" is selected) ─── */}
+              {selectedPaperOption === "all" && (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                  {/* CARD 1: Option 1 SVG Turbulence */}
+                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                    {/* SVG feTurbulence Texture Layer */}
+                    <svg
+                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                      style={{ opacity: paperOpacity, mixBlendMode: paperBlendMode as any }}
+                      aria-hidden="true"
+                    >
+                      <filter id="pm-matrix-opt1" x="0%" y="0%" width="100%" height="100%">
+                        <feTurbulence type="fractalNoise" baseFrequency={paperBaseFrequency} numOctaves={paperOctaves} result="noise" />
+                        <feColorMatrix
+                          type="matrix"
+                          values={
+                            paperBlendMode === "lighten" || paperBlendMode === "screen"
+                              ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+                              : paperBlendMode === "overlay"
+                              ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+                              : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.25   0 0 0 1 0"
+                          }
+                        />
+                      </filter>
+                      <rect width="100%" height="100%" filter="url(#pm-matrix-opt1)" fill="transparent" />
+                    </svg>
 
-                    <div className="space-y-4">
-                      <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--text-muted)] block mb-1">
-                          TYPOGRAPHIC RELIEF PROOF
+                    <div className="relative z-0">
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--primary-600)] uppercase">
+                          OPTION 1: SVG feTurbulence
                         </span>
-                        <h3 className="text-4xl font-extrabold tracking-tighter uppercase text-[var(--gray-900)] leading-tight">
-                          ARCHIVAL FIBER
-                        </h3>
-                        <p className="text-xs font-mono text-[var(--gray-700)] mt-1">
-                          Standard digital rasterization lacks the microscopic physical tooth that catches relief ink on press.
-                        </p>
+                        <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold">
+                          VECTOR NOISE
+                        </span>
                       </div>
-
-                      {/* Ink Overprint Block */}
-                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs relative">
-                        <div className="text-2xl font-black text-[var(--primary-500)] tracking-tight">
-                          TWO-COLOR INK OVERPRINT
-                        </div>
-                        <div className="text-sm font-bold text-[var(--spectrum-red)] mt-0.5">
-                          LITHOGRAPHIC PLATE NO. 08
-                        </div>
-                        <div className="mt-3 flex gap-2">
-                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">
-                            ITTEN BLUE #6EA3BE
-                          </div>
-                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">
-                            VERMILION #E65E59
-                          </div>
+                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
+                        ARCHIVAL FIBER
+                      </h3>
+                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
+                        Procedural mathematical fractal noise. Infinite zoom &amp; resolution independent.
+                      </p>
+                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
+                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
+                        <div className="flex gap-2 mt-2">
+                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
                         </div>
                       </div>
                     </div>
+                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
+                      <span>PAYLOAD: 0 KB (SVG INLINE)</span>
+                      <span>GPU: MEDIUM</span>
+                    </div>
                   </div>
 
-                  <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--text-muted)]">
-                    <span>GROUND: STONE-100 #F5F5F4</span>
-                    <span>SURFACE: PERFECT SCREEN SMOOTH</span>
-                  </div>
-                </div>
-
-                {/* SPECIMEN B: Option 1 Procedural SVG Rag Ground */}
-                <div className="p-6 bg-[var(--white)] border-2 border-[var(--primary-500)] relative overflow-hidden flex flex-col justify-between select-none shadow-sm">
-                  {/* Procedural SVG feTurbulence Paper Texture Layer */}
-                  <svg
-                    className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                    style={{
-                      opacity: paperOpacity,
-                      mixBlendMode: paperBlendMode as any,
-                    }}
-                    aria-hidden="true"
-                  >
-                    <filter id="pm-paper-specimen-filter" x="0%" y="0%" width="100%" height="100%">
-                      <feTurbulence
-                        type="fractalNoise"
-                        baseFrequency={paperBaseFrequency}
-                        numOctaves={paperOctaves}
-                        result="noise"
-                      />
-                      <feColorMatrix
-                        type="matrix"
-                        values={
+                  {/* CARD 2: Option 2 CSS Micro-Grain Stipple Tile */}
+                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                    {/* CSS Stipple Pattern Layer */}
+                    <div
+                      className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                      style={{
+                        opacity: cssStippleOpacity,
+                        mixBlendMode: paperBlendMode as any,
+                        backgroundImage:
                           paperBlendMode === "lighten" || paperBlendMode === "screen"
-                            ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-                            : paperBlendMode === "overlay"
-                            ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                            : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
-                        }
-                        result="coloredNoise"
-                      />
-                    </filter>
-                    <rect width="100%" height="100%" filter="url(#pm-paper-specimen-filter)" fill="transparent" />
-                  </svg>
+                            ? `radial-gradient(rgba(255,255,255,0.9) 0.6px, transparent 0.6px), radial-gradient(rgba(255,255,255,0.6) 0.4px, transparent 0.4px)`
+                            : `radial-gradient(rgba(41,37,36,0.5) 0.6px, transparent 0.6px), radial-gradient(rgba(120,113,108,0.35) 0.4px, transparent 0.4px)`,
+                        backgroundSize: `${cssStippleDensity}px ${cssStippleDensity}px, ${cssStippleDensity * 1.7}px ${cssStippleDensity * 1.7}px`,
+                        backgroundPosition: `0 0, ${cssStippleDensity * 0.5}px ${cssStippleDensity * 0.5}px`,
+                      }}
+                    />
 
-                  <div className="relative z-0">
-                    <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                      <span className="font-bold text-[var(--primary-600)] uppercase tracking-wider">
-                        Canvas B: Option 1 SVG Paper Ground ({paperBlendMode.toUpperCase()})
-                      </span>
-                      <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold">
-                        {paperBlendMode === "lighten" ? "LIGHTEN ONLY ACTIVE" : "feTurbulence ACTIVE"}
-                      </span>
-                    </div>
-
-                    <div className="space-y-4">
-                      <div>
-                        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--primary-600)] font-bold block mb-1">
-                          TYPOGRAPHIC RELIEF PROOF ({paperBlendMode.toUpperCase()} TOOTH)
+                    <div className="relative z-0">
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--primary-600)] uppercase">
+                          OPTION 2: CSS Micro-Grain Stipple
                         </span>
-                        <h3 className="text-4xl font-extrabold tracking-tighter uppercase text-[var(--gray-900)] leading-tight ink-squash-text">
-                          ARCHIVAL FIBER
-                        </h3>
-                        <p className="text-xs font-mono text-[var(--gray-800)] mt-1">
-                          {paperBlendMode === "lighten"
-                            ? "Specular white fiber tooth crests lifting out of dark ink strokes without darkening background ground."
-                            : "Synthesized organic cotton pulp tooth with microscopic paper crevices and letterpress ink meniscus."}
-                        </p>
+                        <span className="bg-[var(--spectrum-green)] text-white px-1.5 py-0.5 text-[10px] font-bold">
+                          120 FPS / ZERO GPU
+                        </span>
                       </div>
-
-                      {/* Ink Overprint Block with Letterpress Squash */}
-                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs relative ink-squash">
-                        <div className="text-2xl font-black text-[var(--primary-500)] tracking-tight">
-                          TWO-COLOR INK OVERPRINT
-                        </div>
-                        <div className="text-sm font-bold text-[var(--spectrum-red)] mt-0.5">
-                          LITHOGRAPHIC PLATE NO. 08
-                        </div>
-                        <div className="mt-3 flex gap-2">
-                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">
-                            ITTEN BLUE #6EA3BE
-                          </div>
-                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">
-                            VERMILION #E65E59
-                          </div>
+                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
+                        ARCHIVAL FIBER
+                      </h3>
+                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
+                        Dual-frequency hardware-accelerated CSS pattern tile. Zero paint cost on scroll.
+                      </p>
+                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
+                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
+                        <div className="flex gap-2 mt-2">
+                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
                         </div>
                       </div>
+                    </div>
+                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
+                      <span>PAYLOAD: 0 KB (PURE CSS)</span>
+                      <span>PERFORMANCE: MAXIMUM</span>
                     </div>
                   </div>
 
-                  <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--primary-700)] font-bold relative z-0">
-                    <span>MODE: {paperBlendMode.toUpperCase()} &bull; ZERO DIRTY ARTIFACTS</span>
-                    <span>0KB PAYLOAD &bull; INFINITE RESOLUTION</span>
+                  {/* CARD 3: Option 3 Archival Laid Paper & Watermark */}
+                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                    {/* Laid Paper Wire Grid Layer */}
+                    <div
+                      className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"
+                      style={{ opacity: laidOpacity, mixBlendMode: paperBlendMode as any }}
+                    >
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          backgroundImage:
+                            paperBlendMode === "lighten" || paperBlendMode === "screen"
+                              ? `repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) 0.5px, transparent 0.5px, transparent ${laidPitch}px)`
+                              : `repeating-linear-gradient(0deg, rgba(41,37,36,0.3) 0px, rgba(41,37,36,0.3) 0.5px, transparent 0.5px, transparent ${laidPitch}px)`,
+                        }}
+                      />
+                      <div
+                        className="absolute inset-0"
+                        style={{
+                          backgroundImage:
+                            paperBlendMode === "lighten" || paperBlendMode === "screen"
+                              ? `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch}px)`
+                              : `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(41,37,36,0.4) ${chainPitch - 1}px, rgba(41,37,36,0.4) ${chainPitch}px)`,
+                        }}
+                      />
+                      {showWatermark && (
+                        <div
+                          className="absolute bottom-2 right-2 border font-mono font-bold text-[8px] px-1 py-0.5 uppercase tracking-widest pointer-events-none select-none"
+                          style={{
+                            borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
+                            color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
+                          }}
+                        >
+                          ⨁ MOULD-MADE 1954
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="relative z-0">
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--primary-600)] uppercase">
+                          OPTION 3: Archival Laid Paper
+                        </span>
+                        <span className="bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1.5 py-0.5 text-[10px] font-bold">
+                          MOULD-MADE WIRE
+                        </span>
+                      </div>
+                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
+                        ARCHIVAL FIBER
+                      </h3>
+                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
+                        Horizontal wire pitch + vertical watermark chain lines. Archival book quality.
+                      </p>
+                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
+                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
+                        <div className="flex gap-2 mt-2">
+                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
+                      <span>PAYLOAD: 0 KB (CSS GRADIENTS)</span>
+                      <span>HISTORICAL REALISM: HIGHEST</span>
+                    </div>
+                  </div>
+
+                  {/* CARD 4: Option 4 HTML5 Canvas Procedural Cotton Fibers */}
+                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                    {/* HTML5 Canvas Cotton Filaments Layer */}
+                    <CanvasPaperTexture
+                      fiberCount={canvasFiberCount}
+                      fiberLength={canvasFiberLength}
+                      opacity={canvasFiberOpacity}
+                      seed={canvasSeed}
+                      blendMode={paperBlendMode}
+                      className="z-10"
+                    />
+
+                    <div className="relative z-0">
+                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--primary-600)] uppercase">
+                          OPTION 4: Canvas Filaments
+                        </span>
+                        <span className="bg-[var(--spectrum-purple)] text-white px-1.5 py-0.5 text-[10px] font-bold">
+                          COTTON THREADS
+                        </span>
+                      </div>
+                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
+                        ARCHIVAL FIBER
+                      </h3>
+                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
+                        Procedural curved cotton threads and pulp specks. 100% unique non-repeating pattern.
+                      </p>
+                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
+                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
+                        <div className="flex gap-2 mt-2">
+                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
+                      <span>PAYLOAD: 0 KB (CANVAS 2D)</span>
+                      <span>ORGANIC UNIQUENESS: 100%</span>
+                    </div>
                   </div>
                 </div>
-              </div>
+              )}
 
-              {/* ─── READY-TO-USE CODE SNIPPET ─── */}
+              {/* ─── SINGLE OPTION VIEW (When specific Option is selected) ─── */}
+              {selectedPaperOption !== "all" && (
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+                  {/* Digital Flat Screen Reference */}
+                  <div className="p-6 bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none">
+                    <div>
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--text-muted)] uppercase">Reference: Raw Flat Digital Screen</span>
+                        <span className="bg-[var(--surface)] text-[var(--text-muted)] px-1.5 py-0.5 text-[10px]">NO TEXTURE</span>
+                      </div>
+                      <h3 className="text-4xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none">ARCHIVAL FIBER</h3>
+                      <p className="text-xs font-mono text-[var(--gray-700)] mt-1 mb-4">Flat digital pixels without material physical tooth.</p>
+                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs">
+                        <div className="text-xl font-bold text-[var(--primary-500)]">TWO-COLOR INK OVERPRINT</div>
+                        <div className="mt-3 flex gap-2">
+                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">RED #E65E59</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 font-mono text-[10px] text-[var(--text-muted)]">
+                      GROUND: STONE-100 #F5F5F4 (SMOOTH SCREEN)
+                    </div>
+                  </div>
+
+                  {/* Active Selected Option Specimen */}
+                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--primary-500)] relative overflow-hidden flex flex-col justify-between select-none shadow-sm">
+                    {/* Conditional Active Texture Layer */}
+                    {selectedPaperOption === "option1" && (
+                      <svg
+                        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                        style={{ opacity: paperOpacity, mixBlendMode: paperBlendMode as any }}
+                        aria-hidden="true"
+                      >
+                        <filter id="pm-single-opt1" x="0%" y="0%" width="100%" height="100%">
+                          <feTurbulence type="fractalNoise" baseFrequency={paperBaseFrequency} numOctaves={paperOctaves} result="noise" />
+                          <feColorMatrix
+                            type="matrix"
+                            values={
+                              paperBlendMode === "lighten" || paperBlendMode === "screen"
+                                ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
+                                : paperBlendMode === "overlay"
+                                ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
+                                : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.25   0 0 0 1 0"
+                            }
+                          />
+                        </filter>
+                        <rect width="100%" height="100%" filter="url(#pm-single-opt1)" fill="transparent" />
+                      </svg>
+                    )}
+
+                    {selectedPaperOption === "option2" && (
+                      <div
+                        className="absolute inset-0 w-full h-full pointer-events-none z-10"
+                        style={{
+                          opacity: cssStippleOpacity,
+                          mixBlendMode: paperBlendMode as any,
+                          backgroundImage:
+                            paperBlendMode === "lighten" || paperBlendMode === "screen"
+                              ? `radial-gradient(rgba(255,255,255,0.9) 0.6px, transparent 0.6px), radial-gradient(rgba(255,255,255,0.6) 0.4px, transparent 0.4px)`
+                              : `radial-gradient(rgba(41,37,36,0.5) 0.6px, transparent 0.6px), radial-gradient(rgba(120,113,108,0.35) 0.4px, transparent 0.4px)`,
+                          backgroundSize: `${cssStippleDensity}px ${cssStippleDensity}px, ${cssStippleDensity * 1.7}px ${cssStippleDensity * 1.7}px`,
+                          backgroundPosition: `0 0, ${cssStippleDensity * 0.5}px ${cssStippleDensity * 0.5}px`,
+                        }}
+                      />
+                    )}
+
+                    {selectedPaperOption === "option3" && (
+                      <div
+                        className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"
+                        style={{ opacity: laidOpacity, mixBlendMode: paperBlendMode as any }}
+                      >
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            backgroundImage:
+                              paperBlendMode === "lighten" || paperBlendMode === "screen"
+                                ? `repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) 0.5px, transparent 0.5px, transparent ${laidPitch}px)`
+                                : `repeating-linear-gradient(0deg, rgba(41,37,36,0.3) 0px, rgba(41,37,36,0.3) 0.5px, transparent 0.5px, transparent ${laidPitch}px)`,
+                          }}
+                        />
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            backgroundImage:
+                              paperBlendMode === "lighten" || paperBlendMode === "screen"
+                                ? `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch}px)`
+                                : `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(41,37,36,0.4) ${chainPitch - 1}px, rgba(41,37,36,0.4) ${chainPitch}px)`,
+                          }}
+                        />
+                        {showWatermark && (
+                          <div
+                            className="absolute bottom-2 right-2 border font-mono font-bold text-[8px] px-1 py-0.5 uppercase tracking-widest pointer-events-none select-none"
+                            style={{
+                              borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
+                              color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
+                            }}
+                          >
+                            ⨁ MOULD-MADE 1954
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {selectedPaperOption === "option4" && (
+                      <CanvasPaperTexture
+                        fiberCount={canvasFiberCount}
+                        fiberLength={canvasFiberLength}
+                        opacity={canvasFiberOpacity}
+                        seed={canvasSeed}
+                        blendMode={paperBlendMode}
+                        className="z-10"
+                      />
+                    )}
+
+                    <div className="relative z-0">
+                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
+                        <span className="font-bold text-[var(--primary-600)] uppercase">
+                          {selectedPaperOption === "option1" && "Option 1: SVG feTurbulence Ground"}
+                          {selectedPaperOption === "option2" && "Option 2: CSS Micro-Grain Stipple Ground"}
+                          {selectedPaperOption === "option3" && "Option 3: Archival Mould-Made Laid Paper"}
+                          {selectedPaperOption === "option4" && "Option 4: Procedural Canvas Cotton Threads"}
+                        </span>
+                        <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold uppercase">
+                          {paperBlendMode} ACTIVE
+                        </span>
+                      </div>
+                      <h3 className="text-4xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
+                        ARCHIVAL FIBER
+                      </h3>
+                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-4">
+                        Tactile paper tooth with relief ink meniscus and overprint layering.
+                      </p>
+                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
+                        <div className="text-xl font-bold text-[var(--primary-500)]">TWO-COLOR INK OVERPRINT</div>
+                        <div className="mt-3 flex gap-2">
+                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
+                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">RED #E65E59</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--primary-700)] font-bold relative z-0">
+                      <span>GROUND: STONE-100 PHYSICAL TOOTH</span>
+                      <span>0 KB ASSET PAYLOAD</span>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ─── PRODUCTION CODE EXPORT CARD ─── */}
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Option 1 ({paperBlendMode.toUpperCase()} Mode) Production Implementation Code
+                    Production Implementation Code ({selectedPaperOption.toUpperCase()})
                   </span>
                   <button
                     onClick={() => {
-                      const matVal =
-                        paperBlendMode === "lighten" || paperBlendMode === "screen"
-                          ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-                          : paperBlendMode === "overlay"
-                          ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                          : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0";
-                      const snippet = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode} opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="${matVal}" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
-                      copyToClipboard(snippet);
+                      let code = "";
+                      if (selectedPaperOption === "option2") {
+                        code = `.paper-stipple-tile {\n  background-color: var(--paper);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${cssStippleOpacity};\n  background-image: radial-gradient(rgba(255,255,255,0.9) 0.6px, transparent 0.6px), radial-gradient(rgba(255,255,255,0.6) 0.4px, transparent 0.4px);\n  background-size: ${cssStippleDensity}px ${cssStippleDensity}px, ${cssStippleDensity * 1.7}px ${cssStippleDensity * 1.7}px;\n}`;
+                      } else if (selectedPaperOption === "option3") {
+                        code = `.paper-laid-wire {\n  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) 0.5px, transparent 0.5px, transparent ${laidPitch}px),\n                    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch}px);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${laidOpacity};\n}`;
+                      } else if (selectedPaperOption === "option4") {
+                        code = `<CanvasPaperTexture fiberCount={${canvasFiberCount}} fiberLength={${canvasFiberLength}} opacity={${canvasFiberOpacity}} blendMode="${paperBlendMode}" seed={${canvasSeed}} />`;
+                      } else {
+                        code = `<svg class="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode} opacity-[${paperOpacity}]">\n  <filter id="paper-tooth">\n    <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />\n    <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />\n  </filter>\n  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />\n</svg>`;
+                      }
+                      copyToClipboard(code);
                     }}
                     className="px-2 py-1 bg-[var(--gray-800)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] text-white flex items-center gap-1 text-[11px]"
                   >
                     <Copy size={11} />
-                    <span>COPY SVG CODE</span>
+                    <span>COPY CODE SNIPPET</span>
                   </button>
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
-{`<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity}, mixBlendMode: "${paperBlendMode}" }}>
+                  {selectedPaperOption === "option2"
+                    ? `/* Option 2: CSS Micro-Grain Stipple Tile (Zero-GPU Pattern) */
+.paper-stipple-tile {
+  background-color: var(--paper); /* Stone-100 #F5F5F4 */
+  mix-blend-mode: ${paperBlendMode};
+  opacity: ${cssStippleOpacity};
+  background-image: 
+    radial-gradient(rgba(255, 255, 255, 0.9) 0.6px, transparent 0.6px),
+    radial-gradient(rgba(255, 255, 255, 0.6) 0.4px, transparent 0.4px);
+  background-size: ${cssStippleDensity}px ${cssStippleDensity}px, ${cssStippleDensity * 1.7}px ${cssStippleDensity * 1.7}px;
+}`
+                    : selectedPaperOption === "option3"
+                    ? `/* Option 3: Archival Mould-Made Laid Paper (Wire & Chain Lines) */
+.paper-laid-wire {
+  mix-blend-mode: ${paperBlendMode};
+  opacity: ${laidOpacity};
+  background-image:
+    repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) 0.5px, transparent 0.5px, transparent ${laidPitch}px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch - 1}px, rgba(255,255,255,0.85) ${chainPitch}px);
+}`
+                    : selectedPaperOption === "option4"
+                    ? `/* Option 4: HTML5 Canvas Cotton Threads */
+<CanvasPaperTexture
+  fiberCount={${canvasFiberCount}}
+  fiberLength={${canvasFiberLength}}
+  opacity={${canvasFiberOpacity}}
+  blendMode="${paperBlendMode}"
+  seed={${canvasSeed}}
+/>`
+                    : `/* Option 1: Procedural SVG feTurbulence Noise */
+<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity}, mixBlendMode: "${paperBlendMode}" }}>
   <filter id="pm-paper-tooth" x="0%" y="0%" width="100%" height="100%">
     <feTurbulence type="fractalNoise" baseFrequency="${paperBaseFrequency}" numOctaves="${paperOctaves}" result="noise" />
-    <feColorMatrix type="matrix" values="${
-      paperBlendMode === "lighten" || paperBlendMode === "screen"
-        ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
-        : paperBlendMode === "overlay"
-        ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-        : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0 0.33 0 0.25   0 0 0 1 0"
-    }" />
+    <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />
   </filter>
   <rect width="100%" height="100%" filter="url(#pm-paper-tooth)" fill="transparent" />
 </svg>`}
