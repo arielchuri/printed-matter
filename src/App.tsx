@@ -39,19 +39,19 @@ export default function App() {
   const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
   const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
   
-  // Light Channel (Highlights on Dark Ink & Color Fields) - Calibrated to 70% of 0.86% = 0.60%
+  // Light Channel (Highlights on Dark Ink & Color Fields) - Reduced by 50% to 0.30%
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
-  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0060); // 0.60% (70% of 0.86%)
+  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0030); // 0.30% (50% of 0.60%)
   const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.00x
   const [paperLightFloor, setPaperLightFloor] = useState<number>(0.29); // 29% Floor clip to eliminate fog on black ink
   const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-1.0); // -1.00px
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
-  // Dark Channel (Shadows on Light Paper Ground) - Calibrated to 70% of 1.85% = 1.30%
+  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 50% to 0.65%
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0130); // 1.30% (70% of 1.85%)
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0065); // 0.65% (50% of 1.30%)
   const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
@@ -3893,7 +3893,7 @@ export default function App() {
         )}
         </main>
 
-        {/* ─── Global Option 1 Paper Texture Overlay (Dual-Relief Multiply + Screen - Scrolls with Page) ─── */}
+        {/* ─── Global Option 1 Paper Texture Overlay (Dual-Relief Multiply + Screen - Infinite Full-Page Tiling) ─── */}
         <div
           className="absolute inset-0 w-full min-h-full pointer-events-none z-30 transition-opacity duration-150 overflow-hidden"
           style={{ opacity: globalPaperTexture ? 1 : 0 }}
@@ -3907,47 +3907,52 @@ export default function App() {
             }}
             aria-hidden="true"
           >
-            <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence
-                type={paperNoiseType}
-                baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                numOctaves={paperOctaves}
-                result="baseNoise"
-              />
-              <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
-              {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
-              {(() => {
-                const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
-                const darkG = Math.min(1.0, Math.max(0, paperDarkG));
-                const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                const sR = 1 - darkR;
-                const sG = 1 - darkG;
-                const sB = 1 - darkB;
-                return (
-                  <feColorMatrix
-                    in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
-                    type="matrix"
-                    values={
-                      paperDarkInvert
-                        ? `
-                          ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
-                          ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
-                          ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
-                          0 0 0 0 1
-                        `
-                        : `
-                          ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1
-                          ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1
-                          ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1
-                          0 0 0 0 1
-                        `
-                    }
-                    result="darkMultiplyMap"
-                  />
-                );
-              })()}
-            </filter>
-            <rect width="100%" height="100%" filter="url(#pm-global-dark-tooth)" fill="white" />
+            <defs>
+              <filter id="pm-global-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence
+                  type={paperNoiseType}
+                  baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                  numOctaves={paperOctaves}
+                  result="baseNoise"
+                />
+                <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
+                {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
+                {(() => {
+                  const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
+                  const darkG = Math.min(1.0, Math.max(0, paperDarkG));
+                  const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
+                  const sR = 1 - darkR;
+                  const sG = 1 - darkG;
+                  const sB = 1 - darkB;
+                  return (
+                    <feColorMatrix
+                      in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
+                      type="matrix"
+                      values={
+                        paperDarkInvert
+                          ? `
+                            ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
+                            ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
+                            ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
+                            0 0 0 0 1
+                          `
+                          : `
+                            ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} ${(-sR / 3).toFixed(4)} 0 1
+                            ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} ${(-sG / 3).toFixed(4)} 0 1
+                            ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} ${(-sB / 3).toFixed(4)} 0 1
+                            0 0 0 0 1
+                          `
+                      }
+                      result="darkMultiplyMap"
+                    />
+                  );
+                })()}
+              </filter>
+              <pattern id="pm-dark-tile-pattern" width="1024" height="1024" patternUnits="userSpaceOnUse">
+                <rect width="1024" height="1024" filter="url(#pm-global-dark-tooth)" fill="white" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#pm-dark-tile-pattern)" />
           </svg>
 
           {/* Global Light Layer (Screen - Pure monochromatic bleached fiber highlights on dark ink, 0% darkening on paper) */}
@@ -3959,35 +3964,40 @@ export default function App() {
             }}
             aria-hidden="true"
           >
-            <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
-              <feTurbulence
-                type={paperNoiseType}
-                baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
-                numOctaves={paperOctaves}
-                result="baseNoise"
-              />
-              <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
-              {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
-              {(() => {
-                const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
-                const kL = (effScale / 3).toFixed(5);
-                const bL = (-(paperLightFloor * effScale)).toFixed(5);
-                return (
-                  <feColorMatrix
-                    in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
-                    type="matrix"
-                    values={`
-                      ${kL} ${kL} ${kL} 0 ${bL}
-                      ${kL} ${kL} ${kL} 0 ${bL}
-                      ${kL} ${kL} ${kL} 0 ${bL}
-                      0 0 0 0 1
-                    `}
-                    result="lightScreenMap"
-                  />
-                );
-              })()}
-            </filter>
-            <rect width="100%" height="100%" filter="url(#pm-global-light-tooth)" fill="black" />
+            <defs>
+              <filter id="pm-global-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
+                <feTurbulence
+                  type={paperNoiseType}
+                  baseFrequency={`${paperBaseFrequency} ${paperFreqY}`}
+                  numOctaves={paperOctaves}
+                  result="baseNoise"
+                />
+                <feOffset in="baseNoise" dx={paperLightOffsetX} dy={paperLightOffsetY} result="offsetLight" />
+                {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
+                {(() => {
+                  const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
+                  const kL = (effScale / 3).toFixed(5);
+                  const bL = (-(paperLightFloor * effScale)).toFixed(5);
+                  return (
+                    <feColorMatrix
+                      in={paperLightBlur > 0 ? "blurredLight" : "offsetLight"}
+                      type="matrix"
+                      values={`
+                        ${kL} ${kL} ${kL} 0 ${bL}
+                        ${kL} ${kL} ${kL} 0 ${bL}
+                        ${kL} ${kL} ${kL} 0 ${bL}
+                        0 0 0 0 1
+                      `}
+                      result="lightScreenMap"
+                    />
+                  );
+                })()}
+              </filter>
+              <pattern id="pm-light-tile-pattern" width="1024" height="1024" patternUnits="userSpaceOnUse">
+                <rect width="1024" height="1024" filter="url(#pm-global-light-tooth)" fill="black" />
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#pm-light-tile-pattern)" />
           </svg>
         </div>
 
