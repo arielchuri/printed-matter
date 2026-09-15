@@ -428,6 +428,24 @@ h6, .ds-h6 {
   transition: transform 0.15s ease-out;
 }
 
+/* ─── Knockout Plate Misregistration Fringes (Plate Shift Trap Gaps) ─── */
+[data-misregistration="on"] .ko-fringe-yellow {
+  text-shadow: 1.2px 1.0px 0 var(--primary-500), -0.8px -0.6px 0 var(--spectrum-yellow);
+  transition: text-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-fringe-aqua {
+  text-shadow: 1.0px -1.0px 0 var(--spectrum-violet), -0.8px 0.8px 0 var(--spectrum-aqua);
+  transition: text-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-fringe-red {
+  text-shadow: -1.2px 1.0px 0 var(--spectrum-lime), 1.0px -0.8px 0 var(--spectrum-red);
+  transition: text-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-fringe-amber {
+  text-shadow: 1.0px 1.0px 0 var(--gray-900), -1.0px -0.8px 0 var(--spectrum-amber);
+  transition: text-shadow 0.15s ease-out;
+}
+
 /* ─── Component Baseline Rules ─────────────────────────────── */
 
 /* 1. Buttons: No bevel, no shadow, sharp corners. Pressed flashes green */
