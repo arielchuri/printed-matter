@@ -327,14 +327,6 @@ h6, .ds-h6 {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.22), inset 0 0 14px rgba(0, 0, 0, 0.08);
 }
 
-.ink-squash-text {
-  text-shadow: 0 0 0.8px currentColor, 0 0 2px rgba(0, 0, 0, 0.28), 0 0 4px rgba(0, 0, 0, 0.12);
-}
-
-.ink-squash-text-subtle {
-  text-shadow: 0 0 0.5px currentColor, 0 0 1.5px rgba(0, 0, 0, 0.18);
-}
-
 /* Global Ink Squash Disable Override */
 [data-ink-squash="off"] .ink-squash,
 [data-ink-squash="off"] .ink-squash-deep,
@@ -349,13 +341,6 @@ h6, .ds-h6 {
 .no-ink-squash .ink-squash-color,
 .no-ink-squash .ink-squash-plate {
   box-shadow: none !important;
-}
-
-[data-ink-squash="off"] .ink-squash-text,
-[data-ink-squash="off"] .ink-squash-text-subtle,
-.no-ink-squash .ink-squash-text,
-.no-ink-squash .ink-squash-text-subtle {
-  text-shadow: none !important;
 }
 
 /* Black Ink Squash Specific Disable Override */
@@ -434,21 +419,21 @@ h6, .ds-h6 {
   transition: transform 0.15s ease-out;
 }
 
-/* ─── Knockout Plate Misregistration Fringes (Plate Shift Trap Gaps) ─── */
+/* ─── Knockout Plate Misregistration Fringes: Overprint on One Edge + Exposed Paper Gap on Opposing Edge ─── */
 [data-misregistration="on"] .ko-fringe-yellow {
-  text-shadow: 1.2px 1.0px 0 var(--primary-500), -0.8px -0.6px 0 var(--spectrum-yellow);
+  text-shadow: 1.2px 1.0px 0 #63891E, -1.0px -0.8px 0 var(--white);
   transition: text-shadow 0.15s ease-out;
 }
 [data-misregistration="on"] .ko-fringe-aqua {
-  text-shadow: 1.0px -1.0px 0 var(--spectrum-violet), -0.8px 0.8px 0 var(--spectrum-aqua);
+  text-shadow: 1.2px -1.0px 0 #4A5273, -1.0px 0.8px 0 var(--white);
   transition: text-shadow 0.15s ease-out;
 }
 [data-misregistration="on"] .ko-fringe-red {
-  text-shadow: -1.2px 1.0px 0 var(--spectrum-lime), 1.0px -0.8px 0 var(--spectrum-red);
+  text-shadow: -1.2px 1.0px 0 #7C511B, 1.0px -0.8px 0 var(--white);
   transition: text-shadow 0.15s ease-out;
 }
 [data-misregistration="on"] .ko-fringe-amber {
-  text-shadow: 1.0px 1.0px 0 var(--gray-900), -1.0px -0.8px 0 var(--spectrum-amber);
+  text-shadow: 1.2px 1.0px 0 #0F0D0C, -1.0px -0.8px 0 var(--white);
   transition: text-shadow 0.15s ease-out;
 }
 
