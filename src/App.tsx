@@ -12,29 +12,7 @@ import {
   FullerMap,
 } from "./components";
 import { COLOR_SWATCHES, getContrastRatio, getWCAGGrade } from "../tokens/tokens";
-import { Layers, Type, Sliders, MapPin, Check, Copy, Monitor, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet } from "lucide-react";
-
-export type BreakpointKey = "fluid" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl";
-
-interface BreakpointConfig {
-  id: BreakpointKey;
-  label: string;
-  width: number | null;
-  displayStr: string;
-  desc: string;
-  isNew?: boolean;
-}
-
-const BREAKPOINTS: BreakpointConfig[] = [
-  { id: "fluid", label: "Fluid (100%)", width: null, displayStr: "100%", desc: "Follows window width" },
-  { id: "sm", label: "SM", width: 640, displayStr: "640px", desc: "Mobile Landscape" },
-  { id: "md", label: "MD", width: 768, displayStr: "768px", desc: "Tablet Portrait" },
-  { id: "lg", label: "LG", width: 1024, displayStr: "1024px", desc: "Laptop Screen" },
-  { id: "xl", label: "XL", width: 1280, displayStr: "1280px", desc: "Standard Desktop" },
-  { id: "2xl", label: "2XL", width: 1536, displayStr: "1536px", desc: "Large Desktop" },
-  { id: "3xl", label: "3XL", width: 1920, displayStr: "1920px", desc: "FHD 1080p Desktop (New)", isNew: true },
-  { id: "4xl", label: "4XL", width: 2560, displayStr: "2560px", desc: "2K/4K/Ultrawide (New)", isNew: true },
-];
+import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet } from "lucide-react";
 
 export default function App() {
   const [activeTab, setActiveTab] = useState<string>("tokens");
@@ -46,7 +24,6 @@ export default function App() {
   const [selectedMeasure, setSelectedMeasure] = useState<"narrow" | "optimal" | "wide" | "unconstrained">("optimal");
   const [columnMaxWidth, setColumnMaxWidth] = useState<"sm" | "md" | "lg" | "none">("none");
   const [columnAlign, setColumnAlign] = useState<"left" | "center" | "right">("center");
-  const [simulatedBreakpoint, setSimulatedBreakpoint] = useState<BreakpointKey>("fluid");
   const [themeMode, setThemeMode] = useState<"light" | "dark" | "stone">("light");
   const [patternSpotColor, setPatternSpotColor] = useState<string>("var(--primary-500)");
   const [misregisterX, setMisregisterX] = useState<number>(1.5);
@@ -74,10 +51,6 @@ export default function App() {
       document.documentElement.setAttribute("data-theme", "light");
     }
   }, [themeMode]);
-
-  // Compute effective width in px
-  const activeBpObj = BREAKPOINTS.find((b) => b.id === simulatedBreakpoint)!;
-  const effectiveWidthPx = activeBpObj.width !== null ? activeBpObj.width : windowWidth;
 
   const sampleTree = {
     id: "root",
@@ -177,112 +150,8 @@ export default function App() {
               <span>DARK</span>
             </button>
           </div>
-
-          <span className="text-xs font-mono bg-black/40 text-white px-2 py-1 font-bold border border-white/20">
-            <span className="sm:hidden">VIEW: &lt;640px</span>
-            <span className="hidden sm:inline md:hidden">VIEW: SM (640px)</span>
-            <span className="hidden md:inline lg:hidden">VIEW: MD (768px)</span>
-            <span className="hidden lg:inline xl:hidden">VIEW: LG (1024px)</span>
-            <span className="hidden xl:inline 2xl:hidden">VIEW: XL (1280px)</span>
-            <span className="hidden 2xl:inline 3xl:hidden">VIEW: 2XL (1536px)</span>
-            <span className="hidden 3xl:inline 4xl:hidden">VIEW: 3XL (1920px)</span>
-            <span className="hidden 4xl:inline">VIEW: 4XL (2560px)</span>
-            <span className="text-white/60 ml-1.5">({windowWidth}px)</span>
-          </span>
-          <span className="text-xs font-mono bg-[var(--white)] text-[var(--text)] px-2 py-1 font-bold border border-[var(--border-gray)]">
-            {themeMode === "dark"
-              ? "STONE-800 #292524"
-              : themeMode === "stone"
-              ? "STONE-400 #A8A29E"
-              : "STONE-100 #F5F5F4"}
-          </span>
         </div>
       </header>
-
-      {/* ─── Responsive Breakpoint Simulator Bar (Supports 3XL & 4XL) ─── */}
-      <div className="bg-[var(--gray-900)] text-[var(--gray-50)] px-6 py-2 border-b border-[var(--border-gray)] flex flex-wrap items-center justify-between gap-3 text-xs font-mono z-20">
-        <div className="flex items-center gap-2 flex-wrap">
-          <span className="flex items-center gap-1.5 font-bold uppercase text-[var(--spectrum-yellow)] tracking-wider mr-1">
-            <Monitor size={14} />
-            Breakpoint Stage:
-          </span>
-
-          <div className="flex flex-wrap gap-1">
-            {BREAKPOINTS.map((bp) => {
-              const isActive = simulatedBreakpoint === bp.id;
-              return (
-                <button
-                  key={bp.id}
-                  onClick={() => {
-                    setSimulatedBreakpoint(bp.id);
-                    if (bp.id === "3xl" && windowWidth < 1920) {
-                      setViewportScale(Math.min(100, Math.floor(((windowWidth - 48) / 1920) * 100)));
-                    } else if (bp.id === "4xl" && windowWidth < 2560) {
-                      setViewportScale(Math.min(100, Math.floor(((windowWidth - 48) / 2560) * 100)));
-                    } else if (bp.id === "fluid") {
-                      setViewportScale(100);
-                    }
-                  }}
-                  className={`px-2.5 py-1 text-xs font-mono font-bold transition-colors flex items-center gap-1 ${
-                    isActive
-                      ? "bg-[var(--primary-500)] text-white border border-[var(--spectrum-aqua)]"
-                      : "bg-[var(--gray-800)] text-[var(--gray-200)] border border-[var(--gray-700)] hover:bg-[var(--gray-700)] hover:text-white"
-                  }`}
-                  style={{ borderRadius: 0 }}
-                  title={`${bp.desc} (${bp.displayStr})`}
-                >
-                  <span>{bp.label}</span>
-                  {bp.isNew && (
-                    <span className="text-[9px] bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1 font-bold">
-                      NEW
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        {/* Width readout & Zoom / Scale toggle for wide previewing */}
-        <div className="flex items-center gap-3">
-          {simulatedBreakpoint !== "fluid" && (
-            <div className="flex items-center gap-2 bg-[var(--gray-800)] px-2 py-1 border border-[var(--gray-700)]">
-              <span className="text-[var(--gray-300)]">SCALE:</span>
-              {[100, 75, 50].map((s) => (
-                <button
-                  key={s}
-                  onClick={() => setViewportScale(s)}
-                  className={`px-1.5 py-0.5 text-[10px] font-bold ${
-                    viewportScale === s ? "bg-[var(--primary-500)] text-white" : "text-[var(--gray-400)] hover:text-white"
-                  }`}
-                >
-                  {s}%
-                </button>
-              ))}
-              <button
-                onClick={() => {
-                  const targetW = activeBpObj.width || windowWidth;
-                  const fitScale = Math.min(100, Math.floor(((windowWidth - 64) / targetW) * 100));
-                  setViewportScale(fitScale);
-                }}
-                className="px-1.5 py-0.5 text-[10px] font-bold text-[var(--spectrum-yellow)] hover:underline"
-                title="Fit stage to screen"
-              >
-                FIT
-              </button>
-            </div>
-          )}
-
-          <span className="text-[var(--gray-300)] bg-[var(--gray-800)] px-2 py-1 border border-[var(--gray-700)]">
-            WIDTH: <strong className="text-white">{effectiveWidthPx}px</strong>
-            {simulatedBreakpoint !== "fluid" && (
-              <span className="text-[var(--spectrum-yellow)] ml-1.5">
-                [{simulatedBreakpoint.toUpperCase()}: {effectiveWidthPx >= 2560 ? "4XL ACTIVE" : effectiveWidthPx >= 1920 ? "3XL ACTIVE" : "STANDARD"}]
-              </span>
-            )}
-          </span>
-        </div>
-      </div>
 
       {/* ─── Sub-Navigation Tabs ────────────────────────────────── */}
       <div className="bg-[var(--gray-100)] border-b border-[var(--border-gray)] px-6">
@@ -299,34 +168,8 @@ export default function App() {
         />
       </div>
 
-      {/* ─── Main Content Container (with Breakpoint Simulator Stage) ─── */}
-      <div className="flex-1 w-full overflow-x-auto bg-[var(--surface-muted)]/50 p-0 sm:p-4 md:p-6 flex justify-center">
-        <div
-          style={{
-            width: simulatedBreakpoint === "fluid" ? "100%" : `${activeBpObj.width}px`,
-            maxWidth: simulatedBreakpoint === "fluid" ? "100%" : `${activeBpObj.width}px`,
-            transform: simulatedBreakpoint !== "fluid" && viewportScale !== 100 ? `scale(${viewportScale / 100})` : "none",
-            transformOrigin: "top center",
-            transition: "width 0.2s ease, transform 0.2s ease",
-          }}
-          className={
-            simulatedBreakpoint !== "fluid"
-              ? "bg-[var(--white)] border-2 border-[var(--primary-500)] shadow-xl my-2 shrink-0 overflow-hidden"
-              : "w-full"
-          }
-        >
-          {simulatedBreakpoint !== "fluid" && (
-            <div className="bg-[var(--primary-500)] text-white px-4 py-1.5 font-mono text-xs flex items-center justify-between border-b border-[var(--border-gray)]">
-              <span className="font-bold tracking-wider">
-                SIMULATED VIEWPORT STAGE: {activeBpObj.label} ({activeBpObj.displayStr}) — {activeBpObj.desc}
-              </span>
-              <span className="text-[var(--spectrum-yellow)] font-bold">
-                ZOOM: {viewportScale}% | ACTUAL WIDTH: {activeBpObj.width}px
-              </span>
-            </div>
-          )}
-
-          <main className="w-full max-w-none 3xl:max-w-3xl 4xl:max-w-4xl mx-auto px-6 3xl:px-12 4xl:px-16 py-8">
+      {/* ─── Main Content ─── */}
+      <main className="flex-1 w-full max-w-none 3xl:max-w-3xl 4xl:max-w-4xl mx-auto px-6 3xl:px-12 4xl:px-16 py-8">
         {/* =========================================================
             TAB 1: DESIGN TOKENS & SPECTRUM
             ========================================================= */}
@@ -3161,15 +3004,13 @@ export default function App() {
           </div>
         )}
         </main>
-      </div>
-    </div>
 
-    {copiedToken && (
-      <div className="fixed bottom-4 right-4 bg-[var(--gray-900)] text-white text-xs font-mono px-3 py-1.5 border border-[var(--spectrum-yellow)] shadow-lg z-50 flex items-center gap-2">
-        <Check size={12} className="text-[var(--spectrum-yellow)]" />
-        <span>COPIED: {copiedToken}</span>
+        {copiedToken && (
+          <div className="fixed bottom-4 right-4 bg-[var(--gray-900)] text-white text-xs font-mono px-3 py-1.5 border border-[var(--spectrum-yellow)] shadow-lg z-50 flex items-center gap-2">
+            <Check size={12} className="text-[var(--spectrum-yellow)]" />
+            <span>COPIED: {copiedToken}</span>
+          </div>
+        )}
       </div>
-    )}
-  </div>
-  );
-}
+    );
+  }
