@@ -64,10 +64,10 @@ export default function App() {
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
-  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 25% to 0.39%
+  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 30% to 0.27%
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0039); // 0.39% (reduced 25% from 0.52%)
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0027); // 0.27% (reduced 30% from 0.39%)
   const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
