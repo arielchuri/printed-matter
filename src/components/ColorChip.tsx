@@ -50,7 +50,7 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
       style={{ borderRadius: 0 }}
     >
       <div
-        className="h-20 w-full flex items-end justify-between p-2 relative"
+        className="h-20 w-full flex items-end justify-between p-2 relative ink-squash"
         style={{ backgroundColor: hexShown }}
       >
         <span

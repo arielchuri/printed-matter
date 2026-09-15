@@ -51,7 +51,7 @@ export const ArchivalPrintSpecimen: React.FC<ArchivalPrintSpecimenProps> = ({
           </div>
 
           {/* Section 1: Field of Solid Black & Step Wedge */}
-          <div className="p-2.5 bg-[var(--gray-900)] text-white font-mono text-[10px] border border-[var(--gray-900)]">
+          <div className="p-2.5 bg-[var(--gray-900)] text-white font-mono text-[10px] border border-[var(--gray-900)] ink-squash-deep">
             <div className="flex justify-between items-center mb-1">
               <span className="font-bold text-[var(--spectrum-yellow)]">100% BLACK COVERAGE</span>
               <span className="text-[8px] text-[var(--gray-400)]">CARBON PIGMENT</span>
@@ -76,10 +76,10 @@ export const ArchivalPrintSpecimen: React.FC<ArchivalPrintSpecimenProps> = ({
             <div className="p-2 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-[9px]">
               <div className="font-bold text-[var(--gray-900)] mb-1">COLOR FIELDS</div>
               <div className="grid grid-cols-2 gap-1 text-[8px] text-white font-bold text-center">
-                <div className="h-5 bg-[var(--primary-500)] flex items-center justify-center">#6EA3BE</div>
-                <div className="h-5 bg-[var(--spectrum-red)] flex items-center justify-center">#E65E59</div>
-                <div className="h-5 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] flex items-center justify-center">#FACC15</div>
-                <div className="h-5 bg-[var(--spectrum-green)] flex items-center justify-center">#047857</div>
+                <div className="h-5 bg-[var(--primary-500)] flex items-center justify-center ink-squash">#6EA3BE</div>
+                <div className="h-5 bg-[var(--spectrum-red)] flex items-center justify-center ink-squash">#E65E59</div>
+                <div className="h-5 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] flex items-center justify-center ink-squash">#FACC15</div>
+                <div className="h-5 bg-[var(--spectrum-green)] flex items-center justify-center ink-squash">#047857</div>
               </div>
             </div>
 
@@ -168,7 +168,7 @@ export const ArchivalPrintSpecimen: React.FC<ArchivalPrintSpecimenProps> = ({
         {/* Row 1: Field of Solid Black & Full Color Spectrum */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Field of Black (5 cols) */}
-          <div className="lg:col-span-5 p-5 bg-[var(--gray-900)] text-white font-mono flex flex-col justify-between border border-[var(--gray-900)] shadow-inner">
+          <div className="lg:col-span-5 p-5 bg-[var(--gray-900)] text-white font-mono flex flex-col justify-between border border-[var(--gray-900)] shadow-inner ink-squash-deep">
             <div>
               <div className="flex justify-between items-center text-xs pb-2 border-b border-white/20 mb-3">
                 <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
@@ -213,19 +213,19 @@ export const ArchivalPrintSpecimen: React.FC<ArchivalPrintSpecimenProps> = ({
                 <span className="text-[var(--text-muted)] text-[10px]">SOLID ARCHIVAL PIGMENTS</span>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-white font-mono text-xs font-bold text-center">
-                <div className="p-3 bg-[var(--primary-500)] flex flex-col justify-center items-center shadow-sm">
+                <div className="p-3 bg-[var(--primary-500)] flex flex-col justify-center items-center shadow-sm ink-squash">
                   <span className="text-sm">ITTEN BLUE</span>
                   <span className="text-[10px] opacity-80">#6EA3BE</span>
                 </div>
-                <div className="p-3 bg-[var(--spectrum-red)] flex flex-col justify-center items-center shadow-sm">
+                <div className="p-3 bg-[var(--spectrum-red)] flex flex-col justify-center items-center shadow-sm ink-squash">
                   <span className="text-sm">CRIMSON</span>
                   <span className="text-[10px] opacity-80">#E65E59</span>
                 </div>
-                <div className="p-3 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] flex flex-col justify-center items-center shadow-sm">
+                <div className="p-3 bg-[var(--spectrum-yellow)] text-[var(--gray-900)] flex flex-col justify-center items-center shadow-sm ink-squash">
                   <span className="text-sm">YELLOW</span>
                   <span className="text-[10px] opacity-80">#FACC15</span>
                 </div>
-                <div className="p-3 bg-[var(--spectrum-green)] flex flex-col justify-center items-center shadow-sm">
+                <div className="p-3 bg-[var(--spectrum-green)] flex flex-col justify-center items-center shadow-sm ink-squash">
                   <span className="text-sm">EMERALD</span>
                   <span className="text-[10px] opacity-80">#047857</span>
                 </div>
