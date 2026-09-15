@@ -47,13 +47,17 @@ export default function App() {
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-0.5); // -0.5px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.0); // 0.0px
 
-  // Dark Channel (Shadows on Light Paper Ground)
+  // Dark Channel (Shadows on Light Paper Ground - Deep Warm Shade of Paper Color)
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.08); // 8%
   const [paperDarkGain, setPaperDarkGain] = useState<number>(1.0); // 1.0x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(0.5); // +0.5px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(0.5); // +0.5px
   const [paperDarkBlur, setPaperDarkBlur] = useState<number>(0.0); // 0.0px
+  const [paperDarkR, setPaperDarkR] = useState<number>(0.38); // Deep warm paper red component
+  const [paperDarkG, setPaperDarkG] = useState<number>(0.32); // Deep warm paper green component
+  const [paperDarkB, setPaperDarkB] = useState<number>(0.24); // Deep warm paper blue component
+  const [paperDarkWarmth, setPaperDarkWarmth] = useState<number>(1.2); // Warmth multiplier (1.0 - 1.5)
 
   // Offset Symmetry & Global Overlay
   const [paperSymmetricOffset, setPaperSymmetricOffset] = useState<boolean>(true);
@@ -3369,11 +3373,11 @@ export default function App() {
 
                     <div className="flex items-center justify-between text-[10px] pt-1 border-t border-[var(--border-gray)]/20 text-[var(--text-muted)]">
                       <span>Targets: Solid Blacks &amp; Inks</span>
-                      <span>Color: Bleached (#FFF)</span>
+                      <span>Color: Bleached Fiber (#FFFFFF)</span>
                     </div>
                   </div>
 
-                  {/* Column 3: Dark Shadow Channel (Stone Shadows on Paper) */}
+                  {/* Column 3: Dark Shadow Channel (Deep Warm Shade of Paper Ground) */}
                   <div className={`p-3 bg-[var(--surface)] border space-y-3 transition-opacity ${paperDarkEnabled ? "border-[var(--gray-700)]" : "border-[var(--border-gray)] opacity-60"}`}>
                     <div className="flex justify-between items-center pb-1 border-b border-[var(--border-gray)]/30">
                       <div className="flex items-center gap-1.5">
@@ -3407,6 +3411,66 @@ export default function App() {
                         onChange={(e) => setPaperDarkOpacity(parseFloat(e.target.value))}
                         className="w-full accent-[var(--gray-800)] cursor-pointer"
                       />
+                    </div>
+
+                    {/* Shadow Tone Presets & Warmth */}
+                    <div className="p-2 bg-[var(--white)] border border-[var(--border-gray)]/60 space-y-1.5 text-[10px]">
+                      <div className="flex items-center justify-between">
+                        <span className="font-bold text-[var(--primary-700)]">SHADOW PAPER TONE:</span>
+                        <div className="flex items-center gap-1">
+                          <span
+                            className="inline-block w-3 h-3 border border-black/20"
+                            style={{
+                              backgroundColor: `rgb(${Math.round(Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))) * 255)}, ${Math.round(Math.min(1.0, Math.max(0, paperDarkG)) * 255)}, ${Math.round(Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))) * 255)})`,
+                            }}
+                          />
+                          <span className="font-mono text-[9px] text-[var(--text-muted)]">
+                            {`#${Math.round(Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))) * 255).toString(16).padStart(2, '0')}${Math.round(Math.min(1.0, Math.max(0, paperDarkG)) * 255).toString(16).padStart(2, '0')}${Math.round(Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))) * 255).toString(16).padStart(2, '0')}`.toUpperCase()}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 flex-wrap">
+                        {[
+                          { label: "Warm Paper Ground", r: 0.38, g: 0.32, b: 0.24, w: 1.2 },
+                          { label: "Stone 600", r: 0.34, g: 0.32, b: 0.30, w: 1.0 },
+                          { label: "Raw Umber", r: 0.44, g: 0.34, b: 0.20, w: 1.3 },
+                          { label: "Sepia", r: 0.30, g: 0.22, b: 0.16, w: 1.2 },
+                        ].map((t) => (
+                          <button
+                            key={t.label}
+                            onClick={() => {
+                              setPaperDarkR(t.r);
+                              setPaperDarkG(t.g);
+                              setPaperDarkB(t.b);
+                              setPaperDarkWarmth(t.w);
+                            }}
+                            className={`px-1.5 py-0.5 text-[9px] font-bold border transition-colors ${
+                              paperDarkR === t.r && paperDarkG === t.g && paperDarkWarmth === t.w
+                                ? "bg-[var(--primary-600)] text-white border-[var(--primary-700)]"
+                                : "bg-[var(--surface)] text-[var(--text)] border-[var(--border-gray)] hover:bg-[var(--border-gray)]/20"
+                            }`}
+                          >
+                            {t.label}
+                          </button>
+                        ))}
+                      </div>
+
+                      <div className="pt-1">
+                        <div className="flex justify-between text-[9px] mb-0.5">
+                          <span className="font-bold">Warmth / Amber Bias:</span>
+                          <span className="text-[var(--primary-600)] font-bold">{paperDarkWarmth.toFixed(1)}×</span>
+                        </div>
+                        <input
+                          type="range"
+                          min="0.6"
+                          max="1.8"
+                          step="0.05"
+                          value={paperDarkWarmth}
+                          onChange={(e) => setPaperDarkWarmth(parseFloat(e.target.value))}
+                          className="w-full accent-[var(--primary-500)] cursor-pointer"
+                        />
+                      </div>
                     </div>
 
                     <div className="grid grid-cols-2 gap-2 text-[10px]">
@@ -3481,7 +3545,7 @@ export default function App() {
                         />
                         <span>Symmetric Offset Link</span>
                       </label>
-                      <span>Color: Warm Carbon</span>
+                      <span>Tone: Deeper Paper Ground</span>
                     </div>
                   </div>
                 </div>
@@ -3511,15 +3575,15 @@ export default function App() {
                         result="baseNoise"
                       />
 
-                      {/* 2. Dark Shadow Texture (Shadows light paper ground) */}
+                      {/* 2. Dark Shadow Texture (Deep warm shade of paper ground) */}
                       <feOffset in="baseNoise" dx={paperDarkOffsetX} dy={paperDarkOffsetY} result="offsetDark" />
                       {paperDarkBlur > 0 && <feGaussianBlur in="offsetDark" stdDeviation={paperDarkBlur} result="blurredDark" />}
                       <feColorMatrix
                         in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                         type="matrix"
-                        values={`0 0 0 0 0.12
-                                0 0 0 0 0.10
-                                0 0 0 0 0.08
+                        values={`0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
+                                0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}
+                                0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
                                 ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}`}
                         result="darkShadow"
                       />
@@ -3552,11 +3616,14 @@ export default function App() {
               <div className="p-4 bg-[var(--gray-900)] text-[var(--gray-100)] font-mono text-xs border border-[var(--border-gray)] flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <span className="font-bold text-[var(--spectrum-yellow)] uppercase">
-                    Production Implementation Code (SVG feTurbulence Dual-Relief with Independent Light/Dark Channels)
+                    Production Implementation Code (SVG feTurbulence Dual-Relief with Warm Deep Paper Shadow)
                   </span>
                   <button
                     onClick={() => {
-                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Independent Light & Dark Controls) */
+                      const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3);
+                      const darkG = Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3);
+                      const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3);
+                      const code = `/* Option 1: SVG feTurbulence Dual-Relief Ground (Deep Warm Paper Shadow & Light Highlight) */
 <svg className="fixed inset-0 w-full h-full pointer-events-none">
   <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
     <!-- 1. Single Base Noise Generator (Identical Seed) -->
@@ -3566,12 +3633,12 @@ export default function App() {
       numOctaves="${paperOctaves}"
       result="baseNoise"
     />
-    <!-- 2. Dark Shadow Component (Shadows Light Paper Ground) -->
+    <!-- 2. Dark Shadow Component (Deep Warm Shade of Paper Color) -->
     <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
     ${paperDarkBlur > 0 ? `<feGaussianBlur in="offsetDark" stdDeviation="${paperDarkBlur.toFixed(1)}" result="blurredDark" />\n    ` : ""}<feColorMatrix
       in="${paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}"
       type="matrix"
-      values="0 0 0 0 0.12   0 0 0 0 0.10   0 0 0 0 0.08   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}"
+      values="0 0 0 0 ${darkR}   0 0 0 0 ${darkG}   0 0 0 0 ${darkB}   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}"
       result="darkShadow"
     />
     <!-- 3. Light Highlight Component (Highlights Dark Ink & Swatches) -->
@@ -3603,7 +3670,7 @@ export default function App() {
   <filter id="paper-dual-tooth" x="-20%" y="-20%" width="140%" height="140%">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="baseNoise" />
     <feOffset in="baseNoise" dx="${paperDarkOffsetX.toFixed(1)}" dy="${paperDarkOffsetY.toFixed(1)}" result="offsetDark" />
-    <feColorMatrix in="offsetDark" type="matrix" values="0 0 0 0 0.12   0 0 0 0 0.10   0 0 0 0 0.08   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}" result="darkShadow" />
+    <feColorMatrix in="offsetDark" type="matrix" values="0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}   0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}   0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}   ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}" result="darkShadow" />
     <feOffset in="baseNoise" dx="${paperLightOffsetX.toFixed(1)}" dy="${paperLightOffsetY.toFixed(1)}" result="offsetLight" />
     <feColorMatrix in="offsetLight" type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} ${(paperLightOpacity * paperLightGain * 0.33).toFixed(4)} 0 ${(paperLightOpacity * paperLightGain * 0.5).toFixed(4)}" result="lightHighlight" />
     <feMerge>
@@ -3637,9 +3704,9 @@ export default function App() {
               <feColorMatrix
                 in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
                 type="matrix"
-                values={`0 0 0 0 0.12
-                        0 0 0 0 0.10
-                        0 0 0 0 0.08
+                values={`0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
+                        0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkG)).toFixed(3)}
+                        0 0 0 0 ${Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2))).toFixed(3)}
                         ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} ${(paperDarkOpacity * paperDarkGain * 0.33).toFixed(4)} 0 ${(paperDarkOpacity * paperDarkGain * 0.5).toFixed(4)}`}
                 result="darkShadow"
               />
