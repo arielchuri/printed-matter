@@ -11,6 +11,7 @@ import {
   ColorChip,
   FullerMap,
   CanvasPaperTexture,
+  ArchivalPrintSpecimen,
 } from "./components";
 import { COLOR_SWATCHES, getContrastRatio, getWCAGGrade } from "../tokens/tokens";
 import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw } from "lucide-react";
@@ -3517,8 +3518,15 @@ export default function App() {
               {/* ─── 4-OPTION COMPARATIVE MATRIX (When "All" is selected) ─── */}
               {selectedPaperOption === "all" && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                  {/* CARD 1: Option 1 SVG Turbulence */}
-                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                  {/* CARD 1: Option 1 SVG feTurbulence */}
+                  <ArchivalPrintSpecimen
+                    title="OPT 1: SVG feTurbulence"
+                    badgeText={paperBaseFrequency >= 0.2 ? "ULTRA-HIGH FREQ" : "VECTOR NOISE"}
+                    subtitle={`Procedural fractal noise (${paperBaseFrequency.toFixed(3)} fx, ${paperOctaves} oct). Infinite DPI.`}
+                    mode="compact"
+                    footerLeft={`FREQ: ${paperBaseFrequency.toFixed(3)} × ${paperFreqY.toFixed(3)}`}
+                    footerRight="0 KB PAYLOAD (SVG INLINE)"
+                  >
                     {/* SVG feTurbulence Texture Layer */}
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -3539,44 +3547,23 @@ export default function App() {
                               ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
                               : paperBlendMode === "overlay"
                               ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                              : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.25   0 0 0 1 0"
+                              : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.33 0 0 0.25   0 0 0 1 0"
                           }
                         />
                       </filter>
                       <rect width="100%" height="100%" filter="url(#pm-matrix-opt1)" fill="transparent" />
                     </svg>
+                  </ArchivalPrintSpecimen>
 
-                    <div className="relative z-0">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--primary-600)] uppercase">
-                          OPTION 1: SVG feTurbulence
-                        </span>
-                        <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold">
-                          {paperBaseFrequency >= 0.2 ? "ULTRA-HIGH FREQ NOISE" : "VECTOR NOISE"}
-                        </span>
-                      </div>
-                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
-                        ARCHIVAL FIBER
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
-                        Procedural fractal noise ({paperBaseFrequency.toFixed(3)} fx, {paperOctaves} oct). Infinite resolution.
-                      </p>
-                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
-                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
-                        <div className="flex gap-2 mt-2">
-                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
-                      <span>PAYLOAD: 0 KB (SVG INLINE)</span>
-                      <span>FREQ: {paperBaseFrequency.toFixed(3)} / {paperFreqY.toFixed(3)}</span>
-                    </div>
-                  </div>
-
-                  {/* CARD 2: Option 2 CSS Micro-Grain Stipple Tile */}
-                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                  {/* CARD 2: Option 2 CSS Stochastic Sand-Grain */}
+                  <ArchivalPrintSpecimen
+                    title="OPT 2: CSS Stochastic Grain"
+                    badgeText="APERIODIC COPRIME"
+                    subtitle={`Pure CSS multi-harmonic sand grain (${cssStippleDensity}px base scale). Zero paint cost.`}
+                    mode="compact"
+                    footerLeft={`SCALE: ${cssStippleDensity}px | RADIUS: ${cssDotRadius.toFixed(1)}px`}
+                    footerRight="0 KB PAYLOAD (PURE CSS)"
+                  >
                     {/* CSS Stipple Pattern Layer */}
                     <div
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -3585,44 +3572,28 @@ export default function App() {
                         mixBlendMode: paperBlendMode as any,
                         backgroundImage:
                           paperBlendMode === "lighten" || paperBlendMode === "screen"
-                            ? `radial-gradient(rgba(255,255,255,0.9) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `, radial-gradient(rgba(255,255,255,0.55) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""}`
-                            : `radial-gradient(rgba(41,37,36,0.5) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `, radial-gradient(rgba(120,113,108,0.35) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""}`,
-                        backgroundSize: `${cssStippleDensity}px ${cssStippleDensity}px${cssSecondaryHarmonic ? `, ${Math.round(cssStippleDensity * 1.7)}px ${Math.round(cssStippleDensity * 1.7)}px` : ""}`,
-                        backgroundPosition: `0 0${cssSecondaryHarmonic ? `, ${cssStippleDensity * 0.5}px ${cssStippleDensity * 0.5}px` : ""}`,
+                            ? `radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
+                               radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
+                               radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
+                               radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`
+                            : `radial-gradient(circle at 22% 28%, rgba(41,37,36,0.40) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
+                               radial-gradient(circle at 74% 68%, rgba(78,70,68,0.28) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
+                               radial-gradient(circle at 42% 82%, rgba(120,113,108,0.22) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
+                               radial-gradient(circle at 86% 18%, rgba(168,162,158,0.16) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`,
+                        backgroundSize: `${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px`,
                       }}
                     />
+                  </ArchivalPrintSpecimen>
 
-                    <div className="relative z-0">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--primary-600)] uppercase">
-                          OPTION 2: CSS Micro-Grain Stipple
-                        </span>
-                        <span className="bg-[var(--spectrum-green)] text-white px-1.5 py-0.5 text-[10px] font-bold">
-                          {cssStippleDensity <= 3 ? "ULTRA-FINE 120 FPS" : "120 FPS / ZERO GPU"}
-                        </span>
-                      </div>
-                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
-                        ARCHIVAL FIBER
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
-                        Hardware-accelerated CSS pattern tile ({cssStippleDensity}px pitch, r={cssDotRadius}px). Zero paint overhead.
-                      </p>
-                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
-                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
-                        <div className="flex gap-2 mt-2">
-                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
-                      <span>PAYLOAD: 0 KB (PURE CSS)</span>
-                      <span>PITCH: {cssStippleDensity}px | RADIUS: {cssDotRadius}px</span>
-                    </div>
-                  </div>
-
-                  {/* CARD 3: Option 3 Archival Laid Paper & Watermark */}
-                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                  {/* CARD 3: Option 3 Archival Mould-Made Laid Paper */}
+                  <ArchivalPrintSpecimen
+                    title="OPT 3: Mould-Made Laid Paper"
+                    badgeText="ANTIQUE WIRE MOULD"
+                    subtitle={`Soft sinusoidal wire ribs (${laidPitch.toFixed(1)}px) with shadowed vertical chain lines (${chainPitch}px).`}
+                    mode="compact"
+                    footerLeft={`WIRE: ${laidPitch.toFixed(1)}px | CHAIN: ${chainPitch}px`}
+                    footerRight="AUTHENTIC WATERMARK"
+                  >
                     {/* Laid Paper Wire Grid Layer */}
                     <div
                       className="absolute inset-0 w-full h-full pointer-events-none z-10 overflow-hidden"
@@ -3633,66 +3604,38 @@ export default function App() {
                         style={{
                           backgroundImage:
                             paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? `repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px)`
-                              : `repeating-linear-gradient(0deg, rgba(41,37,36,0.3) 0px, rgba(41,37,36,0.3) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px)`,
-                        }}
-                      />
-                      <div
-                        className="absolute inset-0"
-                        style={{
-                          backgroundImage:
-                            paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch}px)`
-                              : `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(41,37,36,0.4) ${chainPitch - chainThickness}px, rgba(41,37,36,0.4) ${chainPitch}px)`,
+                              ? `repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${laidPitch * 0.5}px, rgba(255,255,255,0) ${laidPitch}px),
+                                 repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`
+                              : `repeating-linear-gradient(0deg, rgba(41,37,36,0) 0px, rgba(41,37,36,0.18) ${laidPitch * 0.5}px, rgba(41,37,36,0) ${laidPitch}px),
+                                 repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(30,25,20,0.12) ${chainPitch - 2}px, rgba(41,37,36,0.28) ${chainPitch}px, rgba(30,25,20,0.12) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`,
                         }}
                       />
                       {deckleEdge && (
-                        <div className="absolute inset-0 border-8 border-transparent pointer-events-none" style={{ boxShadow: "inset 0 0 12px rgba(255,255,255,0.6)" }} />
+                        <div className="absolute inset-0 border-8 border-transparent pointer-events-none" style={{ boxShadow: "inset 0 0 14px rgba(255,255,255,0.6)" }} />
                       )}
                       {showWatermark && (
                         <div
                           className="absolute bottom-2 right-2 border font-mono font-bold text-[8px] px-1 py-0.5 uppercase tracking-widest pointer-events-none select-none"
                           style={{
-                            borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
-                            color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.8)" : "rgba(41,37,36,0.45)",
+                            borderColor: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
+                            color: paperBlendMode === "lighten" || paperBlendMode === "screen" ? "rgba(255,255,255,0.85)" : "rgba(41,37,36,0.45)",
                           }}
                         >
                           {watermarkText}
                         </div>
                       )}
                     </div>
+                  </ArchivalPrintSpecimen>
 
-                    <div className="relative z-0">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--primary-600)] uppercase">
-                          OPTION 3: Archival Laid Paper
-                        </span>
-                        <span className="bg-[var(--spectrum-yellow)] text-[var(--gray-900)] px-1.5 py-0.5 text-[10px] font-bold">
-                          {laidPitch <= 1.5 ? "FINE WIRE GRID" : "MOULD-MADE WIRE"}
-                        </span>
-                      </div>
-                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
-                        ARCHIVAL FIBER
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
-                        Horizontal wire pitch ({laidPitch.toFixed(1)}px) + vertical chain lines ({chainPitch}px).
-                      </p>
-                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
-                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
-                        <div className="flex gap-2 mt-2">
-                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
-                      <span>WIRE: {laidPitch.toFixed(1)}px | CHAIN: {chainPitch}px</span>
-                      <span>HISTORICAL REALISM: HIGHEST</span>
-                    </div>
-                  </div>
-
-                  {/* CARD 4: Option 4 HTML5 Canvas Procedural Cotton Fibers */}
-                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none min-h-[340px]">
+                  {/* CARD 4: Option 4 HTML5 Canvas Cotton Filaments */}
+                  <ArchivalPrintSpecimen
+                    title="OPT 4: Canvas Cotton Filaments"
+                    badgeText="ORGANIC LINT & FLECK"
+                    subtitle={`Procedural curved cotton threads (${canvasFiberCount} fibers, ${canvasSpeckCount} flecks, #${canvasSeed}).`}
+                    mode="compact"
+                    footerLeft={`FIBERS: ${canvasFiberCount} | SPECKS: ${canvasSpeckCount}`}
+                    footerRight={`TONE: ${canvasColorTone.toUpperCase()}`}
+                  >
                     {/* HTML5 Canvas Cotton Filaments Layer */}
                     <CanvasPaperTexture
                       fiberCount={canvasFiberCount}
@@ -3707,66 +3650,31 @@ export default function App() {
                       blendMode={paperBlendMode}
                       className="z-10"
                     />
-
-                    <div className="relative z-0">
-                      <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--primary-600)] uppercase">
-                          OPTION 4: Canvas Filaments
-                        </span>
-                        <span className="bg-[var(--spectrum-purple)] text-white px-1.5 py-0.5 text-[10px] font-bold">
-                          {canvasFiberCount >= 4000 ? "HIGH-DENSITY PULP" : "COTTON THREADS"}
-                        </span>
-                      </div>
-                      <h3 className="text-3xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
-                        ARCHIVAL FIBER
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-3">
-                        Procedural curved cotton threads ({canvasFiberCount} threads, {canvasSpeckCount} specks, seed #{canvasSeed}).
-                      </p>
-                      <div className="p-3 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
-                        <div className="font-bold text-[var(--primary-500)] text-sm">TWO-COLOR OVERPRINT</div>
-                        <div className="flex gap-2 mt-2">
-                          <div className="h-5 flex-1 bg-[var(--primary-500)] text-white text-[9px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-5 flex-1 bg-[var(--spectrum-red)] text-white text-[9px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-4 pt-2 border-t border-[var(--border-gray)]/30 flex justify-between font-mono text-[10px] text-[var(--text-muted)] relative z-0">
-                      <span>FIBERS: {canvasFiberCount} | SPECKS: {canvasSpeckCount}</span>
-                      <span>TONE: {canvasColorTone.toUpperCase()}</span>
-                    </div>
-                  </div>
+                  </ArchivalPrintSpecimen>
                 </div>
               )}
 
               {/* ─── SINGLE OPTION VIEW (When specific Option is selected) ─── */}
               {selectedPaperOption !== "all" && (
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-                  {/* Digital Flat Screen Reference */}
-                  <div className="p-6 bg-[var(--white)] border border-[var(--border-gray)] relative overflow-hidden flex flex-col justify-between select-none">
-                    <div>
-                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--text-muted)] uppercase">Reference: Raw Flat Digital Screen</span>
-                        <span className="bg-[var(--surface)] text-[var(--text-muted)] px-1.5 py-0.5 text-[10px]">NO TEXTURE</span>
-                      </div>
-                      <h3 className="text-4xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none">ARCHIVAL FIBER</h3>
-                      <p className="text-xs font-mono text-[var(--gray-700)] mt-1 mb-4">Flat digital pixels without material physical tooth.</p>
-                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs">
-                        <div className="text-xl font-bold text-[var(--primary-500)]">TWO-COLOR INK OVERPRINT</div>
-                        <div className="mt-3 flex gap-2">
-                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 font-mono text-[10px] text-[var(--text-muted)]">
-                      GROUND: STONE-100 #F5F5F4 (SMOOTH SCREEN)
-                    </div>
-                  </div>
-
-                  {/* Active Selected Option Specimen */}
-                  <div className="p-6 bg-[var(--white)] border-2 border-[var(--primary-500)] relative overflow-hidden flex flex-col justify-between select-none shadow-sm">
-                    {/* Conditional Active Texture Layer */}
+                <div className="space-y-6 mb-6">
+                  {/* Comprehensive Large Specimen Sheet */}
+                  <ArchivalPrintSpecimen
+                    title={
+                      selectedPaperOption === "option1"
+                        ? "OPTION 1: SVG feTurbulence Ground"
+                        : selectedPaperOption === "option2"
+                        ? "OPTION 2: CSS Stochastic Sand-Grain"
+                        : selectedPaperOption === "option3"
+                        ? "OPTION 3: Archival Mould-Made Laid Paper"
+                        : "OPTION 4: Procedural Cotton Filaments"
+                    }
+                    badgeText={`${paperBlendMode.toUpperCase()} TRANSFER ACTIVE`}
+                    subtitle="Grand Typographic Proof — Fields of Solid Black, Color Overprints, Geometric Artwork & Editorial Prose"
+                    mode="full"
+                    footerLeft={`MODE: ${selectedPaperOption.toUpperCase()} (${paperBlendMode.toUpperCase()})`}
+                    footerRight="PRINTED MATTER MATERIALITY SUITE"
+                  >
+                    {/* Active Injected Texture Layer */}
                     {selectedPaperOption === "option1" && (
                       <svg
                         className="absolute inset-0 w-full h-full pointer-events-none z-10"
@@ -3787,7 +3695,7 @@ export default function App() {
                                 ? "0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0"
                                 : paperBlendMode === "overlay"
                                 ? "0.5 0 0 0 0.5   0 0.5 0 0 0.5   0 0.5 0 0 0.5   0 0 0 1 0"
-                                : "0.33 0 0 0 0.25   0 0.33 0 0 0.25   0 0.33 0 0 0.25   0 0 0 1 0"
+                                : "0.33 0 0 0 0.25   0.33 0 0 0.25   0.33 0 0 0.33 0 0 0.25   0 0 0 1 0"
                             }
                           />
                         </filter>
@@ -3803,10 +3711,15 @@ export default function App() {
                           mixBlendMode: paperBlendMode as any,
                           backgroundImage:
                             paperBlendMode === "lighten" || paperBlendMode === "screen"
-                              ? `radial-gradient(rgba(255,255,255,0.9) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `, radial-gradient(rgba(255,255,255,0.55) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""}`
-                              : `radial-gradient(rgba(41,37,36,0.5) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `, radial-gradient(rgba(120,113,108,0.35) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""}`,
-                          backgroundSize: `${cssStippleDensity}px ${cssStippleDensity}px${cssSecondaryHarmonic ? `, ${Math.round(cssStippleDensity * 1.7)}px ${Math.round(cssStippleDensity * 1.7)}px` : ""}`,
-                          backgroundPosition: `0 0${cssSecondaryHarmonic ? `, ${cssStippleDensity * 0.5}px ${cssStippleDensity * 0.5}px` : ""}`,
+                              ? `radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
+                                 radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
+                                 radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
+                                 radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`
+                              : `radial-gradient(circle at 22% 28%, rgba(41,37,36,0.40) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
+                                 radial-gradient(circle at 74% 68%, rgba(78,70,68,0.28) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
+                                 radial-gradient(circle at 42% 82%, rgba(120,113,108,0.22) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
+                                 radial-gradient(circle at 86% 18%, rgba(168,162,158,0.16) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px)`,
+                          backgroundSize: `${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px`,
                         }}
                       />
                     )}
@@ -3821,17 +3734,10 @@ export default function App() {
                           style={{
                             backgroundImage:
                               paperBlendMode === "lighten" || paperBlendMode === "screen"
-                                ? `repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px)`
-                                : `repeating-linear-gradient(0deg, rgba(41,37,36,0.3) 0px, rgba(41,37,36,0.3) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px)`,
-                          }}
-                        />
-                        <div
-                          className="absolute inset-0"
-                          style={{
-                            backgroundImage:
-                              paperBlendMode === "lighten" || paperBlendMode === "screen"
-                                ? `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch}px)`
-                                : `repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(41,37,36,0.4) ${chainPitch - chainThickness}px, rgba(41,37,36,0.4) ${chainPitch}px)`,
+                                ? `repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${laidPitch * 0.5}px, rgba(255,255,255,0) ${laidPitch}px),
+                                   repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`
+                                : `repeating-linear-gradient(0deg, rgba(41,37,36,0) 0px, rgba(41,37,36,0.18) ${laidPitch * 0.5}px, rgba(41,37,36,0) ${laidPitch}px),
+                                   repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(30,25,20,0.12) ${chainPitch - 2}px, rgba(41,37,36,0.28) ${chainPitch}px, rgba(30,25,20,0.12) ${chainPitch + 2}px, transparent ${chainPitch + 4}px)`,
                           }}
                         />
                         {deckleEdge && (
@@ -3866,38 +3772,7 @@ export default function App() {
                         className="z-10"
                       />
                     )}
-
-                    <div className="relative z-0">
-                      <div className="flex items-center justify-between pb-3 mb-4 border-b border-[var(--border-gray)]/30 font-mono text-xs">
-                        <span className="font-bold text-[var(--primary-600)] uppercase">
-                          {selectedPaperOption === "option1" && "Option 1: SVG feTurbulence Ground"}
-                          {selectedPaperOption === "option2" && "Option 2: CSS Micro-Grain Stipple Ground"}
-                          {selectedPaperOption === "option3" && "Option 3: Archival Mould-Made Laid Paper"}
-                          {selectedPaperOption === "option4" && "Option 4: Procedural Canvas Cotton Threads"}
-                        </span>
-                        <span className="bg-[var(--primary-500)] text-white px-1.5 py-0.5 text-[10px] font-bold uppercase">
-                          {paperBlendMode} ACTIVE
-                        </span>
-                      </div>
-                      <h3 className="text-4xl font-black tracking-tighter uppercase text-[var(--gray-900)] leading-none ink-squash-text">
-                        ARCHIVAL FIBER
-                      </h3>
-                      <p className="text-xs font-mono text-[var(--gray-800)] mt-1 mb-4">
-                        Tactile paper tooth with relief ink meniscus and overprint layering.
-                      </p>
-                      <div className="p-4 bg-[var(--surface-muted)] border border-[var(--border-gray)] font-mono text-xs ink-squash">
-                        <div className="text-xl font-bold text-[var(--primary-500)]">TWO-COLOR INK OVERPRINT</div>
-                        <div className="mt-3 flex gap-2">
-                          <div className="h-6 flex-1 bg-[var(--primary-500)] text-white text-[10px] font-bold flex items-center justify-center">BLUE #6EA3BE</div>
-                          <div className="h-6 flex-1 bg-[var(--spectrum-red)] text-white text-[10px] font-bold flex items-center justify-center">RED #E65E59</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="mt-6 pt-3 border-t border-[var(--border-gray)]/40 flex justify-between font-mono text-[10px] text-[var(--primary-700)] font-bold relative z-0">
-                      <span>GROUND: STONE-100 PHYSICAL TOOTH</span>
-                      <span>0 KB ASSET PAYLOAD</span>
-                    </div>
-                  </div>
+                  </ArchivalPrintSpecimen>
                 </div>
               )}
 
@@ -3911,9 +3786,9 @@ export default function App() {
                     onClick={() => {
                       let code = "";
                       if (selectedPaperOption === "option2") {
-                        code = `.paper-stipple-tile {\n  background-color: var(--paper);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${cssStippleOpacity};\n  background-image: radial-gradient(rgba(255,255,255,0.9) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `, radial-gradient(rgba(255,255,255,0.55) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""};\n  background-size: ${cssStippleDensity}px ${cssStippleDensity}px${cssSecondaryHarmonic ? `, ${Math.round(cssStippleDensity * 1.7)}px ${Math.round(cssStippleDensity * 1.7)}px` : ""};\n}`;
+                        code = `/* Option 2: CSS Aperiodic Stochastic Paper Grain */\n.paper-stipple-grain {\n  background-color: var(--paper);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${cssStippleOpacity};\n  background-image:\n    radial-gradient(circle at 22% 28%, rgba(255,255,255,0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),\n    radial-gradient(circle at 74% 68%, rgba(255,255,255,0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),\n    radial-gradient(circle at 42% 82%, rgba(255,255,255,0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),\n    radial-gradient(circle at 86% 18%, rgba(255,255,255,0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px);\n  background-size: ${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px, ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px, ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px, ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px;\n}`;
                       } else if (selectedPaperOption === "option3") {
-                        code = `.paper-laid-wire {\n  background-image: repeating-linear-gradient(0deg, rgba(255,255,255,0.7) 0px, rgba(255,255,255,0.7) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px),\n                    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch - chainThickness}px, rgba(255,255,255,0.85) ${chainPitch}px);\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${laidOpacity};\n}`;
+                        code = `/* Option 3: Archival Mould-Made Laid Paper & Shadowed Chain Lines */\n.paper-laid-wire {\n  mix-blend-mode: ${paperBlendMode};\n  opacity: ${laidOpacity};\n  background-image:\n    repeating-linear-gradient(0deg, rgba(255,255,255,0) 0px, rgba(255,255,255,0.42) ${(laidPitch * 0.5).toFixed(1)}px, rgba(255,255,255,0) ${laidPitch.toFixed(1)}px),\n    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215,210,205,0.25) ${chainPitch - 2}px, rgba(255,255,255,0.70) ${chainPitch}px, rgba(215,210,205,0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);\n}`;
                       } else if (selectedPaperOption === "option4") {
                         code = `<CanvasPaperTexture fiberCount={${canvasFiberCount}} fiberLength={${canvasFiberLength}} fiberThickness={${canvasFiberThickness}} fiberCurvature={${canvasFiberCurvature}} speckCount={${canvasSpeckCount}} colorTone="${canvasColorTone}" opacity={${canvasFiberOpacity}} blendMode="${paperBlendMode}" seed={${canvasSeed}} />`;
                       } else {
@@ -3929,23 +3804,29 @@ export default function App() {
                 </div>
                 <pre className="overflow-x-auto text-[11px] text-[var(--gray-300)] p-2 bg-black/40 border border-white/10 font-mono">
                   {selectedPaperOption === "option2"
-                    ? `/* Option 2: CSS Micro-Grain Stipple Tile (Pitch: ${cssStippleDensity}px, Radius: ${cssDotRadius}px) */
-.paper-stipple-tile {
+                    ? `/* Option 2: Pure CSS Aperiodic Stochastic Paper Grain (Scale: ${cssStippleDensity}px, Radius: ${cssDotRadius}px) */
+.paper-stipple-grain {
   background-color: var(--paper); /* Stone-100 #F5F5F4 */
   mix-blend-mode: ${paperBlendMode};
   opacity: ${cssStippleOpacity};
   background-image: 
-    radial-gradient(rgba(255, 255, 255, 0.9) ${cssDotRadius}px, transparent ${cssDotRadius}px)${cssSecondaryHarmonic ? `,\n    radial-gradient(rgba(255, 255, 255, 0.55) ${cssDotRadius * 0.7}px, transparent ${cssDotRadius * 0.7}px)` : ""};
-  background-size: ${cssStippleDensity}px ${cssStippleDensity}px${cssSecondaryHarmonic ? `, ${Math.round(cssStippleDensity * 1.7)}px ${Math.round(cssStippleDensity * 1.7)}px` : ""};
+    radial-gradient(circle at 22% 28%, rgba(255, 255, 255, 0.85) ${cssDotRadius}px, transparent ${cssDotRadius + 0.4}px),
+    radial-gradient(circle at 74% 68%, rgba(255, 255, 255, 0.60) ${cssDotRadius * 0.85}px, transparent ${cssDotRadius * 0.85 + 0.4}px),
+    radial-gradient(circle at 42% 82%, rgba(255, 255, 255, 0.45) ${cssDotRadius * 0.70}px, transparent ${cssDotRadius * 0.70 + 0.4}px),
+    radial-gradient(circle at 86% 18%, rgba(255, 255, 255, 0.30) ${cssDotRadius * 0.90}px, transparent ${cssDotRadius * 0.90 + 0.4}px);
+  background-size: ${Math.round(cssStippleDensity * 2.5 + 3)}px ${Math.round(cssStippleDensity * 2.5 + 3)}px,
+                   ${Math.round(cssStippleDensity * 3.7 + 5)}px ${Math.round(cssStippleDensity * 3.7 + 5)}px,
+                   ${Math.round(cssStippleDensity * 5.1 + 7)}px ${Math.round(cssStippleDensity * 5.1 + 7)}px,
+                   ${Math.round(cssStippleDensity * 6.5 + 11)}px ${Math.round(cssStippleDensity * 6.5 + 11)}px;
 }`
                     : selectedPaperOption === "option3"
-                    ? `/* Option 3: Archival Mould-Made Laid Paper (Wire: ${laidPitch.toFixed(1)}px, Chain: ${chainPitch}px) */
+                    ? `/* Option 3: Archival Mould-Made Laid Paper & Shadowed Chain Lines (Wire: ${laidPitch.toFixed(1)}px, Chain: ${chainPitch}px) */
 .paper-laid-wire {
   mix-blend-mode: ${paperBlendMode};
   opacity: ${laidOpacity};
   background-image:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.7) 0px, rgba(255, 255, 255, 0.7) ${laidThickness}px, transparent ${laidThickness}px, transparent ${laidPitch}px),
-    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - chainThickness}px, rgba(255, 255, 255, 0.85) ${chainPitch - chainThickness}px, rgba(255, 255, 255, 0.85) ${chainPitch}px);
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0) 0px, rgba(255, 255, 255, 0.42) ${(laidPitch * 0.5).toFixed(1)}px, rgba(255, 255, 255, 0) ${laidPitch.toFixed(1)}px),
+    repeating-linear-gradient(90deg, transparent 0px, transparent ${chainPitch - 4}px, rgba(215, 210, 205, 0.25) ${chainPitch - 2}px, rgba(255, 255, 255, 0.70) ${chainPitch}px, rgba(215, 210, 205, 0.25) ${chainPitch + 2}px, transparent ${chainPitch + 4}px);
 }`
                     : selectedPaperOption === "option4"
                     ? `/* Option 4: HTML5 Canvas Cotton Threads (Threads: ${canvasFiberCount}, Specks: ${canvasSpeckCount}) */
@@ -3961,12 +3842,12 @@ export default function App() {
   seed={${canvasSeed}}
 />`
                     : `/* Option 1: Procedural SVG feTurbulence Noise (Freq: ${paperBaseFrequency.toFixed(3)} x ${paperFreqY.toFixed(3)}, Octaves: ${paperOctaves}) */
-<svg className="fixed inset-0 w-full h-full pointer-events-none" style={{ opacity: ${paperOpacity}, mixBlendMode: "${paperBlendMode}" }}>
-  <filter id="pm-paper-tooth" x="0%" y="0%" width="100%" height="100%">
+<svg className="fixed inset-0 w-full h-full pointer-events-none mix-blend-${paperBlendMode}" style={{ opacity: ${paperOpacity} }}>
+  <filter id="paper-tooth">
     <feTurbulence type="${paperNoiseType}" baseFrequency="${paperBaseFrequency} ${paperFreqY}" numOctaves="${paperOctaves}" result="noise" />
     <feColorMatrix type="matrix" values="0 0 0 0 1   0 0 0 0 1   0 0 0 0 1   0 0 0 1 0" />
   </filter>
-  <rect width="100%" height="100%" filter="url(#pm-paper-tooth)" fill="transparent" />
+  <rect width="100%" height="100%" filter="url(#paper-tooth)" fill="transparent" />
 </svg>`}
                 </pre>
               </div>
