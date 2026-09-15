@@ -19,7 +19,6 @@ import { PRINTERS_SYMBOLS_DATA, PrinterSymbol } from "./data/printersSymbols";
 import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw, Code, Download, Eye, X, Maximize2 } from "lucide-react";
 
 export const PRIMARY_PALETTE = [
-  { name: "BLUE", hex: "#6EA3BE", hoverHex: "#5A8BA4", darkHex: "#3C6B84", lightHex: "#EEF5F8", antiColor: "#FFFFFF" },
   { name: "RED", hex: "#E65E59", hoverHex: "#C94D48", darkHex: "#8F2A26", lightHex: "#FDE8E7", antiColor: "#FFFFFF" },
   { name: "RED-ORANGE", hex: "#EA7B49", hoverHex: "#CC6333", darkHex: "#8F3915", lightHex: "#FDEEE7", antiColor: "#FFFFFF" },
   { name: "ORANGE", hex: "#ED9235", hoverHex: "#D1771D", darkHex: "#8A4707", lightHex: "#FEF2E6", antiColor: "#1C1917" },
@@ -28,6 +27,7 @@ export const PRIMARY_PALETTE = [
   { name: "LIME", hex: "#BBCA49", hoverHex: "#9EAE2F", darkHex: "#5C6613", lightHex: "#F7F9E9", antiColor: "#1C1917" },
   { name: "GREEN", hex: "#74BE60", hoverHex: "#5CA449", darkHex: "#316422", lightHex: "#EEF8EB", antiColor: "#1C1917" },
   { name: "AQUA", hex: "#71B197", hoverHex: "#57967D", darkHex: "#2C5847", lightHex: "#EEF6F3", antiColor: "#1C1917" },
+  { name: "BLUE", hex: "#6EA3BE", hoverHex: "#5A8BA4", darkHex: "#3C6B84", lightHex: "#EEF5F8", antiColor: "#FFFFFF" },
   { name: "INDIGO", hex: "#8E92C6", hoverHex: "#7579B0", darkHex: "#444980", lightHex: "#F2F3FA", antiColor: "#FFFFFF" },
   { name: "VIOLET", hex: "#A773C4", hoverHex: "#8E58AE", darkHex: "#5E2F79", lightHex: "#F6EEF9", antiColor: "#FFFFFF" },
   { name: "INK BLACK", hex: "#1C1917", hoverHex: "#292524", darkHex: "#000000", lightHex: "#E7E5E4", antiColor: "#FFFFFF" },

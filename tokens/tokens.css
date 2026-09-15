@@ -30,9 +30,9 @@
   --primary-muted: #78716C;          /* Stone 500: Tonal warm stone tone */
   --primary-color: #6EA3BE;
   --anti-primary-color: #FFFFFF;
-  --primary-rollover: #E65E59;        /* 1-Step Palette Right Rollover/Hover (Default: Red) */
+  --primary-rollover: #8E92C6;        /* 1-Step Spectrum Right (Indigo #8E92C6) */
   --primary-rollover-anti: #FFFFFF;
-  --primary-active: #EA7B49;          /* 2-Step Palette Right Active/Pressed (Default: Red-Orange) */
+  --primary-active: #A773C4;          /* 2-Step Spectrum Right (Violet #A773C4) */
   --primary-active-anti: #FFFFFF;
 
   /* Secondary & Spot Colour (Paper Multiply) */
