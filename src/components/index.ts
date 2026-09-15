@@ -11,3 +11,4 @@ export * from "./ColorChip";
 export * from "./FullerMap";
 export * from "./CanvasPaperTexture";
 export * from "./ArchivalPrintSpecimen";
+export * from "./SvgCodeInspectorModal";

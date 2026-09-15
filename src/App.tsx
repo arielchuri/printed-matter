@@ -12,9 +12,11 @@ import {
   FullerMap,
   CanvasPaperTexture,
   ArchivalPrintSpecimen,
+  SvgCodeInspectorModal,
 } from "./components";
 import { COLOR_SWATCHES, getContrastRatio, getWCAGGrade } from "../tokens/tokens";
-import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw } from "lucide-react";
+import { PRINTERS_SYMBOLS_DATA, PrinterSymbol } from "./data/printersSymbols";
+import { Layers, Type, Sliders, MapPin, Check, Copy, AlignLeft, AlignCenter, AlignRight, Moon, Sun, Sparkles, Droplet, RefreshCw, Code, Download, Eye, X, Maximize2 } from "lucide-react";
 
 export const PRIMARY_PALETTE = [
   { name: "BLUE", hex: "#6EA3BE", hoverHex: "#5A8BA4", darkHex: "#3C6B84", lightHex: "#EEF5F8", antiColor: "#FFFFFF" },
@@ -242,6 +244,17 @@ export default function App() {
         count: 6,
       },
     ],
+  };
+
+  const [selectedSvgSymbol, setSelectedSvgSymbol] = useState<PrinterSymbol | null>(null);
+  const [cabbageFilter, setCabbageFilter] = useState<"all" | "vintage" | "calibration" | "finishing">("all");
+  const [cabbageColor, setCabbageColor] = useState<string>("var(--gray-900)");
+  const [copiedSvgId, setCopiedSvgId] = useState<string | null>(null);
+
+  const handleCopySvgCode = (symbol: PrinterSymbol) => {
+    navigator.clipboard.writeText(symbol.svgMarkup);
+    setCopiedSvgId(symbol.id);
+    setTimeout(() => setCopiedSvgId(null), 2000);
   };
 
   const copyToClipboard = (text: string) => {
@@ -2020,446 +2033,770 @@ export default function App() {
               </div>
             </section>
 
-            {/* ─── 4. PRINTER'S SYMBOLS & COLOR CABBAGES ─── */}
+            {/* ─── 4. PRINTER'S SYMBOLS, COLOR CABBAGES & VINTAGE DINGBATS ─── */}
             <section className="bg-[var(--white)] p-6 border border-[var(--border-gray)]" style={{ borderRadius: 0 }}>
-              <div className="flex flex-col sm:flex-row sm:items-baseline justify-between border-b border-[var(--border-gray)]/20 pb-3 mb-6 gap-2">
+              <div className="flex flex-col lg:flex-row lg:items-baseline justify-between border-b border-[var(--border-gray)]/20 pb-3 mb-6 gap-3">
                 <div>
                   <h2 className="text-xl font-bold tracking-tight m-0 text-[var(--primary-500)] uppercase font-mono flex items-center gap-2">
                     <span className="w-2.5 h-2.5 bg-[var(--spectrum-red)] inline-block" />
-                    Printer&apos;s Calibration Symbols &amp; Color Cabbages
+                    Printer&apos;s Calibration Symbols, Color Cabbages &amp; Vintage Dingbats
                   </h2>
-                  <p className="text-xs text-[var(--text-muted)] mt-1">
-                    Authentic lithographic &amp; letterpress calibration strip artifacts: 4-color process cabbages, overprinted registration crosshairs, Siemens rosette star targets, slur ladders, and precision trim crop marks.
+                  <p className="text-xs text-[var(--text-muted)] mt-1 max-w-3xl">
+                    Authentic letterpress and lithographic artifacts: 4-color process calibration cabbages, overprinted registration crosshairs, Siemens rosette targets, and classic vintage letterpress cabbages (manicules, fleurons, Maltese crosses, Aldine anchors). Click <strong>&lt;/&gt; VIEW SVG</strong> on any item to inspect, scale, and copy production-ready SVG code.
                   </p>
                 </div>
-                <span className="text-xs font-mono text-[var(--text-muted)] shrink-0">CMYK &amp; SPOT PRESS TOOLS</span>
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-xs font-mono text-[var(--text-muted)] uppercase shrink-0">FILTER:</span>
+                  <div className="flex gap-1 font-mono text-xs">
+                    {(
+                      [
+                        { id: "all", label: "ALL ARTIFACTS (18)" },
+                        { id: "vintage", label: "VINTAGE CABBAGES (12)" },
+                        { id: "calibration", label: "CALIBRATION (4)" },
+                        { id: "finishing", label: "FINISHING (2)" },
+                      ] as const
+                    ).map((f) => (
+                      <button
+                        key={f.id}
+                        onClick={() => setCabbageFilter(f.id)}
+                        className={`px-2.5 py-1 font-bold transition-colors ${
+                          cabbageFilter === f.id
+                            ? "bg-[var(--primary-500)] text-white border border-[var(--primary-500)]"
+                            : "bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                        }`}
+                        style={{ borderRadius: 0 }}
+                      >
+                        {f.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* Spot Ink Color Selector for Dingbats & Symbols */}
+              <div className="mb-6 bg-[var(--surface-muted)] p-3.5 border border-[var(--border-gray)]/30 flex flex-wrap items-center justify-between gap-3">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-mono font-bold text-[var(--text)] uppercase flex items-center gap-1.5">
+                    <Sparkles className="w-3.5 h-3.5 text-[var(--spectrum-amber)]" />
+                    Press Ink Swatch (Vintage Dingbat Specimen):
+                  </span>
+                  <span className="text-[11px] font-mono text-[var(--text-muted)]">
+                    Active: <strong className="text-[var(--text)]">{cabbageColor}</strong>
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap gap-1.5">
+                  {PRIMARY_PALETTE.map((pal) => (
+                    <button
+                      key={pal.name}
+                      onClick={() => setCabbageColor(pal.hex)}
+                      className={`flex items-center gap-1.5 px-2 py-1 text-[11px] font-mono font-bold border transition-transform ${
+                        cabbageColor === pal.hex
+                          ? "bg-[var(--gray-900)] text-white border-[var(--gray-900)] scale-105 shadow-sm"
+                          : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/30 hover:border-[var(--border-gray)]"
+                      }`}
+                      style={{ borderRadius: 0 }}
+                      title={`Press in ${pal.name}`}
+                    >
+                      <span className="w-2.5 h-2.5 inline-block" style={{ backgroundColor: pal.hex }} />
+                      <span className="hidden sm:inline">{pal.name}</span>
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="space-y-8">
                 {/* 4A: Printer's Color Cabbages / Progressive Tint Control Slugs */}
-                <div>
-                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
-                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
-                      <span className="w-2 h-2 bg-[var(--primary-500)] inline-block" />
-                      A. Printer&apos;s Color Cabbages &amp; Progressive Tint Slugs (Densitometer Control Strips)
-                    </span>
-                    <span className="text-[11px] font-mono text-[var(--text-muted)]">100% &rarr; 5% Progressive Tint Density</span>
-                  </div>
-
-                  <div className="space-y-4">
-                    {/* CMYK 4-Color Process Stepped Cabbages */}
-                    <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] font-mono text-xs">
-                      <span className="font-bold text-[var(--text)] uppercase block mb-2.5">
-                        1. Primary Process Cabbages (Cyan/Blue, Magenta/Red, Yellow, Key Black):
+                {(cabbageFilter === "all" || cabbageFilter === "calibration") && (
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                        <span className="w-2 h-2 bg-[var(--primary-500)] inline-block" />
+                        A. Printer&apos;s Color Cabbages &amp; Progressive Tint Slugs (Densitometer Control Strips)
                       </span>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        {/* Cyan / Process Blue */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
-                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--primary-700)]">
-                            <span>CYAN / BLUE PLATE</span>
-                            <span className="text-[10px] text-[var(--text-muted)]">C100</span>
+                      <span className="text-[11px] font-mono text-[var(--text-muted)]">100% &rarr; 5% Progressive Tint Density</span>
+                    </div>
+
+                    <div className="space-y-4">
+                      {/* CMYK 4-Color Process Stepped Cabbages */}
+                      <div className="p-4 bg-[var(--surface)] border border-[var(--border-gray)] font-mono text-xs">
+                        <span className="font-bold text-[var(--text)] uppercase block mb-2.5">
+                          1. Primary Process Cabbages (Cyan/Blue, Magenta/Red, Yellow, Key Black):
+                        </span>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                          {/* Cyan / Process Blue */}
+                          <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                            <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--primary-700)]">
+                              <span>CYAN / BLUE PLATE</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">C100</span>
+                            </div>
+                            <div className="grid grid-cols-6 gap-1 h-8">
+                              <div className="bg-[var(--primary-700)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                              <div className="bg-[var(--primary-600)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                              <div className="bg-[var(--primary-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                              <div className="bg-[var(--primary-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                              <div className="bg-[var(--primary-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                              <div className="bg-[var(--primary-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                            </div>
                           </div>
-                          <div className="grid grid-cols-6 gap-1 h-8">
-                            <div className="bg-[var(--primary-700)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
-                            <div className="bg-[var(--primary-600)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
-                            <div className="bg-[var(--primary-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
-                            <div className="bg-[var(--primary-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
-                            <div className="bg-[var(--primary-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
-                            <div className="bg-[var(--primary-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+
+                          {/* Magenta / Process Red */}
+                          <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                            <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--spectrum-red)]">
+                              <span>MAGENTA / RED PLATE</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">M100</span>
+                            </div>
+                            <div className="grid grid-cols-6 gap-1 h-8">
+                              <div className="bg-[#B91C1C] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                              <div className="bg-[var(--spectrum-red)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                              <div className="bg-[#F87171] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                              <div className="bg-[#FCA5A5] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                              <div className="bg-[#FECACA] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                              <div className="bg-[#FEF2F2] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                            </div>
+                          </div>
+
+                          {/* Process Yellow */}
+                          <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                            <div className="flex justify-between items-center mb-1.5 font-bold text-[#A16207]">
+                              <span>PROCESS YELLOW</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">Y100</span>
+                            </div>
+                            <div className="grid grid-cols-6 gap-1 h-8">
+                              <div className="bg-[var(--spectrum-yellow)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="100%">100</div>
+                              <div className="bg-[#FDE047] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="80%">80</div>
+                              <div className="bg-[#FEF08A] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="60%">60</div>
+                              <div className="bg-[#FEF9C3] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                              <div className="bg-[#FEFCE8] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                              <div className="bg-[#FFFBEB] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                            </div>
+                          </div>
+
+                          {/* Process Key Black */}
+                          <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
+                            <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--gray-900)]">
+                              <span>KEY CARBON BLACK</span>
+                              <span className="text-[10px] text-[var(--text-muted)]">K100</span>
+                            </div>
+                            <div className="grid grid-cols-6 gap-1 h-8">
+                              <div className="bg-[var(--gray-900)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
+                              <div className="bg-[var(--gray-700)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
+                              <div className="bg-[var(--gray-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
+                              <div className="bg-[var(--gray-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
+                              <div className="bg-[var(--gray-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
+                              <div className="bg-[var(--gray-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+                            </div>
                           </div>
                         </div>
+                      </div>
 
-                        {/* Magenta / Process Red */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
-                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--spectrum-red)]">
-                            <span>MAGENTA / RED PLATE</span>
-                            <span className="text-[10px] text-[var(--text-muted)]">M100</span>
+                      {/* 2-Plate & 3-Plate Subtractive Overprint Trap Slugs */}
+                      <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] font-mono text-xs">
+                        <span className="font-bold text-[var(--text)] uppercase block mb-2">
+                          2. Multi-Plate Subtractive Trap &amp; Rich Black Slugs (mix-blend-mode: multiply):
+                        </span>
+                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+                          {/* C + M -> Optical Violet */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M (BLUE+RED)</span>
+                            <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                              <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                              <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Violet</span>
                           </div>
-                          <div className="grid grid-cols-6 gap-1 h-8">
-                            <div className="bg-[#B91C1C] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
-                            <div className="bg-[var(--spectrum-red)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
-                            <div className="bg-[#F87171] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
-                            <div className="bg-[#FCA5A5] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
-                            <div className="bg-[#FECACA] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
-                            <div className="bg-[#FEF2F2] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
-                          </div>
-                        </div>
 
-                        {/* Process Yellow */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
-                          <div className="flex justify-between items-center mb-1.5 font-bold text-[#A16207]">
-                            <span>PROCESS YELLOW</span>
-                            <span className="text-[10px] text-[var(--text-muted)]">Y100</span>
+                          {/* C + Y -> Optical Green */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + Y (BLUE+YELLOW)</span>
+                            <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                              <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                              <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Green</span>
                           </div>
-                          <div className="grid grid-cols-6 gap-1 h-8">
-                            <div className="bg-[var(--spectrum-yellow)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="100%">100</div>
-                            <div className="bg-[#FDE047] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="80%">80</div>
-                            <div className="bg-[#FEF08A] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="60%">60</div>
-                            <div className="bg-[#FEF9C3] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
-                            <div className="bg-[#FEFCE8] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
-                            <div className="bg-[#FFFBEB] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
-                          </div>
-                        </div>
 
-                        {/* Process Key Black */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-2.5">
-                          <div className="flex justify-between items-center mb-1.5 font-bold text-[var(--gray-900)]">
-                            <span>KEY CARBON BLACK</span>
-                            <span className="text-[10px] text-[var(--text-muted)]">K100</span>
+                          {/* M + Y -> Optical Orange */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">M + Y (RED+YELLOW)</span>
+                            <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                              <div className="absolute inset-0 bg-[var(--spectrum-red)]" />
+                              <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Orange</span>
                           </div>
-                          <div className="grid grid-cols-6 gap-1 h-8">
-                            <div className="bg-[var(--gray-900)] flex items-center justify-center text-[9px] text-white font-bold" title="100%">100</div>
-                            <div className="bg-[var(--gray-700)] flex items-center justify-center text-[9px] text-white font-bold" title="80%">80</div>
-                            <div className="bg-[var(--gray-500)] flex items-center justify-center text-[9px] text-white font-bold" title="60%">60</div>
-                            <div className="bg-[var(--gray-400)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="40%">40</div>
-                            <div className="bg-[var(--gray-200)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="20%">20</div>
-                            <div className="bg-[var(--gray-100)] flex items-center justify-center text-[9px] text-[var(--gray-900)] font-bold" title="5%">5</div>
+
+                          {/* C + M + Y -> 3-Color Process Umber */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M + Y (3-WAY)</span>
+                            <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                              <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                              <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                              <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text)] mt-1">3-Color Neutral</span>
+                          </div>
+
+                          {/* 4-Color Rich Black (C60 M40 Y40 K100) */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C+M+Y+K RICH BLACK</span>
+                            <div className="relative h-10 bg-white overflow-hidden border border-black/20">
+                              <div className="absolute inset-0 bg-[var(--primary-500)]" />
+                              <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
+                              <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
+                              <div className="absolute inset-0 bg-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} />
+                            </div>
+                            <span className="text-[10px] font-bold text-[var(--text)] mt-1">Rich Carbon Black</span>
+                          </div>
+
+                          {/* Densitometer Micro-Step Target */}
+                          <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between bg-[var(--surface-muted)]">
+                            <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">PRESS DENSITY</span>
+                            <div className="h-10 flex border border-black/20">
+                              <div className="flex-1 bg-[var(--spectrum-red)]" />
+                              <div className="flex-1 bg-[var(--spectrum-yellow)]" />
+                              <div className="flex-1 bg-[var(--spectrum-green)]" />
+                              <div className="flex-1 bg-[var(--primary-500)]" />
+                              <div className="flex-1 bg-[var(--gray-900)]" />
+                            </div>
+                            <span className="text-[10px] font-mono text-[var(--text-muted)] mt-1">0.05D &ndash; 2.20D</span>
                           </div>
                         </div>
                       </div>
                     </div>
-
-                    {/* 2-Plate & 3-Plate Subtractive Overprint Trap Slugs */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] font-mono text-xs">
-                      <span className="font-bold text-[var(--text)] uppercase block mb-2">
-                        2. Multi-Plate Subtractive Trap &amp; Rich Black Slugs (mix-blend-mode: multiply):
-                      </span>
-                      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
-                        {/* C + M -> Optical Violet */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M (BLUE+RED)</span>
-                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
-                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
-                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
-                          </div>
-                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Violet</span>
-                        </div>
-
-                        {/* C + Y -> Optical Green */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + Y (BLUE+YELLOW)</span>
-                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
-                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
-                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
-                          </div>
-                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Green</span>
-                        </div>
-
-                        {/* M + Y -> Optical Orange */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">M + Y (RED+YELLOW)</span>
-                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
-                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" />
-                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
-                          </div>
-                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Optical Orange</span>
-                        </div>
-
-                        {/* C + M + Y -> 3-Color Process Umber */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C + M + Y (3-WAY)</span>
-                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
-                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
-                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
-                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
-                          </div>
-                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">3-Color Neutral</span>
-                        </div>
-
-                        {/* 4-Color Rich Black (C60 M40 Y40 K100) */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">C+M+Y+K RICH BLACK</span>
-                          <div className="relative h-10 bg-white overflow-hidden border border-black/20">
-                            <div className="absolute inset-0 bg-[var(--primary-500)]" />
-                            <div className="absolute inset-0 bg-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply" }} />
-                            <div className="absolute inset-0 bg-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply" }} />
-                            <div className="absolute inset-0 bg-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} />
-                          </div>
-                          <span className="text-[10px] font-bold text-[var(--text)] mt-1">Rich Carbon Black</span>
-                        </div>
-
-                        {/* Densitometer Micro-Step Target */}
-                        <div className="border border-[var(--border-gray)] p-2 flex flex-col justify-between bg-[var(--surface-muted)]">
-                          <span className="font-bold text-[10px] text-[var(--text-muted)] mb-1">PRESS DENSITY</span>
-                          <div className="h-10 flex border border-black/20">
-                            <div className="flex-1 bg-[var(--spectrum-red)]" />
-                            <div className="flex-1 bg-[var(--spectrum-yellow)]" />
-                            <div className="flex-1 bg-[var(--spectrum-green)]" />
-                            <div className="flex-1 bg-[var(--primary-500)]" />
-                            <div className="flex-1 bg-[var(--gray-900)]" />
-                          </div>
-                          <span className="text-[10px] font-mono text-[var(--text-muted)] mt-1">0.05D &ndash; 2.20D</span>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* 4B: Overprinted Multi-Plate Registration Marks & Targets */}
-                <div>
-                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
-                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
-                      <span className="w-2 h-2 bg-[var(--spectrum-green)] inline-block" />
-                      B. Multi-Plate Overprint Registration Targets &amp; Crop Marks
-                    </span>
-                    <span className="text-[11px] font-mono text-[var(--text-muted)]">Overprinted Red, Yellow, Blue, Key Black</span>
+                {(cabbageFilter === "all" || cabbageFilter === "calibration" || cabbageFilter === "finishing") && (
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                        <span className="w-2 h-2 bg-[var(--spectrum-green)] inline-block" />
+                        B. Multi-Plate Overprint Registration Targets &amp; Crop Marks
+                      </span>
+                      <span className="text-[11px] font-mono text-[var(--text-muted)]">Overprinted Red, Yellow, Blue, Key Black &bull; SVG Code Available</span>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      {/* Target 1: 4-Color Overprinted Crosshair Target */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "reg-crosshair-4col")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>4-PLATE CROSSHAIR</span>
+                              <span className="text-[var(--primary-500)]">⨁ OVERPRINT</span>
+                            </div>
+                            <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2 mb-2">
+                              {/* Red Plate */}
+                              <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-red-x), var(--misregister-red-y))" : "none" }} viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                                <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                              </svg>
+                              {/* Yellow Plate */}
+                              <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-yellow-x), var(--misregister-yellow-y))" : "none" }} viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                                <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                              </svg>
+                              {/* Blue Plate */}
+                              <svg className="absolute inset-0 w-full h-full text-[var(--primary-500)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-blue-x), var(--misregister-blue-y))" : "none" }} viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
+                                <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
+                              </svg>
+                              {/* Key Black Plate */}
+                              <svg className="absolute inset-0 w-full h-full text-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1.25" />
+                                <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="8" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                                <line x1="5" y1="50" x2="95" y2="50" stroke="currentColor" strokeWidth="1" />
+                                <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="1.5" fill="currentColor" />
+                              </svg>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              C+M+Y+K Multi-Plate Optical Trap
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Target 2: Concentric Micro-Tick Vernier Target */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "vernier-target")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>VERNIER TARGET</span>
+                              <span className="text-[var(--spectrum-red)]">0.05mm GAIN</span>
+                            </div>
+                            <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2 mb-2">
+                              <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                                <circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" strokeWidth="0.75" strokeDasharray="2,2" />
+                                <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                                <circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" strokeWidth="0.75" />
+                                {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
+                                  <line
+                                    key={deg}
+                                    x1="50"
+                                    y1="6"
+                                    x2="50"
+                                    y2="16"
+                                    stroke="currentColor"
+                                    strokeWidth="0.75"
+                                    transform={`rotate(${deg} 50 50)`}
+                                  />
+                                ))}
+                                <circle cx="50" cy="50" r="2" fill="currentColor" />
+                              </svg>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              Angular Press Shift Diagnostic
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Target 3: Corner Trim & Bleed Registration Crop Marks */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "crop-marks-corner")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>CROP &amp; BLEED MARKS</span>
+                              <span className="text-[var(--spectrum-amber)]">3.0mm BLEED</span>
+                            </div>
+                            <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 overflow-hidden mb-2">
+                              <div className="absolute inset-4 border border-dashed border-[var(--gray-400)] flex items-center justify-center">
+                                <span className="font-mono text-[9px] text-[var(--text-muted)] uppercase">Trim Area</span>
+                              </div>
+                              <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
+                                <line x1="16" y1="0" x2="16" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="0" y1="16" x2="12" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="84" y1="0" x2="84" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="88" y1="16" x2="100" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="16" y1="88" x2="16" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="0" y1="84" x2="12" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="84" y1="88" x2="84" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
+                                <line x1="88" y1="84" x2="100" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
+                              </svg>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              Precision Guillotine Hairlines
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+
+                      {/* Target 4: Perforation & Fold Line Chrome */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "fold-perf-rules")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>FOLD &amp; PERFORATION</span>
+                              <span className="text-[var(--primary-500)]">SCORE RULE</span>
+                            </div>
+                            <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between p-3 font-mono text-[10px] mb-2">
+                              <div>
+                                <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                                  <span>FOLD (DASHED)</span>
+                                  <span>SCORE</span>
+                                </div>
+                                <div className="h-0 border-t-2 border-dashed border-[var(--gray-900)] mb-3" />
+                              </div>
+                              <div>
+                                <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                                  <span>PERFORATION (DOTS)</span>
+                                  <span>MICRO-TIE</span>
+                                </div>
+                                <div className="h-0 border-t-2 border-dotted border-[var(--spectrum-red)] mb-3" />
+                              </div>
+                              <div>
+                                <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
+                                  <span>CUT LINE (SOLID)</span>
+                                  <span>SLIT</span>
+                                </div>
+                                <div className="h-0 border-t border-[var(--primary-500)]" />
+                              </div>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              Mechanical Finishing Indicators
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })()}
+                    </div>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                    {/* Target 1: 4-Color Overprinted Crosshair Target */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>4-PLATE CROSSHAIR</span>
-                        <span className="text-[var(--primary-500)]">⨁ OVERPRINT</span>
-                      </div>
-                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
-                        {/* Red Plate */}
-                        <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-red)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-red-x), var(--misregister-red-y))" : "none" }} viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
-                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
-                        </svg>
-                        {/* Yellow Plate */}
-                        <svg className="absolute inset-0 w-full h-full text-[var(--spectrum-yellow)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-yellow-x), var(--misregister-yellow-y))" : "none" }} viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
-                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
-                        </svg>
-                        {/* Blue Plate */}
-                        <svg className="absolute inset-0 w-full h-full text-[var(--primary-500)]" style={{ mixBlendMode: "multiply", transform: globalMisregistration ? "translate(var(--misregister-blue-x), var(--misregister-blue-y))" : "none" }} viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <line x1="10" y1="50" x2="90" y2="50" stroke="currentColor" strokeWidth="0.75" />
-                          <line x1="50" y1="10" x2="50" y2="90" stroke="currentColor" strokeWidth="0.75" />
-                        </svg>
-                        {/* Key Black Plate */}
-                        <svg className="absolute inset-0 w-full h-full text-[var(--gray-900)]" style={{ mixBlendMode: "multiply" }} viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="36" fill="none" stroke="currentColor" strokeWidth="1.25" />
-                          <circle cx="50" cy="50" r="22" fill="none" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="8" fill="none" stroke="currentColor" strokeWidth="0.75" />
-                          <line x1="5" y1="50" x2="95" y2="50" stroke="currentColor" strokeWidth="1" />
-                          <line x1="50" y1="5" x2="50" y2="95" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="1.5" fill="currentColor" />
-                        </svg>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        C+M+Y+K Multi-Plate Optical Trap
-                      </span>
-                    </div>
-
-                    {/* Target 2: Concentric Micro-Tick Vernier Target */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>VERNIER TARGET</span>
-                        <span className="text-[var(--spectrum-red)]">0.05mm GAIN</span>
-                      </div>
-                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
-                        <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
-                          <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" strokeWidth="0.75" />
-                          <circle cx="50" cy="50" r="32" fill="none" stroke="currentColor" strokeWidth="0.75" strokeDasharray="2,2" />
-                          <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" strokeWidth="0.75" />
-                          <circle cx="50" cy="50" r="10" fill="none" stroke="currentColor" strokeWidth="0.75" />
-                          {/* 8-Axis Radial Ticks */}
-                          {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-                            <line
-                              key={deg}
-                              x1="50"
-                              y1="6"
-                              x2="50"
-                              y2="16"
-                              stroke="currentColor"
-                              strokeWidth="0.75"
-                              transform={`rotate(${deg} 50 50)`}
-                            />
-                          ))}
-                          <circle cx="50" cy="50" r="2" fill="currentColor" />
-                        </svg>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Angular Press Shift Diagnostic
-                      </span>
-                    </div>
-
-                    {/* Target 3: Corner Trim & Bleed Registration Crop Marks */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>CROP &amp; BLEED MARKS</span>
-                        <span className="text-[var(--spectrum-amber)]">3.0mm BLEED</span>
-                      </div>
-                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 overflow-hidden">
-                        {/* Trim area bounds */}
-                        <div className="absolute inset-4 border border-dashed border-[var(--gray-400)] flex items-center justify-center">
-                          <span className="font-mono text-[9px] text-[var(--text-muted)] uppercase">Trim Area</span>
-                        </div>
-                        {/* Overprinted Corner Crop Marks in C, M, Y, K */}
-                        <svg className="absolute inset-0 w-full h-full" viewBox="0 0 100 100">
-                          {/* Top-Left Crops */}
-                          <line x1="16" y1="0" x2="16" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
-                          <line x1="0" y1="16" x2="12" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
-                          {/* Top-Right Crops */}
-                          <line x1="84" y1="0" x2="84" y2="12" stroke="var(--gray-900)" strokeWidth="1" />
-                          <line x1="88" y1="16" x2="100" y2="16" stroke="var(--gray-900)" strokeWidth="1" />
-                          {/* Bottom-Left Crops */}
-                          <line x1="16" y1="88" x2="16" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
-                          <line x1="0" y1="84" x2="12" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
-                          {/* Bottom-Right Crops */}
-                          <line x1="84" y1="88" x2="84" y2="100" stroke="var(--gray-900)" strokeWidth="1" />
-                          <line x1="88" y1="84" x2="100" y2="84" stroke="var(--gray-900)" strokeWidth="1" />
-                        </svg>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Precision Guillotine Hairlines
-                      </span>
-                    </div>
-
-                    {/* Target 4: Perforation & Fold Line Chrome */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>FOLD &amp; PERFORATION</span>
-                        <span className="text-[var(--primary-500)]">SCORE RULE</span>
-                      </div>
-                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex flex-col justify-between p-3 font-mono text-[10px]">
-                        <div>
-                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
-                            <span>FOLD (DASHED)</span>
-                            <span>SCORE</span>
-                          </div>
-                          <div className="h-0 border-t-2 border-dashed border-[var(--gray-900)] mb-3" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
-                            <span>PERFORATION (DOTS)</span>
-                            <span>MICRO-TIE</span>
-                          </div>
-                          <div className="h-0 border-t-2 border-dotted border-[var(--spectrum-red)] mb-3" />
-                        </div>
-                        <div>
-                          <div className="flex justify-between text-[9px] text-[var(--text-muted)] mb-1">
-                            <span>CUT LINE (SOLID)</span>
-                            <span>SLIT</span>
-                          </div>
-                          <div className="h-0 border-t border-[var(--primary-500)]" />
-                        </div>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Mechanical Finishing Indicators
-                      </span>
-                    </div>
-                  </div>
-                </div>
+                )}
 
                 {/* 4C: Siemens Rosette Star Target & Slur / Doubling Gauges */}
-                <div>
-                  <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
-                    <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
-                      <span className="w-2 h-2 bg-[var(--spectrum-violet)] inline-block" />
-                      C. Siemens Star Rosette Target &amp; Slur/Doubling Resolution Gauges
-                    </span>
-                    <span className="text-[11px] font-mono text-[var(--text-muted)]">Optical Resolving Power &bull; Hairline Calibrations</span>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    {/* Siemens Star Rosette */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>SIEMENS STAR ROSETTE</span>
-                        <span className="text-[var(--primary-500)]">36 RAYS</span>
-                      </div>
-                      <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2">
-                        <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
-                          {Array.from({ length: 36 }).map((_, i) => {
-                            const angle = (i * 360) / 36;
-                            return (
-                              <line
-                                key={i}
-                                x1="50"
-                                y1="50"
-                                x2="50"
-                                y2="6"
-                                stroke="currentColor"
-                                strokeWidth={i % 2 === 0 ? "1.5" : "0.75"}
-                                transform={`rotate(${angle} 50 50)`}
-                              />
-                            );
-                          })}
-                          <circle cx="50" cy="50" r="4" fill="var(--surface)" stroke="currentColor" strokeWidth="1" />
-                          <circle cx="50" cy="50" r="1" fill="currentColor" />
-                        </svg>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Radial Optical Resolution Limit
+                {(cabbageFilter === "all" || cabbageFilter === "calibration") && (
+                  <div>
+                    <div className="flex items-center justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20">
+                      <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                        <span className="w-2 h-2 bg-[var(--spectrum-violet)] inline-block" />
+                        C. Siemens Star Rosette Target &amp; Slur/Doubling Resolution Gauges
                       </span>
+                      <span className="text-[11px] font-mono text-[var(--text-muted)]">Optical Resolving Power &bull; Hairline Calibrations &bull; SVG Code Available</span>
                     </div>
 
-                    {/* Slur and Doubling Ladder Gauge */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>SLUR &amp; DOUBLING GAUGE</span>
-                        <span className="text-[var(--spectrum-red)]">PRESS SLIP</span>
-                      </div>
-                      <div className="w-full h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 grid grid-cols-2 gap-2">
-                        {/* Horizontal Ladder (Directional Slur) */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
-                          <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">HORIZ. LADDER</span>
-                          <div className="space-y-1">
-                            {Array.from({ length: 7 }).map((_, idx) => (
-                              <div key={idx} className="h-0.5 bg-[var(--gray-900)]" />
-                            ))}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      {/* Siemens Star Rosette */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "siemens-star")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>SIEMENS STAR ROSETTE</span>
+                              <span className="text-[var(--primary-500)]">36 RAYS</span>
+                            </div>
+                            <div className="w-36 h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] flex items-center justify-center p-2 mb-2">
+                              <svg className="w-full h-full text-[var(--gray-900)]" viewBox="0 0 100 100">
+                                {Array.from({ length: 36 }).map((_, i) => {
+                                  const angle = (i * 360) / 36;
+                                  return (
+                                    <line
+                                      key={i}
+                                      x1="50"
+                                      y1="50"
+                                      x2="50"
+                                      y2="6"
+                                      stroke="currentColor"
+                                      strokeWidth={i % 2 === 0 ? "1.5" : "0.75"}
+                                      transform={`rotate(${angle} 50 50)`}
+                                    />
+                                  );
+                                })}
+                                <circle cx="50" cy="50" r="4" fill="var(--surface)" stroke="currentColor" strokeWidth="1" />
+                                <circle cx="50" cy="50" r="1" fill="currentColor" />
+                              </svg>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              Radial Optical Resolution Limit
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
                           </div>
-                          <span className="font-mono text-[8px] text-[var(--text-muted)]">Circumferential</span>
-                        </div>
-                        {/* Vertical Ladder (Directional Slur) */}
-                        <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
-                          <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">VERT. LADDER</span>
-                          <div className="flex justify-between h-14 items-stretch">
-                            {Array.from({ length: 7 }).map((_, idx) => (
-                              <div key={idx} className="w-0.5 bg-[var(--gray-900)]" />
-                            ))}
+                        );
+                      })()}
+
+                      {/* Slur and Doubling Ladder Gauge */}
+                      {(() => {
+                        const sym = PRINTERS_SYMBOLS_DATA.find((s) => s.id === "slur-ladder-gauge")!;
+                        const isCopied = copiedSvgId === sym?.id;
+                        return (
+                          <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between group">
+                            <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                              <span>SLUR &amp; DOUBLING GAUGE</span>
+                              <span className="text-[var(--spectrum-red)]">PRESS SLIP</span>
+                            </div>
+                            <div className="w-full h-36 relative bg-[var(--surface)] border border-[var(--border-gray)] p-2 grid grid-cols-2 gap-2 mb-2">
+                              {/* Horizontal Ladder (Directional Slur) */}
+                              <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
+                                <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">HORIZ. LADDER</span>
+                                <div className="space-y-1">
+                                  {Array.from({ length: 7 }).map((_, idx) => (
+                                    <div key={idx} className="h-0.5 bg-[var(--gray-900)]" />
+                                  ))}
+                                </div>
+                                <span className="font-mono text-[8px] text-[var(--text-muted)]">Circumferential</span>
+                              </div>
+                              {/* Vertical Ladder (Directional Slur) */}
+                              <div className="border border-[var(--border-gray)] bg-[var(--white)] p-1.5 flex flex-col justify-between">
+                                <span className="font-mono text-[9px] font-bold text-[var(--text-muted)]">VERT. LADDER</span>
+                                <div className="flex justify-between h-14 items-stretch">
+                                  {Array.from({ length: 7 }).map((_, idx) => (
+                                    <div key={idx} className="w-0.5 bg-[var(--gray-900)]" />
+                                  ))}
+                                </div>
+                                <span className="font-mono text-[8px] text-[var(--text-muted)]">Lateral Shift</span>
+                              </div>
+                            </div>
+                            <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                              Detects Directional Cylinder Slippage
+                            </span>
+                            <div className="w-full flex gap-1 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2 py-1 border font-bold flex items-center gap-1 transition-colors ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy SVG Code"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
                           </div>
-                          <span className="font-mono text-[8px] text-[var(--text-muted)]">Lateral Shift</span>
+                        );
+                      })()}
+
+                      {/* Hairline Calibrated Rule Gauge */}
+                      <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
+                        <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
+                          <span>HAIRLINE RULE GAUGE</span>
+                          <span className="text-[var(--spectrum-green)]">0.1pt &ndash; 2.0pt</span>
+                        </div>
+                        <div className="w-full h-36 bg-[var(--surface)] border border-[var(--border-gray)] p-3 flex flex-col justify-between font-mono text-[10px] mb-2">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-[var(--text-muted)]">0.10pt (Ultra)</span>
+                            <div className="w-24 h-[0.5px] bg-[var(--gray-900)]" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-[var(--text-muted)]">0.25pt (Hairline)</span>
+                            <div className="w-24 h-[1px] bg-[var(--gray-900)]" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-[var(--text-muted)]">0.50pt (Light)</span>
+                            <div className="w-24 h-[1.5px] bg-[var(--gray-900)]" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-[var(--text-muted)]">1.00pt (Regular)</span>
+                            <div className="w-24 h-[2px] bg-[var(--gray-900)]" />
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[9px] text-[var(--text-muted)]">2.00pt (Heavy Rule)</span>
+                            <div className="w-24 h-[3px] bg-[var(--gray-900)]" />
+                          </div>
+                        </div>
+                        <span className="font-mono text-[10px] text-[var(--text-muted)] text-center mb-2">
+                          Stroke Fidelity &amp; Gain Calibration
+                        </span>
+                        <div className="w-full flex gap-1 font-mono text-[10px]">
+                          <button
+                            onClick={() =>
+                              copyToClipboard("/* Hairline Rule Gauge: 0.1pt (0.13px), 0.25pt (0.33px), 0.50pt (0.66px), 1.0pt (1.33px), 2.0pt (2.66px) */")
+                            }
+                            className="flex-1 py-1 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white flex items-center justify-center gap-1 font-bold transition-colors"
+                            style={{ borderRadius: 0 }}
+                          >
+                            <Copy className="w-3 h-3" />
+                            <span>COPY CSS SPECS</span>
+                          </button>
                         </div>
                       </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Detects Directional Cylinder Slippage
+                    </div>
+                  </div>
+                )}
+
+                {/* ─── 4D: VINTAGE PRINTER'S CABBAGES & LETTERPRESS DINGBATS ─── */}
+                {(cabbageFilter === "all" || cabbageFilter === "vintage") && (
+                  <div>
+                    <div className="flex flex-col sm:flex-row sm:items-baseline justify-between pb-2 mb-3 border-b border-[var(--border-gray)]/20 gap-2">
+                      <div>
+                        <span className="font-mono text-xs font-bold text-[var(--text)] uppercase flex items-center gap-2">
+                          <span className="w-2 h-2 bg-[var(--spectrum-orange)] inline-block" />
+                          D. Vintage Printer&apos;s Cabbages (Historical Dingbats &amp; Letterpress Ornaments)
+                        </span>
+                        <p className="text-[11px] text-[var(--text-muted)] font-mono mt-0.5">
+                          12 authentic letterpress ornaments &amp; dingbats from Renaissance incunabula to Victorian type specimen sheets.
+                        </p>
+                      </div>
+                      <span className="text-[11px] font-mono text-[var(--spectrum-orange)] font-bold shrink-0">
+                        12 HISTORICAL CUTS &bull; LIVE SVG
                       </span>
                     </div>
 
-                    {/* Hairline Calibrated Rule Gauge */}
-                    <div className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col items-center justify-between">
-                      <div className="w-full flex justify-between font-mono text-[10px] font-bold text-[var(--text-muted)] mb-2">
-                        <span>HAIRLINE RULE GAUGE</span>
-                        <span className="text-[var(--spectrum-green)]">0.1pt &ndash; 2.0pt</span>
-                      </div>
-                      <div className="w-full h-36 bg-[var(--surface)] border border-[var(--border-gray)] p-3 flex flex-col justify-between font-mono text-[10px]">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-[var(--text-muted)]">0.10pt (Ultra)</span>
-                          <div className="w-24 h-[0.5px] bg-[var(--gray-900)]" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-[var(--text-muted)]">0.25pt (Hairline)</span>
-                          <div className="w-24 h-[1px] bg-[var(--gray-900)]" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-[var(--text-muted)]">0.50pt (Light)</span>
-                          <div className="w-24 h-[1.5px] bg-[var(--gray-900)]" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-[var(--text-muted)]">1.00pt (Regular)</span>
-                          <div className="w-24 h-[2px] bg-[var(--gray-900)]" />
-                        </div>
-                        <div className="flex items-center justify-between">
-                          <span className="text-[9px] text-[var(--text-muted)]">2.00pt (Heavy Rule)</span>
-                          <div className="w-24 h-[3px] bg-[var(--gray-900)]" />
-                        </div>
-                      </div>
-                      <span className="font-mono text-[10px] text-[var(--text-muted)] mt-2 text-center">
-                        Stroke Fidelity &amp; Gain Calibration
-                      </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {PRINTERS_SYMBOLS_DATA.filter((s) => s.category === "vintage-cabbage").map((sym) => {
+                        const isCopied = copiedSvgId === sym.id;
+                        return (
+                          <div
+                            key={sym.id}
+                            className="p-4 bg-[var(--white)] border border-[var(--border-gray)] flex flex-col justify-between hover:border-[var(--primary-500)] transition-colors group"
+                            style={{ borderRadius: 0 }}
+                          >
+                            <div>
+                              {/* Top Bar with Category & ViewBox */}
+                              <div className="flex items-center justify-between font-mono text-[10px] mb-2 pb-1.5 border-b border-[var(--border-gray)]/20 text-[var(--text-muted)]">
+                                <span className="font-bold uppercase text-[var(--primary-500)]">{sym.shortName}</span>
+                                <span className="text-[9px] bg-[var(--surface-muted)] px-1 py-0.2">{sym.viewBox}</span>
+                              </div>
+
+                              {/* Symbol SVG Display Box */}
+                              <div
+                                className="h-28 w-full bg-[var(--surface)] border border-[var(--border-gray)]/40 flex items-center justify-center p-3 mb-3 cursor-pointer overflow-hidden transition-transform group-hover:bg-[var(--surface-muted)]"
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                title="Click to view full SVG code & scale"
+                              >
+                                <div
+                                  className="w-16 h-16 flex items-center justify-center transition-transform group-hover:scale-110"
+                                  style={{ color: cabbageColor }}
+                                  dangerouslySetInnerHTML={{ __html: sym.svgMarkup }}
+                                />
+                              </div>
+
+                              {/* Era & Description */}
+                              <div className="mb-3">
+                                <span className="text-[10px] font-mono font-bold text-[var(--text-muted)] uppercase block mb-0.5">
+                                  {sym.era}
+                                </span>
+                                <p className="text-[11px] text-[var(--text)] line-clamp-2 leading-snug">
+                                  {sym.description}
+                                </p>
+                              </div>
+                            </div>
+
+                            {/* Action Buttons */}
+                            <div className="flex items-center gap-1.5 pt-2 border-t border-[var(--border-gray)]/20 font-mono text-[10px]">
+                              <button
+                                onClick={() => setSelectedSvgSymbol(sym)}
+                                className="flex-1 py-1.5 bg-[var(--surface-muted)] text-[var(--text)] border border-[var(--border-gray)]/40 hover:bg-[var(--primary-500)] hover:text-white font-bold flex items-center justify-center gap-1 transition-colors"
+                                style={{ borderRadius: 0 }}
+                              >
+                                <Code className="w-3 h-3" />
+                                <span>&lt;/&gt; VIEW SVG</span>
+                              </button>
+                              <button
+                                onClick={() => handleCopySvgCode(sym)}
+                                className={`px-2.5 py-1.5 border font-bold flex items-center gap-1 transition-all ${
+                                  isCopied
+                                    ? "bg-[var(--success-color)] text-white border-[var(--success-color)]"
+                                    : "bg-[var(--white)] text-[var(--text)] border-[var(--border-gray)]/40 hover:bg-[var(--surface)]"
+                                }`}
+                                style={{ borderRadius: 0 }}
+                                title="Copy raw SVG string"
+                              >
+                                {isCopied ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
+                              </button>
+                            </div>
+                          </div>
+                        );
+                      })}
                     </div>
                   </div>
-                </div>
+                )}
               </div>
             </section>
 
@@ -5321,6 +5658,17 @@ export default function App() {
             <span>COPIED: {copiedToken}</span>
           </div>
         )}
+
+        {/* ─── SVG Code Inspector Modal for Printer's Symbols & Cabbages ─── */}
+        <SvgCodeInspectorModal
+          symbol={selectedSvgSymbol}
+          isOpen={!!selectedSvgSymbol}
+          onClose={() => setSelectedSvgSymbol(null)}
+          activeColor={cabbageColor}
+          onSelectColor={setCabbageColor}
+          copiedId={copiedSvgId}
+          onCopySvg={handleCopySvgCode}
+        />
       </div>
     );
   }
