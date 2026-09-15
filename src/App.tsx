@@ -55,19 +55,19 @@ export default function App() {
   const [paperOctaves, setPaperOctaves] = useState<number>(2); // Octaves: 2
   const [paperNoiseType, setPaperNoiseType] = useState<"fractalNoise" | "turbulence">("turbulence"); // Turbulence
   
-  // Light Channel (Highlights on Dark Ink & Color Fields) - Scaled to 0.36% (+20%)
+  // Light Channel (Highlights on Dark Ink & Color Fields) - Reduced by 20%
   const [paperLightEnabled, setPaperLightEnabled] = useState<boolean>(true);
-  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0036); // 0.36% (increased 20% from 0.30%)
+  const [paperLightOpacity, setPaperLightOpacity] = useState<number>(0.0029); // 0.29% (reduced 20% from 0.36%)
   const [paperLightGain, setPaperLightGain] = useState<number>(1.0); // 1.00x
   const [paperLightFloor, setPaperLightFloor] = useState<number>(0.29); // 29% Floor clip to eliminate fog on black ink
   const [paperLightOffsetX, setPaperLightOffsetX] = useState<number>(-1.0); // -1.00px
   const [paperLightOffsetY, setPaperLightOffsetY] = useState<number>(-1.0); // -1.00px
   const [paperLightBlur, setPaperLightBlur] = useState<number>(0.4); // 0.40px
 
-  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 50% to 0.65%
+  // Dark Channel (Shadows on Light Paper Ground) - Reduced by 20% to 0.52%
   const [paperDarkEnabled, setPaperDarkEnabled] = useState<boolean>(true);
   const [paperDarkInvert, setPaperDarkInvert] = useState<boolean>(false); // Direct multiply
-  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0065); // 0.65% (50% of 1.30%)
+  const [paperDarkOpacity, setPaperDarkOpacity] = useState<number>(0.0052); // 0.52% (reduced 20% from 0.65%)
   const [paperDarkGain, setPaperDarkGain] = useState<number>(2.0); // 2.00x
   const [paperDarkOffsetX, setPaperDarkOffsetX] = useState<number>(1.0); // +1.00px
   const [paperDarkOffsetY, setPaperDarkOffsetY] = useState<number>(1.0); // +1.00px
@@ -115,7 +115,7 @@ export default function App() {
   const [cssStippleDensity, setCssStippleDensity] = useState<number>(4);
   const [cssDotRadius, setCssDotRadius] = useState<number>(0.5);
   const [cssSecondaryHarmonic, setCssSecondaryHarmonic] = useState<boolean>(true);
-  const [cssStippleOpacity, setCssStippleOpacity] = useState<number>(0.35);
+  const [cssStippleOpacity, setCssStippleOpacity] = useState<number>(0.28);
 
   // Option 3: Archival Laid Paper & Watermark (Ultra-fine wire down to 0.8px)
   const [laidPitch, setLaidPitch] = useState<number>(2.0);
@@ -125,7 +125,7 @@ export default function App() {
   const [watermarkText, setWatermarkText] = useState<string>("⨁ MOULD-MADE 1954");
   const [showWatermark, setShowWatermark] = useState<boolean>(true);
   const [deckleEdge, setDeckleEdge] = useState<boolean>(true);
-  const [laidOpacity, setLaidOpacity] = useState<number>(0.30);
+  const [laidOpacity, setLaidOpacity] = useState<number>(0.24);
 
   // Option 4: HTML5 Canvas Procedural Cotton Fibers (Dense micro-threads & frequency)
   const [canvasFiberCount, setCanvasFiberCount] = useState<number>(2500);
@@ -136,7 +136,7 @@ export default function App() {
   const [canvasSpeckCount, setCanvasSpeckCount] = useState<number>(1800);
   const [canvasSpeckSize, setCanvasSpeckSize] = useState<number>(0.7);
   const [canvasColorTone, setCanvasColorTone] = useState<"white" | "cream" | "charcoal" | "brown">("white");
-  const [canvasFiberOpacity, setCanvasFiberOpacity] = useState<number>(0.35);
+  const [canvasFiberOpacity, setCanvasFiberOpacity] = useState<number>(0.28);
   const [canvasSeed, setCanvasSeed] = useState<number>(1);
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1440
