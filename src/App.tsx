@@ -948,7 +948,7 @@ export default function App() {
                         <div data-plate="yellow" className="ko-fringe-yellow">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white/90">YELLOW ON BLUE</span>
-                            <span className="bg-[var(--spectrum-yellow)] text-[var(--primary-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
+                            <span className="bg-[var(--spectrum-yellow)] text-[var(--primary-900)] px-1.5 py-0.2 font-black ko-badge-yellow">KNOCKOUT</span>
                           </div>
                           <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-yellow)]">
                             Boundary Override
@@ -971,7 +971,7 @@ export default function App() {
                         <div data-plate="aqua" className="ko-fringe-aqua">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white/90">AQUA ON VIOLET</span>
-                            <span className="bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
+                            <span className="bg-[var(--spectrum-aqua)] text-[var(--gray-900)] px-1.5 py-0.2 font-black ko-badge-aqua">KNOCKOUT</span>
                           </div>
                           <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-aqua)]">
                             Geodesic Vertex
@@ -994,7 +994,7 @@ export default function App() {
                         <div data-plate="red" className="ko-fringe-red">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-[var(--gray-900)]">RED ON LIME</span>
-                            <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2 font-black">KNOCKOUT</span>
+                            <span className="bg-[var(--spectrum-red)] text-white px-1.5 py-0.2 font-black ko-badge-red">KNOCKOUT</span>
                           </div>
                           <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-red)]">
                             Spectral Chromatic Gap
@@ -1017,7 +1017,7 @@ export default function App() {
                         <div data-plate="amber" className="ko-fringe-amber">
                           <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] font-bold">
                             <span className="text-white/90">AMBER ON BLACK</span>
-                            <span className="bg-[var(--spectrum-amber)] text-[var(--gray-900)] px-1.5 py-0.2 font-black">KNOCKOUT</span>
+                            <span className="bg-[var(--spectrum-amber)] text-[var(--gray-900)] px-1.5 py-0.2 font-black ko-badge-amber">KNOCKOUT</span>
                           </div>
                           <h5 className="font-extrabold text-sm leading-tight mb-1 text-[var(--spectrum-amber)]">
                             Carbon Relief

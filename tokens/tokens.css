@@ -437,6 +437,28 @@ h6, .ds-h6 {
   transition: text-shadow 0.15s ease-out;
 }
 
+/* ─── Knockout Badge Box Misregistration (Trap Overprint + Exposed Paper White Gap) ─── */
+[data-misregistration="on"] .ko-badge-yellow {
+  box-shadow: 0.65px 0.50px 0 #63891E, -0.65px -0.50px 0 var(--white);
+  text-shadow: none !important;
+  transition: box-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-badge-aqua {
+  box-shadow: 0.65px -0.50px 0 #4A5273, -0.65px 0.50px 0 var(--white);
+  text-shadow: none !important;
+  transition: box-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-badge-red {
+  box-shadow: -0.65px 0.50px 0 #7C511B, 0.65px -0.50px 0 var(--white);
+  text-shadow: none !important;
+  transition: box-shadow 0.15s ease-out;
+}
+[data-misregistration="on"] .ko-badge-amber {
+  box-shadow: 0.65px 0.50px 0 #0F0D0C, -0.65px -0.50px 0 var(--white);
+  text-shadow: none !important;
+  transition: box-shadow 0.15s ease-out;
+}
+
 /* ─── Component Baseline Rules ─────────────────────────────── */
 
 /* 1. Buttons: No bevel, no shadow, sharp corners. Pressed flashes green */
