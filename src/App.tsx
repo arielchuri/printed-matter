@@ -96,6 +96,7 @@ export default function App() {
   const [windowWidth, setWindowWidth] = useState<number>(
     typeof window !== "undefined" ? window.innerWidth : 1440
   );
+  const effectiveWidthPx = windowWidth;
 
   useEffect(() => {
     const handleResize = () => setWindowWidth(window.innerWidth);
@@ -3319,13 +3320,13 @@ export default function App() {
 
                     <div>
                       <div className="flex justify-between text-[10px] mb-0.5">
-                        <span className="font-bold">Light Opacity (0.00%–25.00%):</span>
+                        <span className="font-bold">Light Opacity (0.00%–3.00%):</span>
                         <span className="text-[var(--primary-600)] font-bold">{(paperLightOpacity * 100).toFixed(2)}%</span>
                       </div>
                       <input
                         type="range"
                         min="0.0000"
-                        max="0.2500"
+                        max="0.0300"
                         step="0.0001"
                         value={paperLightOpacity}
                         onChange={(e) => setPaperLightOpacity(parseFloat(e.target.value))}
@@ -3447,7 +3448,7 @@ export default function App() {
                         type="range"
                         min="0.0000"
                         max="0.2500"
-                        step="0.0001"
+                        step="0.0005"
                         value={paperDarkOpacity}
                         onChange={(e) => setPaperDarkOpacity(parseFloat(e.target.value))}
                         className="w-full accent-[var(--gray-800)] cursor-pointer"
@@ -3614,7 +3615,10 @@ export default function App() {
                   {paperDarkEnabled && (
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{ mixBlendMode: "multiply" }}
+                      style={{
+                        mixBlendMode: "multiply",
+                        opacity: Math.min(1.0, paperDarkOpacity * paperDarkGain * 3.0),
+                      }}
                       aria-hidden="true"
                     >
                       <filter id="pm-svg-dark-tooth" x="-20%" y="-20%" width="140%" height="140%">
@@ -3631,9 +3635,9 @@ export default function App() {
                           const darkR = Math.min(1.0, Math.max(0, paperDarkR * (paperDarkWarmth * 0.8 + 0.2)));
                           const darkG = Math.min(1.0, Math.max(0, paperDarkG));
                           const darkB = Math.min(1.0, Math.max(0, paperDarkB / (paperDarkWarmth * 0.8 + 0.2)));
-                          const sR = (1 - darkR) * paperDarkOpacity * paperDarkGain * 2;
-                          const sG = (1 - darkG) * paperDarkOpacity * paperDarkGain * 2;
-                          const sB = (1 - darkB) * paperDarkOpacity * paperDarkGain * 2;
+                          const sR = 1 - darkR;
+                          const sG = 1 - darkG;
+                          const sB = 1 - darkB;
                           return (
                             <feColorMatrix
                               in={paperDarkBlur > 0 ? "blurredDark" : "offsetDark"}
@@ -3641,9 +3645,9 @@ export default function App() {
                               values={
                                 paperDarkInvert
                                   ? `
-                                    ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${(1 - sR).toFixed(4)}
-                                    ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${(1 - sG).toFixed(4)}
-                                    ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${(1 - sB).toFixed(4)}
+                                    ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} ${(sR / 3).toFixed(4)} 0 ${darkR.toFixed(4)}
+                                    ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} ${(sG / 3).toFixed(4)} 0 ${darkG.toFixed(4)}
+                                    ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} ${(sB / 3).toFixed(4)} 0 ${darkB.toFixed(4)}
                                     0 0 0 0 1
                                   `
                                   : `
@@ -3666,7 +3670,10 @@ export default function App() {
                   {paperLightEnabled && (
                     <svg
                       className="absolute inset-0 w-full h-full pointer-events-none z-10"
-                      style={{ mixBlendMode: "screen" }}
+                      style={{
+                        mixBlendMode: "screen",
+                        opacity: Math.min(1.0, paperLightOpacity * paperLightGain * 10.0),
+                      }}
                       aria-hidden="true"
                     >
                       <filter id="pm-svg-light-tooth" x="-20%" y="-20%" width="140%" height="140%">
@@ -3680,7 +3687,7 @@ export default function App() {
                         {paperLightBlur > 0 && <feGaussianBlur in="offsetLight" stdDeviation={paperLightBlur} result="blurredLight" />}
                         {/* Monochromatic luminance mapping with noise floor clipping to eliminate flat gray fogging */}
                         {(() => {
-                          const effScale = (paperLightOpacity * paperLightGain) / Math.max(0.01, 1 - paperLightFloor);
+                          const effScale = 1.0 / Math.max(0.01, 1.0 - paperLightFloor);
                           const kL = (effScale / 3).toFixed(5);
                           const bL = (-(paperLightFloor * effScale)).toFixed(5);
                           return (

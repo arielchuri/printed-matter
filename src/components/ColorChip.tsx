@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { clsx } from "clsx";
-import { getContrastRatio, getWCAGGrade, isLight } from "@tokens/tokens";
+import { getContrastRatio, getWCAGGrade, isLight, getLuminance } from "@tokens/tokens";
 import { Copy, Check } from "lucide-react";
 
 export interface ColorChipProps {
@@ -36,6 +36,7 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
   const contrastWithPaper = getContrastRatio(hexShown, paperGround);
   const wcag = getWCAGGrade(contrastWithPaper);
   const isLightGround = isLight(hexShown);
+  const isPaperOrLighter = getLuminance(hexShown) >= 0.70 || token === "--white" || token.includes("gray-50") || token.includes("gray-100") || token.includes("gray-200");
 
   const handleCopy = () => {
     navigator.clipboard.writeText(token);
@@ -50,7 +51,10 @@ export const ColorChip: React.FC<ColorChipProps> = ({ token, name, value, descri
       style={{ borderRadius: 0 }}
     >
       <div
-        className="h-20 w-full flex items-end justify-between p-2 relative ink-squash"
+        className={clsx(
+          "h-20 w-full flex items-end justify-between p-2 relative",
+          !isPaperOrLighter && "ink-squash-subtle"
+        )}
         style={{ backgroundColor: hexShown }}
       >
         <span
